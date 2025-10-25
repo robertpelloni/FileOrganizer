@@ -1,7 +1,0 @@
-This is a short text file
-for doing tests
-using my jhead program
-bla
-bla
-bla
-and some more text

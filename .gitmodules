@@ -1,0 +1,417 @@
+[submodule "libs/fstlib"]
+	path = libs/fstlib
+	url = https://github.com/fstpackage/fstlib
+[submodule "libs/hash-library"]
+	path = libs/hash-library
+	url = https://github.com/stbrumme/hash-library
+[submodule "libs/libheif"]
+	path = libs/libheif
+	url = https://github.com/strukturag/libheif
+[submodule "libs/heif"]
+	path = libs/heif
+	url = https://github.com/nokiatech/heif
+[submodule "libs/imageinfo"]
+	path = libs/imageinfo
+	url = https://github.com/xiaozhuai/imageinfo
+[submodule "libs/image_info"]
+	path = libs/image_info
+	url = https://github.com/gottfrois/image_info
+[submodule "libs/Windows"]
+	path = libs/Windows
+	url = https://github.com/ImageMagick/Windows
+[submodule "libs/Dependencies"]
+	path = libs/Dependencies
+	url = https://github.com/ImageMagick/Dependencies
+[submodule "libs/ImageMagick"]
+	path = libs/ImageMagick
+	url = https://github.com/ImageMagick/ImageMagick
+[submodule "libs/gdk-pixbuf"]
+	path = libs/gdk-pixbuf
+	url = https://github.com/ImageMagick/gdk-pixbuf
+[submodule "libs/Imath"]
+	path = libs/Imath
+	url = https://github.com/AcademySoftwareFoundation/Imath
+[submodule "libs/openexr"]
+	path = libs/openexr
+	url = https://github.com/AcademySoftwareFoundation/openexr
+[submodule "libs/OpenImageIO"]
+	path = libs/OpenImageIO
+	url = https://github.com/AcademySoftwareFoundation/OpenImageIO
+[submodule "libs/OpenColorIO"]
+	path = libs/OpenColorIO
+	url = https://github.com/AcademySoftwareFoundation/OpenColorIO
+[submodule "libs/OpenTimelineIO"]
+	path = libs/OpenTimelineIO
+	url = https://github.com/AcademySoftwareFoundation/OpenTimelineIO
+[submodule "libs/OpenCue"]
+	path = libs/OpenCue
+	url = https://github.com/AcademySoftwareFoundation/OpenCue
+[submodule "libs/OpenRV"]
+	path = libs/OpenRV
+	url = https://github.com/AcademySoftwareFoundation/OpenRV
+[submodule "libs/openfx"]
+	path = libs/openfx
+	url = https://github.com/AcademySoftwareFoundation/openfx
+[submodule "libs/openapv"]
+	path = libs/openapv
+	url = https://github.com/AcademySoftwareFoundation/openapv
+[submodule "libs/libxml2"]
+	path = libs/libxml2
+	url = https://github.com/GNOME/libxml2
+[submodule "libs/libxmlplusplus"]
+	path = libs/libxmlplusplus
+	url = https://github.com/libxmlplusplus/libxmlplusplus
+[submodule "libs/json-c"]
+	path = libs/json-c
+	url = https://github.com/json-c/json-c
+[submodule "libs/SysmonForLinux"]
+	path = libs/SysmonForLinux
+	url = https://github.com/microsoft/SysmonForLinux
+[submodule "libs/fast-lzma2"]
+	path = libs/fast-lzma2
+	url = https://github.com/conor42/fast-lzma2
+[submodule "libs/pxz"]
+	path = libs/pxz
+	url = https://github.com/jnovy/pxz
+[submodule "libs/liblzma"]
+	path = libs/liblzma
+	url = https://github.com/ShiftMediaProject/liblzma
+[submodule "libs/openh264"]
+	path = libs/openh264
+	url = https://github.com/cisco/openh264
+[submodule "libs/libffi"]
+	path = libs/libffi
+	url = https://github.com/libffi/libffi
+[submodule "libs/dragonffi"]
+	path = libs/dragonffi
+	url = https://github.com/aguinet/dragonffi
+[submodule "libs/WizardsToolkit"]
+	path = libs/WizardsToolkit
+	url = https://github.com/ImageMagick/WizardsToolkit
+[submodule "libs/openjpeg"]
+	path = libs/openjpeg
+	url = https://github.com/uclouvain/openjpeg
+[submodule "libs/libzip"]
+	path = libs/libzip
+	url = https://github.com/nih-at/libzip
+[submodule "libs/libiconv"]
+	path = libs/libiconv
+	url = https://github.com/winlibs/libiconv
+[submodule "libs/ckmame"]
+	path = libs/ckmame
+	url = https://github.com/nih-at/ckmame
+[submodule "libs/nihtest"]
+	path = libs/nihtest
+	url = https://github.com/nih-at/nihtest
+[submodule "libs/ziptools"]
+	path = libs/ziptools
+	url = https://github.com/nih-at/ziptools
+[submodule "libs/nihtest-cpp"]
+	path = libs/nihtest-cpp
+	url = https://github.com/nih-at/nihtest-cpp
+[submodule "libs/openssl"]
+	path = libs/openssl
+	url = https://github.com/winlibs/openssl
+[submodule "libs/sqlite3"]
+	path = libs/sqlite3
+	url = https://github.com/winlibs/sqlite3
+[submodule "libs/postgresql"]
+	path = libs/postgresql
+	url = https://github.com/winlibs/postgresql
+[submodule "libs/cURL"]
+	path = libs/cURL
+	url = https://github.com/winlibs/cURL
+[submodule "libs/libtidy"]
+	path = libs/libtidy
+	url = https://github.com/winlibs/libtidy
+[submodule "libs/libjpeg"]
+	path = libs/libjpeg
+	url = https://github.com/winlibs/libjpeg
+[submodule "libs/glib"]
+	path = libs/glib
+	url = https://github.com/winlibs/glib
+[submodule "libs/enchant"]
+	path = libs/enchant
+	url = https://github.com/winlibs/enchant
+[submodule "libs/net-snmp"]
+	path = libs/net-snmp
+	url = https://github.com/winlibs/net-snmp
+[submodule "libs/openldap"]
+	path = libs/openldap
+	url = https://github.com/winlibs/openldap
+[submodule "libs/nghttp2"]
+	path = libs/nghttp2
+	url = https://github.com/winlibs/nghttp2
+[submodule "libs/libxpm"]
+	path = libs/libxpm
+	url = https://github.com/winlibs/libxpm
+[submodule "libs/cyrus-sasl"]
+	path = libs/cyrus-sasl
+	url = https://github.com/winlibs/cyrus-sasl
+[submodule "libs/icu4c"]
+	path = libs/icu4c
+	url = https://github.com/winlibs/icu4c
+[submodule "libs/mpir"]
+	path = libs/mpir
+	url = https://github.com/winlibs/mpir
+[submodule "libs/gettext"]
+	path = libs/gettext
+	url = https://github.com/winlibs/gettext
+[submodule "libs/libxslt"]
+	path = libs/libxslt
+	url = https://github.com/winlibs/libxslt
+[submodule "libs/libwebp"]
+	path = libs/libwebp
+	url = https://github.com/winlibs/libwebp
+[submodule "libs/freetype"]
+	path = libs/freetype
+	url = https://github.com/winlibs/freetype
+[submodule "libs/libavif"]
+	path = libs/libavif
+	url = https://github.com/winlibs/libavif
+[submodule "libs/libssh2"]
+	path = libs/libssh2
+	url = https://github.com/winlibs/libssh2
+[submodule "libs/libpng"]
+	path = libs/libpng
+	url = https://github.com/winlibs/libpng
+[submodule "libs/libsodium"]
+	path = libs/libsodium
+	url = https://github.com/winlibs/libsodium
+[submodule "libs/qdbm"]
+	path = libs/qdbm
+	url = https://github.com/winlibs/qdbm
+[submodule "libs/oniguruma"]
+	path = libs/oniguruma
+	url = https://github.com/winlibs/oniguruma
+[submodule "libs/argon2"]
+	path = libs/argon2
+	url = https://github.com/winlibs/argon2
+[submodule "libs/lmdb"]
+	path = libs/lmdb
+	url = https://github.com/winlibs/lmdb
+[submodule "libs/libbzip2"]
+	path = libs/libbzip2
+	url = https://github.com/winlibs/libbzip2
+[submodule "libs/zlib"]
+	path = libs/zlib
+	url = https://github.com/winlibs/zlib
+[submodule "libs/ssdeep"]
+	path = libs/ssdeep
+	url = https://github.com/winlibs/ssdeep
+[submodule "libs/wineditline"]
+	path = libs/wineditline
+	url = https://github.com/winlibs/wineditline
+[submodule "libs/pthreads"]
+	path = libs/pthreads
+	url = https://github.com/winlibs/pthreads
+[submodule "libs/imap"]
+	path = libs/imap
+	url = https://github.com/winlibs/imap
+[submodule "libs/pslib"]
+	path = libs/pslib
+	url = https://github.com/winlibs/pslib
+[submodule "libs/libmcrypt"]
+	path = libs/libmcrypt
+	url = https://github.com/winlibs/libmcrypt
+[submodule "libs/dirent"]
+	path = libs/dirent
+	url = https://github.com/winlibs/dirent
+[submodule "libs/c-ares"]
+	path = libs/c-ares
+	url = https://github.com/winlibs/c-ares
+[submodule "libs/httpd"]
+	path = libs/httpd
+	url = https://github.com/apache/httpd
+[submodule "libs/fribidi"]
+	path = libs/fribidi
+	url = https://github.com/winlibs/fribidi
+[submodule "libs/libvpx"]
+	path = libs/libvpx
+	url = https://github.com/winlibs/libvpx
+[submodule "libs/libvbucket"]
+	path = libs/libvbucket
+	url = https://github.com/membase/libvbucket
+[submodule "libs/FFmpeg"]
+	path = libs/FFmpeg
+	url = https://github.com/FFmpeg/FFmpeg
+[submodule "libs/hashcat"]
+	path = libs/hashcat
+	url = https://github.com/hashcat/hashcat
+[submodule "libs/radare2"]
+	path = libs/radare2
+	url = https://github.com/radareorg/radare2
+[submodule "libs/C"]
+	path = libs/C
+	url = https://github.com/TheAlgorithms/C
+[submodule "libs/vlc"]
+	path = libs/vlc
+	url = https://github.com/videolan/vlc
+[submodule "libs/sumatrapdf"]
+	path = libs/sumatrapdf
+	url = https://github.com/sumatrapdfreader/sumatrapdf
+[submodule "libs/mpv"]
+	path = libs/mpv
+	url = https://github.com/mpv-player/mpv
+[submodule "libs/sqlite"]
+	path = libs/sqlite
+	url = https://github.com/sqlite/sqlite
+[submodule "libs/tinyxml2"]
+	path = libs/tinyxml2
+	url = https://github.com/leethomason/tinyxml2
+[submodule "libs/libvips"]
+	path = libs/libvips
+	url = https://github.com/libvips/libvips
+[submodule "libs/opencv"]
+	path = libs/opencv
+	url = https://github.com/opencv/opencv
+[submodule "libs/MediaInfoLib"]
+	path = libs/MediaInfoLib
+	url = https://github.com/MediaArea/MediaInfoLib
+[submodule "libs/MediaInfo"]
+	path = libs/MediaInfo
+	url = https://github.com/MediaArea/MediaInfo
+[submodule "libs/mm_file"]
+	path = libs/mm_file
+	url = https://github.com/jermp/mm_file
+[submodule "libs/TinyEXIF"]
+	path = libs/TinyEXIF
+	url = https://github.com/cdcseacave/TinyEXIF
+[submodule "libs/libjpeg-turbo"]
+	path = libs/libjpeg-turbo
+	url = https://github.com/libjpeg-turbo/libjpeg-turbo
+[submodule "libs/jhead"]
+	path = libs/jhead
+	url = https://github.com/Matthias-Wandel/jhead
+[submodule "libs/libexif"]
+	path = libs/libexif
+	url = https://github.com/libexif/libexif
+[submodule "libs/getopt-win32"]
+	path = libs/getopt-win32
+	url = https://github.com/nanoporetech/getopt-win32
+[submodule "libs/raylib"]
+	path = libs/raylib
+	url = https://github.com/raysan5/raylib
+[submodule "libs/lvgl"]
+	path = libs/lvgl
+	url = https://github.com/lvgl/lvgl
+[submodule "libs/getopt-win"]
+	path = libs/getopt-win
+	url = https://github.com/ludvikjerabek/getopt-win
+[submodule "libs/libunistd"]
+	path = libs/libunistd
+	url = https://github.com/robinrowe/libunistd
+[submodule "libs/CNTK"]
+	path = libs/CNTK
+	url = https://github.com/microsoft/CNTK
+[submodule "libs/ShazamAPI"]
+	path = libs/ShazamAPI
+	url = https://github.com/Numenorean/ShazamAPI
+[submodule "libs/seek-tune"]
+	path = libs/seek-tune
+	url = https://github.com/cgzirim/seek-tune
+[submodule "libs/ShazamIO"]
+	path = libs/ShazamIO
+	url = https://github.com/shazamio/ShazamIO
+[submodule "libs/audio-recognizer"]
+	path = libs/audio-recognizer
+	url = https://github.com/wsieroci/audio-recognizer
+[submodule "libs/pHash"]
+	path = libs/pHash
+	url = https://github.com/nihas101/pHash
+[submodule "libs/image-hash"]
+	path = libs/image-hash
+	url = https://github.com/ytetsuro/image-hash
+[submodule "libs/imghash-viewer"]
+	path = libs/imghash-viewer
+	url = https://github.com/YannickAlex07/imghash-viewer
+[submodule "libs/imagehash"]
+	path = libs/imagehash
+	url = https://github.com/vitali-fedulov/imagehash
+[submodule "libs/securecopy"]
+	path = libs/securecopy
+	url = https://github.com/hansij66/securecopy
+[submodule "libs/xattrs"]
+	path = libs/xattrs
+	url = https://github.com/hrbrmstr/xattrs
+[submodule "libs/fuse_xattrs"]
+	path = libs/fuse_xattrs
+	url = https://github.com/fbarriga/fuse_xattrs
+[submodule "libs/xattrlib"]
+	path = libs/xattrlib
+	url = https://github.com/amdf/xattrlib
+[submodule "libs/RenStrm"]
+	path = libs/RenStrm
+	url = https://github.com/hernandp/RenStrm
+[submodule "libs/metastore"]
+	path = libs/metastore
+	url = https://github.com/przemoc/metastore
+[submodule "libs/lsads"]
+	path = libs/lsads
+	url = https://github.com/assarbad/lsads
+[submodule "libs/Powershell-ADS"]
+	path = libs/Powershell-ADS
+	url = https://github.com/phlashko/Powershell-ADS
+[submodule "libs/SharpADS"]
+	path = libs/SharpADS
+	url = https://github.com/ricardojoserf/SharpADS
+[submodule "libs/ADSIdentifier"]
+	path = libs/ADSIdentifier
+	url = https://github.com/HannahVernon/ADSIdentifier
+[submodule "libs/ads"]
+	path = libs/ads
+	url = https://github.com/katahiromz/ads
+[submodule "libs/AlternateDataStreams"]
+	path = libs/AlternateDataStreams
+	url = https://github.com/narasimha14/AlternateDataStreams
+[submodule "libs/DataStreamBrowser"]
+	path = libs/DataStreamBrowser
+	url = https://github.com/Thibstars/DataStreamBrowser
+[submodule "libs/libevent"]
+	path = libs/libevent
+	url = https://github.com/libevent/libevent
+[submodule "libs/xxHash"]
+	path = libs/xxHash
+	url = https://github.com/Cyan4973/xxHash
+[submodule "libs/libgit2"]
+	path = libs/libgit2
+	url = https://github.com/libgit2/libgit2
+[submodule "libs/dokany"]
+	path = libs/dokany
+	url = https://github.com/dokan-dev/dokany
+[submodule "libs/pngquant"]
+	path = libs/pngquant
+	url = https://github.com/kornelski/pngquant
+[submodule "libs/dunst"]
+	path = libs/dunst
+	url = https://github.com/dunst-project/dunst
+[submodule "libs/audiocraft"]
+	path = libs/audiocraft
+	url = https://github.com/facebookresearch/audiocraft
+[submodule "libs/hashingImage"]
+	path = libs/hashingImage
+	url = https://github.com/goongong/hashingImage
+[submodule "libs/util-linux"]
+	path = libs/util-linux
+	url = https://github.com/util-linux/util-linux
+[submodule "libs/libimghash"]
+	path = libs/libimghash
+	url = https://github.com/shuttie/libimghash
+[submodule "libs/perceptual-dct-hash"]
+	path = libs/perceptual-dct-hash
+	url = https://github.com/alangshur/perceptual-dct-hash
+[submodule "libs/pHash.c"]
+	path = libs/pHash.c
+	url = https://github.com/folksable/pHash.c
+[submodule "libs/tinyphash"]
+	path = libs/tinyphash
+	url = https://github.com/Wassasin/tinyphash
+[submodule "libs/ADSman"]
+	path = libs/ADSman
+	url = https://github.com/8gudbits/ADSman
+[submodule "libs/ADSFileSystem"]
+	path = libs/ADSFileSystem
+	url = https://github.com/marcelogm/ADSFileSystem
+[submodule "libs/Bringing-Old-Photos-Back-to-Life"]
+	path = libs/Bringing-Old-Photos-Back-to-Life
+	url = https://github.com/microsoft/Bringing-Old-Photos-Back-to-Life
