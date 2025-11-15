@@ -73,9 +73,6 @@
 [submodule "libs/pxz"]
 	path = libs/pxz
 	url = https://github.com/jnovy/pxz
-[submodule "libs/liblzma"]
-	path = libs/liblzma
-	url = https://github.com/ShiftMediaProject/liblzma
 [submodule "libs/openh264"]
 	path = libs/openh264
 	url = https://github.com/cisco/openh264
