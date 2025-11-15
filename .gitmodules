@@ -301,9 +301,6 @@
 [submodule "libs/libunistd"]
 	path = libs/libunistd
 	url = https://github.com/robinrowe/libunistd
-[submodule "libs/CNTK"]
-	path = libs/CNTK
-	url = https://github.com/microsoft/CNTK
 [submodule "libs/ShazamAPI"]
 	path = libs/ShazamAPI
 	url = https://github.com/Numenorean/ShazamAPI

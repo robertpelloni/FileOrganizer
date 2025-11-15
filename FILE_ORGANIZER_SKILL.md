@@ -431,3 +431,87 @@ Documents folder.
 - Organizing shared team folders
 - Structuring new project directories
 
+
+## File Organizer Roadmap
+
+### Current Architecture Observations
+- **Monolithic worker** – the `Worker` class currently handles filesystem traversal, hashing, EXIF parsing, duplicate grouping, logging, and SQLite IO in one thread, which limits testability and portability.
+- **Redundant scanning strategies** – four directory-walk implementations run sequentially (C++17 recursive iterator, manual stack recursion, `dirent`, Win32 APIs). Only one per platform should exist.
+- **Ad hoc persistence** – `index.db` and `ignore.db` are opened without schema management, migrations, or a data-access layer; SQL lives inside worker logic.
+- **UI limitations** – Qt Widgets UI is tightly coupled to the worker thread, making it difficult to port to non-desktop targets or ship headless/CLI builds.
+- **Dependency sprawl** – dozens of vendored libs live under `libs/` with no documented ownership, licensing notes, or build story.
+- **Testing & release gaps** – no unit tests, integration tests, or CI; build is VS solution only.
+
+### Phase 0 – Architecture & Platform Preparation (2–3 weeks)
+1. **Service decomposition**: split the current worker into scanning, metadata, hashing, duplicate analysis, logging, and persistence services with clear contracts.
+2. **Filesystem abstraction**: create a single traversal interface with per-platform backends; remove redundant walkers.
+3. **Persistence layer**: define SQLite schema (versioned migrations, WAL, indexes) and wrap DB access behind repository classes.
+4. **Dependency audit**: inventory every project under `libs/`, record license, build instructions, current usage, and remove or archive unused code.
+5. **UI/engine separation spike**: define a shared “core engine” API (CLI-first) that exposes scanning and automation without any Qt dependencies.
+
+### Phase 1 – Core Feature Hardening (4–5 weeks)
+1. **Hashing pipeline**: implement pluggable hash strategies (chunk hash, full-file, future perceptual hash) with regression tests verifying stability across OSes.
+2. **Metadata fusion**: encapsulate filename, EXIF, filesystem timestamp heuristics into a scoring engine that retains raw signals for traceability.
+3. **Duplicate review UX**: replace QTextEdit output with a data model supporting paging/filtering, preview panes, auto-select rules, and export.
+4. **Structured logging & metrics**: emit timing and queue-depth metrics to identify hotspots; guard long-running tasks with cancellation hooks.
+5. **UI modernization initiative**:
+   - **Decouple core from UI** by exposing a gRPC/CLI/IPC boundary so any interface can drive the engine.
+   - **Evaluate cross-platform shells** (GTK4, Dear ImGui + SDL, Electron/tauri) for future desktop UX, prioritizing permissive licensing and simple deployment.
+   - **Prototype headless console UI** to validate the separation and enable server-mode scans.
+   - Decision milestone: pick target UI stack or formally support multiple thin clients.
+
+### Phase 2 – Feature Expansion (iterative sprints)
+1. **Regex/scriptable renamer** with dry-run, undo, and preset support.
+2. **OCR & AI classification** by leveraging vendored OCR libs (TinyOCR/Tesseract) and optional model adapters; run work asynchronously so dedupe scans remain responsive.
+3. **ADS and metadata preservation** with platform-aware handlers (NTFS ADS, Linux xattrs) and user-configured policies.
+4. **Pluggable source providers** for network shares, removable media, and cloud mounts respecting ignore rules and throttling.
+5. **Automation & APIs**: expose CLI/REST endpoints so other apps (or future subagents) can orchestrate scans programmatically.
+
+### Phase 3 – Quality, Tooling & Release
+1. **Test harnesses**: introduce Catch2/GoogleTest suites plus fixture directories for regression testing duplicate detection, hashing, and metadata logic.
+2. **CI/CD**: add GitHub Actions (Windows + Linux) to build, test, package artifacts, and run linting.
+3. **Telemetry & crash reporting** (opt-in) to gather anonymized performance/error data.
+4. **Documentation & onboarding**: publish architecture decision records, dependency build notes, contribution guide, and roadmap.
+
+### Immediate Next Steps
+1. Finalize module boundary diagram for engine vs. UI vs. persistence.
+2. Draft the UI modernization RFC comparing GTK, Dear ImGui/SDL, and Electron/tauri with pros/cons for maintainability and multi-platform reach.
+3. Produce dependency audit spreadsheet and schema migration plan.
+
+---
+
+## AI Multimodel Development Playbook
+
+### Goals
+- Support “heavy AI assisted development” with orchestrated multi-model subagents that can plan, code, review, and test within FileOrganizer.
+- Ensure the codebase, tooling, and documentation give agents clear, safe entry points and guardrails.
+
+### Knowledge & Context Surfaces
+1. **Canonical docs**: keep skill/rules (`FILE_ORGANIZER_SKILL.md`), roadmap, API references, and architecture diagrams up to date.
+2. **Structured metadata**: maintain machine-readable descriptors (e.g., JSON/YAML) for modules, commands, and naming conventions so subagents can query them.
+3. **Decision logs**: use ADRs and CHANGELOG to capture rationale and prevent re-litigating choices.
+
+### Workflow Topology for Subagents
+1. **Planner agent**: interprets tasks, consults roadmap, and creates execution plans with resource constraints.
+2. **Builder agents** (per domain: core engine, UI, persistence, AI integrations) operate on isolated branches, referencing module-specific docs.
+3. **Reviewer agent**: validates diffs against coding standards, tests, and architecture guidelines.
+4. **Ops agent**: manages CI pipelines, dependency updates, and releases.
+
+### Tooling & Infrastructure
+- **Unified CLI** to run scans, tests, formatters, and packaging tasks (e.g., via CMake + vcpkg/conan). Provide sample commands in docs.
+- **Sandboxed environments** (Docker/Dev Containers) mirroring CI to give AI agents reproducible setups.
+- **API surface for orchestration**: provide stable scripts/commands (e.g., `fileorganizer scan --config config.json`) so subagents can automate workflows.
+- **Observability hooks**: expose structured logs/metrics so agents can detect regressions.
+
+### Guardrails
+- Enforce code-formatting (clang-format), linting, and unit tests in CI gates.
+- Require architectural review for changes touching the engine-core or UI boundary.
+- Maintain security review checklist before integrating new third-party AI services.
+
+### Execution Blueprint
+1. **Bootstrap**: document the multi-agent workflow, required tools, and environment provisioning.
+2. **Automate**: create scripts for plan generation, branch creation, and PR templating to guide autonomous work.
+3. **Monitor**: set up dashboards (CI, code coverage, issue triage) so human overseers can supervise AI activity.
+4. **Iterate**: collect metrics on agent performance (latency, defect rate) and refine prompts/tooling accordingly.
+
+With the roadmap and playbook embedded here, future contributors—human or AI—have a single canonical reference that captures architectural priorities, UI modernization plans, and the orchestration model for multi-agent development.
