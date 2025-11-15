@@ -316,13 +316,19 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 
 ---
 
-## Long-Term Vision (Beyond v1.0)
+## Long-Term Vision & Feature Backlog
 
-- **Cloud sync**: Optional integration with S3, Google Drive for backup verification.
-- **Web UI**: React/Vue frontend hosted locally; access via browser.
-- **Mobile apps**: iOS/Android clients (read-only; view duplicates, browse metadata).
-- **Plugin marketplace**: Community-contributed providers (new hash algos, OCR engines, AI models).
-- **Enterprise features**: LDAP auth, audit logs, policy enforcement (for corporate NAS).
+For a detailed list of potential features and ideas for development beyond the v1.0 roadmap, see the following documents:
+
+- **[Competitive Analysis](COMPETITIVE_ANALYSIS.md)**: A review of features from other leading file management and deduplication tools.
+- **[Feature Wishlist](FEATURE_WISHLIST.md)**: A backlog of potential new features, including advanced duplicate detection, filesystem "lint" finding, and workflow enhancements.
+
+### High-Level Vision (Beyond v1.0)
+- **Cloud Sync:** Optional integration with S3, Google Drive for backup verification.
+- **Web UI:** React/Vue frontend hosted locally; access via browser.
+- **Mobile Apps:** iOS/Android clients (read-only; view duplicates, browse metadata).
+- **Plugin Marketplace:** A system for community-contributed providers (new hash algorithms, OCR engines, AI models).
+- **Enterprise Features:** LDAP authentication, audit logs, and policy enforcement for corporate NAS environments.
 
 ---
 
