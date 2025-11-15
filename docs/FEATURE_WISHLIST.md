@@ -86,3 +86,145 @@ These features involve deeper integration with modern filesystem capabilities fo
 - **Scan Result Caching & Replay:**
   - *Description:* The ability to save a complete scan result (including hashes and file lists) to a file (e.g., JSON or a DB snapshot) and "replay" it later. This allows for re-filtering, re-sorting, or generating different reports without re-scanning the filesystem.
   - *Inspired by:* rmlint.
+
+- **Natural Language Commands:**
+  - *Description:* Allow users to interact with FileOrganizer using natural language queries and commands (e.g., "find all photos from last summer", "organize documents by project").
+  - *Dependencies:* Local LLM integration (e.g., llama.cpp) or cloud API.
+  - *Inspired by:* llama-fs, Organize With AI.
+
+- **Usage Pattern Learning:**
+  - *Description:* Track file access patterns and learn user behavior to make intelligent suggestions for organization, archiving, and cleanup.
+  - *Inspired by:* Declutr AI.
+
+- **Template-Based Organization:**
+  - *Description:* Provide pre-built organization templates for common scenarios (photography projects, software development, documents, music library) that users can apply with customization.
+  - *Inspired by:* Folderer, FileFolder.org.
+
+- **Tag-Based Organization:**
+  - *Description:* Support user-defined tags for files and folders, with tag-based search, filtering, and organization rules.
+  - *Inspired by:* Files, Sigma File Manager.
+
+- **Workspace Management:**
+  - *Description:* Allow users to create workspaces for different projects or contexts, each with its own organization rules and settings.
+  - *Inspired by:* Sigma File Manager.
+
+- **Timeline View:**
+  - *Description:* A chronological view of file activity (created, modified, accessed) to help users understand file evolution and find files by time.
+  - *Inspired by:* Sigma File Manager.
+
+- **Dashboard & Statistics:**
+  - *Description:* Provide visual dashboards showing file system statistics (storage usage by type, duplicate space savings, organization progress).
+  - *Inspired by:* Sigma File Manager.
+
+### 5. Advanced File Operations
+
+- **Batch Renaming with AI:**
+  - *Description:* Intelligent batch renaming that suggests names based on file content, metadata, and context.
+  - *Dependencies:* Content analysis (OCR, image recognition, document parsing).
+  - *Inspired by:* Renamer AI.
+
+- **File Merging & Splitting:**
+  - *Description:* Tools to merge multiple files into one or split large files into smaller parts.
+  - *Inspired by:* FrankenFile.
+
+- **Format Conversion:**
+  - *Description:* Built-in or plugin-based format conversion (image formats, document formats, etc.).
+  - *Inspired by:* FrankenFile.
+
+- **Archive Management:**
+  - *Description:* Full support for creating, extracting, and browsing archive files (ZIP, RAR, 7-Zip, TAR).
+  - *Inspired by:* Open Salamander, Double Commander, Files.
+
+- **File Comparison:**
+  - *Description:* Tools to compare files content-wise (text diff, binary diff, image comparison).
+  - *Inspired by:* Open Salamander.
+
+### 6. User Interface Enhancements
+
+- **Dual-Pane Mode:**
+  - *Description:* Classic dual-pane file manager interface for easier file operations between locations.
+  - *Inspired by:* Open Salamander, Double Commander.
+
+- **Tabbed Interface:**
+  - *Description:* Support multiple tabs for different locations to reduce window clutter.
+  - *Inspired by:* Double Commander, Files, Explorer++.
+
+- **QuickLook/Preview:**
+  - *Description:* Quick preview of file contents without opening the full application (images, documents, videos).
+  - *Inspired by:* Files, Sigma File Manager.
+
+- **Modern Themes:**
+  - *Description:* Customizable themes (light, dark, custom colors) for the GUI.
+  - *Inspired by:* Files, Sigma File Manager.
+
+- **Media Gallery View:**
+  - *Description:* Specialized view for browsing image and video collections with thumbnails.
+  - *Inspired by:* Sigma File Manager.
+
+### 7. Integration & Extensibility
+
+- **Cloud Storage Integration:**
+  - *Description:* Support for organizing files in cloud storage (OneDrive, Google Drive, Dropbox, etc.).
+  - *Inspired by:* Files, The Drive AI, M-Files.
+
+- **Git Integration:**
+  - *Description:* Show git status, integrate with version control operations.
+  - *Inspired by:* Files.
+
+- **FTP/FTPS Client:**
+  - *Description:* Built-in FTP client for remote file management.
+  - *Inspired by:* Open Salamander.
+
+- **Workflow Automation:**
+  - *Description:* Advanced workflow engine for automating complex file operations with conditions and triggers.
+  - *Inspired by:* M-Files, AI File Pro.
+
+- **Integration APIs:**
+  - *Description:* REST API or similar for integration with other tools and scripts.
+  - *Inspired by:* FileAI Pro.
+
+### 8. Privacy & Security
+
+- **Encrypted Storage:**
+  - *Description:* Support for encrypted containers or folders to protect sensitive files.
+  - *Inspired by:* Sigma File Manager.
+
+- **Local-Only Processing:**
+  - *Description:* Ensure all AI and processing happens locally without cloud dependency for privacy.
+  - *Inspired by:* Local-File-Organizer.
+
+- **Audit Trail:**
+  - *Description:* Complete logging of all file operations for compliance and review.
+  - *Inspired by:* M-Files.
+
+### 9. Enterprise Features (Post-v1.0, Specialized)
+
+- **Multi-User Collaboration:**
+  - *Description:* Support for team workflows with file locking, check-in/check-out.
+  - *Inspired by:* M-Files, The Drive AI.
+
+- **Compliance Features:**
+  - *Description:* Features for regulatory compliance (retention policies, audit trails, access controls).
+  - *Inspired by:* M-Files.
+
+- **Multi-Repository Support:**
+  - *Description:* Manage files across multiple repositories (network shares, cloud storage, local drives) from a single interface.
+  - *Inspired by:* M-Files.
+
+### 10. Productivity Tools
+
+- **Note-Taking Integration:**
+  - *Description:* Integrated note-taking for files and folders (annotations, comments, TODO lists).
+  - *Inspired by:* Sigma File Manager.
+
+- **Built-in Viewers:**
+  - *Description:* Support for viewing various file types without external applications (text, images, PDFs, code).
+  - *Inspired by:* Open Salamander, Double Commander.
+
+- **Internal Text Editor:**
+  - *Description:* Basic text editing capabilities for quick edits.
+  - *Inspired by:* Double Commander.
+
+- **Keyboard Shortcuts:**
+  - *Description:* Comprehensive, customizable keyboard shortcuts for power users.
+  - *Inspired by:* Files, Sigma File Manager, Double Commander.
