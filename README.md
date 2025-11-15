@@ -237,23 +237,6 @@ A: GPL-compatible (exact license TBD; Exiv2/Tesseract are GPLv2/Apache 2.0). Per
 
 ---
 
-## Documentation
-
-### Core Documentation
-- **[ROADMAP.md](docs/ROADMAP.md)** - Development roadmap and v1.0 feature plan
-- **[LIBRARY_EVALUATION.md](docs/LIBRARY_EVALUATION.md)** - Comparison and benchmarks of libraries
-- **[SCANNER_EVALUATION.md](docs/SCANNER_EVALUATION.md)** - Scanner implementation comparison
-- **[DATABASE_SCHEMA.md](docs/DATABASE_SCHEMA.md)** - SQLite schema and design decisions
-- **[BENCHMARKING_PLAN.md](docs/BENCHMARKING_PLAN.md)** - Benchmarking methodology and plan
-- **[BENCHMARKING_RUNBOOK.md](docs/BENCHMARKING_RUNBOOK.md)** - How to run benchmarks
-
-### Competitive Analysis & Features
-- **[COMPETITIVE_ANALYSIS.md](docs/COMPETITIVE_ANALYSIS.md)** - Analysis of 25+ file management products
-- **[COMPETITIVE_FEATURES_SUMMARY.md](docs/COMPETITIVE_FEATURES_SUMMARY.md)** - Quick reference of features by category
-- **[FEATURE_WISHLIST.md](docs/FEATURE_WISHLIST.md)** - Post-v1.0 feature backlog and priorities
-
----
-
 ## Contributing
 
 See [`docs/ROADMAP.md`](docs/ROADMAP.md) for current priorities. Contributions welcome:
