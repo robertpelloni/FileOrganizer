@@ -86,9 +86,10 @@ public:
 
 // Static registration
 static bool reg_scanner_dirent = [](){
-    static Registry<IFileScanner>& R = Registry<IFileScanner>::instance();
-    R.add("dirent", [](){ return std::make_unique<DirentScanner>(); });
+    Registry<IFileScanner>::instance().add("dirent", [](){ return std::make_unique<DirentScanner>(); });
     return true;
 }();
+
+void register_scanner_dirent() { (void)reg_scanner_dirent; }
 
 } // namespace fo::core

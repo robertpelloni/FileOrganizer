@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include "fo/core/provider_registration.hpp"
 
 using namespace std::chrono;
 
@@ -12,6 +13,7 @@ static void print_usage() {
 }
 
 int main(int argc, char** argv) {
+    fo::core::register_all_providers();
     std::vector<std::filesystem::path> roots;
     std::vector<std::string> exts;
     bool follow_symlinks = false;
