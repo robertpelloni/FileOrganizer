@@ -56,9 +56,10 @@ public:
 
 // Static registration
 static bool reg_scanner_std = [](){
-    static Registry<IFileScanner>& R = Registry<IFileScanner>::instance();
-    R.add("std", [](){ return std::make_unique<StdFsScanner>(); });
+    Registry<IFileScanner>::instance().add("std", [](){ return std::make_unique<StdFsScanner>(); });
     return true;
 }();
+
+void register_scanner_std() { (void)reg_scanner_std; }
 
 } // namespace fo::core

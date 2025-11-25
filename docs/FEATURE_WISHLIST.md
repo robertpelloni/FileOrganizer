@@ -48,6 +48,18 @@ These features extend the core duplicate-finding capabilities to handle more com
   - *Description:* A perceptual hashing equivalent for video files. This would involve extracting keyframes and comparing their visual similarity to find duplicate or near-duplicate videos, even with different encodings, resolutions, or minor edits.
   - *Inspired by:* Czkawka.
 
+- **AI Search & Q&A:**
+  - *Description:* A conversational interface that allows users to ask questions in natural language and get direct answers from their documents.
+  - *Inspired by:* Clivio, The Drive AI.
+
+- **AI Summaries:**
+  - *Description:* The ability to automatically generate summaries of long documents.
+  - *Inspired by:* Clivio, The Drive AI.
+
+- **Smart Inbox / Email Integration:**
+  - *Description:* A feature that can automatically extract, classify, and archive attachments from emails.
+  - *Inspired by:* Clivio, The Drive AI.
+
 ### 2. Filesystem Health & "Lint" Finding
 
 This category expands the tool's scope from organization to general filesystem hygiene, helping users clean up various types of clutter and broken files.

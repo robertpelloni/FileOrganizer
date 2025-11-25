@@ -3,6 +3,7 @@ set(LIBS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../libs)
 
 # Vendored libraries: TinyEXIF, hash-library (SHA256/etc), xxHash
 set(TINYEXIF_SOURCES ${LIBS_DIR}/TinyEXIF/TinyEXIF.cpp)
+set(TINYXML2_SOURCES ${LIBS_DIR}/tinyxml2/tinyxml2.cpp)
 set(HASHLIBRARY_SOURCES
     ${LIBS_DIR}/hash-library/sha256.cpp
     ${LIBS_DIR}/hash-library/sha1.cpp
@@ -21,12 +22,14 @@ add_library(fo_core STATIC
     ${FO_CORE_HEADERS}
     ${FO_CORE_SOURCES}
     ${TINYEXIF_SOURCES}
+    ${TINYXML2_SOURCES}
     ${HASHLIBRARY_SOURCES}
 )
 
 target_include_directories(fo_core
     PUBLIC ${FO_CORE_INCLUDE_DIR}
     PRIVATE ${LIBS_DIR}/TinyEXIF
+    PRIVATE ${LIBS_DIR}/tinyxml2
     PRIVATE ${LIBS_DIR}/hash-library
     PRIVATE ${XXHASH_INCLUDE}
   PRIVATE ${LIBS_DIR}/dirent

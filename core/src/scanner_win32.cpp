@@ -103,10 +103,11 @@ public:
 
 // Static registration
 static bool reg_scanner_win32 = [](){
-    static Registry<IFileScanner>& R = Registry<IFileScanner>::instance();
-    R.add("win32", [](){ return std::make_unique<Win32Scanner>(); });
+    Registry<IFileScanner>::instance().add("win32", [](){ return std::make_unique<Win32Scanner>(); });
     return true;
 }();
+
+void register_scanner_win32() { (void)reg_scanner_win32; }
 
 } // namespace fo::core
 
