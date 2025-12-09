@@ -67,9 +67,11 @@ public:
 };
 
 // Static registration
-static bool reg_fast64 = [](){
+static bool reg_hasher_fast64 = [](){
     Registry<IHasher>::instance().add("fast64", [](){ return std::make_unique<Fast64Hasher>(); });
     return true;
 }();
+
+void register_hasher_fast64() { (void)reg_hasher_fast64; }
 
 } // namespace fo::core

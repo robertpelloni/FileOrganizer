@@ -1,9 +1,18 @@
-#include "fo/providers/hasher_sha256.hpp"
+#include "fo/core/interfaces.hpp"
+#include "fo/core/registry.hpp"
 #include "../../libs/hash-library/sha256.h"
 #include <fstream>
 #include <array>
 
-namespace fo::providers {
+namespace fo::core {
+
+class SHA256Hasher : public IHasher {
+public:
+    std::string name() const override { return "sha256"; }
+    std::string fast64(const std::filesystem::path& p) override;
+    std::optional<std::string> strong(const std::filesystem::path& p) override;
+    std::string strong_algo() const override { return "sha256"; }
+};
 
 std::string SHA256Hasher::fast64(const std::filesystem::path& p) {
     // Reuse the fast sampling logic from hasher_fast64.cpp for prefilter
@@ -27,4 +36,12 @@ std::optional<std::string> SHA256Hasher::strong(const std::filesystem::path& p) 
     return sha.getHash();
 }
 
-} // namespace fo::providers
+// Static registration
+static bool reg_hasher_sha256 = [](){
+    Registry<IHasher>::instance().add("sha256", [](){ return std::make_unique<SHA256Hasher>(); });
+    return true;
+}();
+
+void register_hasher_sha256() { (void)reg_hasher_sha256; }
+
+} // namespace fo::core

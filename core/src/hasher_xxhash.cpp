@@ -1,4 +1,5 @@
-#include "fo/providers/hasher_xxhash.hpp"
+#include "fo/core/interfaces.hpp"
+#include "fo/core/registry.hpp"
 
 // Using XXH64 from vendored xxHash
 #define XXH_INLINE_ALL
@@ -9,7 +10,13 @@
 #include <iomanip>
 #include <sstream>
 
-namespace fo::providers {
+namespace fo::core {
+
+class XXHasher : public IHasher {
+public:
+    std::string name() const override { return "xxhash"; }
+    std::string fast64(const std::filesystem::path& p) override;
+};
 
 std::string XXHasher::fast64(const std::filesystem::path& p) {
     std::ifstream f(p, std::ios::binary);
@@ -32,4 +39,12 @@ std::string XXHasher::fast64(const std::filesystem::path& p) {
     return oss.str();
 }
 
-} // namespace fo::providers
+// Static registration
+static bool reg_hasher_xxhash = [](){
+    Registry<IHasher>::instance().add("xxhash", [](){ return std::make_unique<XXHasher>(); });
+    return true;
+}();
+
+void register_hasher_xxhash() { (void)reg_hasher_xxhash; }
+
+} // namespace fo::core

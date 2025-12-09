@@ -1,10 +1,17 @@
-#include "fo/providers/metadata_tinyexif.hpp"
+#include "fo/core/interfaces.hpp"
+#include "fo/core/registry.hpp"
 #include "../../libs/TinyEXIF/TinyEXIF.h"
 #include <fstream>
 #include <cstring>
 #include <ctime>
 
-namespace fo::providers {
+namespace fo::core {
+
+class TinyExifMetadataProvider : public IMetadataProvider {
+public:
+    std::string name() const override { return "tinyexif"; }
+    bool read(const std::filesystem::path& p, ImageMetadata& out) override;
+};
 
 // Parse EXIF datetime string (YYYY:MM:DD HH:MM:SS) to system_clock time_point
 static bool parse_exif_datetime(const std::string& s, std::chrono::system_clock::time_point& out) {
@@ -59,4 +66,12 @@ bool TinyExifMetadataProvider::read(const std::filesystem::path& p, fo::core::Im
     return out.date.has_taken || out.has_gps;
 }
 
-} // namespace fo::providers
+// Static registration
+static bool reg_metadata_tinyexif = [](){
+    Registry<IMetadataProvider>::instance().add("tinyexif", [](){ return std::make_unique<TinyExifMetadataProvider>(); });
+    return true;
+}();
+
+void register_metadata_tinyexif() { (void)reg_metadata_tinyexif; }
+
+} // namespace fo::core
