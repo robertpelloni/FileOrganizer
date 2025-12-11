@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include "fo/core/provider_registration.hpp"
 
 using namespace std::chrono;
 
