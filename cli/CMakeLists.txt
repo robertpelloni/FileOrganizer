@@ -1,5 +1,9 @@
 add_executable(fo_cli fo_cli.cpp)
-target_link_libraries(fo_cli PRIVATE fo_core)
+
+target_link_libraries(fo_cli PRIVATE
+    fo_core
+)
+
 target_compile_features(fo_cli PRIVATE cxx_std_20)
 
 if(MSVC)
