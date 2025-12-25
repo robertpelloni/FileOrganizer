@@ -1,6 +1,15 @@
 set(FO_CORE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(LIBS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../libs)
 
+# Read version from VERSION.md
+file(READ "${CMAKE_SOURCE_DIR}/VERSION.md" FO_VERSION_STRING)
+string(STRIP "${FO_VERSION_STRING}" FO_VERSION_STRING)
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/fo/core/version.hpp.in
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/fo/core/version.hpp
+    @ONLY
+)
+
 # Vendored libraries: TinyEXIF, hash-library (SHA256/etc), xxHash
 set(TINYEXIF_SOURCES ${LIBS_DIR}/TinyEXIF/TinyEXIF.cpp)
 set(TINYXML2_SOURCES ${LIBS_DIR}/tinyxml2/tinyxml2.cpp)

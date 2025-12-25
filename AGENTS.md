@@ -203,3 +203,33 @@ The core database infrastructure is in place. The Engine now persists data. The 
 **Handoff Note:**
 The project is now in a stable, buildable state on Windows. The CLI is feature-complete for the current roadmap phase (scanning, hashing, metadata, duplicates, persistence). The next major step is setting up CI to prevent regression and then moving to advanced content analysis features.
 
+### Update: 2025-12-25 (Session 4)
+
+**Author:** GitHub Copilot (Gemini 3 Pro)
+
+**Scope:** Versioning, OCR Implementation, and Documentation Standardization.
+
+**Current Status:**
+- **Versioning**:
+    - `VERSION.md` is now the single source of truth.
+    - `core/CMakeLists.txt` reads `VERSION.md` and generates `version.hpp`.
+    - `fo_cli` supports `--version` flag.
+- **OCR**:
+    - Implemented `TesseractOCRProvider` in `core/src/ocr_tesseract.cpp` using Tesseract C++ API.
+    - Code is guarded by `FO_HAVE_TESSERACT` to allow building without the dependency.
+- **Documentation**:
+    - Updated `CLAUDE.md`, `GEMINI.md`, `GPT.md` to reference `docs/LLM_INSTRUCTIONS.md`.
+    - Updated `CHANGELOG.md` and `docs/ROADMAP.md`.
+    - `docs/SUBMODULES.md` is up to date.
+- **Repositories**:
+    - Verified `ScanSessionRepository` and `IgnoreRepository` are implemented.
+
+**Next Steps:**
+1.  **CI/CD**: Set up GitHub Actions (critical for cross-platform validation).
+2.  **Dependency Integration**: Configure vcpkg to actually install Tesseract and enable the `FO_HAVE_TESSERACT` flag in CMake.
+3.  **Advanced Features**: Implement `Blake3Hasher` and `Exiv2MetadataProvider`.
+
+**Handoff Note:**
+The codebase is ready for advanced dependencies. The OCR provider is written but dormant until Tesseract is linked. Versioning is robust. The immediate next step is to get the dependencies building via vcpkg/CI.
+
+

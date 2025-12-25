@@ -57,7 +57,7 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
    - [x] `cli/fo_cli.cpp`: Parse args (`--scanner`, `--hasher`, `--ext`, roots).
    - [x] Integrate with `fo::core::Engine`.
    - [x] Add commands: `scan`, `duplicates`, `hash`, `metadata`.
-   - [ ] Add commands: `ocr` (subcommands).
+   - [x] Add commands: `ocr` (subcommands).
    - [ ] Add JSON output mode (`--format=json`) for GUI consumption.
 
 5. **Extract Qt GUI as thin client** (deferred to Phase 3)
@@ -113,7 +113,7 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 ### Tasks
 
 1. **Add vcpkg dependencies**
-   - [ ] `vcpkg.json`: Add `exiv2`, `blake3`, `tesseract`, `opencv` (optional).
+   - [x] `vcpkg.json`: Add `exiv2`, `blake3`, `tesseract`, `opencv` (optional).
    - [ ] CMake `find_package()` for each; set `FO_HAVE_*` macros.
    - [ ] Conditional compilation: `#ifdef FO_HAVE_EXIV2`.
 
@@ -128,10 +128,10 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
    - [ ] Add to registry; select via `--hasher=blake3`.
 
 4. **Implement OCR providers**
-   - [ ] `TesseractOCRProvider`: Basic text extraction.
+   - [x] `TesseractOCRProvider`: Basic text extraction (Code implemented, requires vcpkg build).
    - [ ] Optional: `PaddleOCRProvider` (Python bridge or C++ inference).
    - [ ] Store results in `ocr_results` table; enable FTS5 search.
-   - [ ] CLI: `fo_cli ocr --lang=eng /path/to/images`.
+   - [x] CLI: `fo_cli ocr --lang=eng /path/to/images`.
 
 5. **Implement perceptual hashing**
    - [ ] `dHash` (difference hash): Simple gradient-based.

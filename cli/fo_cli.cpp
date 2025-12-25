@@ -2,6 +2,7 @@
 #include "fo/core/registry.hpp"
 #include "fo/core/provider_registration.hpp"
 #include "fo/core/ocr_interface.hpp"
+#include "fo/core/version.hpp"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -11,6 +12,7 @@
 using namespace std::chrono;
 
 static void print_usage() {
+    std::cout << "FileOrganizer v" << fo::core::FO_VERSION << "\n";
     std::cout << "Usage: fo_cli <command> [options] [paths...]\n"
               << "Commands:\n"
               << "  scan         Scan for files\n"
@@ -42,6 +44,10 @@ int main(int argc, char** argv) {
     std::string command = argv[1];
     if (command == "-h" || command == "--help") {
         print_usage();
+        return 0;
+    }
+    if (command == "-v" || command == "--version") {
+        std::cout << "FileOrganizer v" << fo::core::FO_VERSION << "\n";
         return 0;
     }
 
