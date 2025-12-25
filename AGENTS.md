@@ -182,3 +182,24 @@ The project is now better documented and versioned. The Win32 scanner is optimiz
 **Handoff Note:**
 The core database infrastructure is in place. The Engine now persists data. The immediate priority is to verify the build and then complete the remaining repositories.
 
+### Update: 2025-12-25 (Session 3)
+
+**Author:** GitHub Copilot (Gemini 3 Pro)
+
+**Scope:** Build Fixes, CLI Expansion, and Submodule Management.
+
+**Current Status:**
+- **Build System**: Fixed linker errors by including `sqlite3.c` and `dirent.c` directly in `fo_core` sources. Enabled C language support in CMake.
+- **CLI**: Implemented `hash`, `metadata`, and `ocr` subcommands. Added `--list-ocr` and `--lang` support (OCR is currently a placeholder calling a stub provider).
+- **Submodules**: Fixed `vcpkg` submodule configuration in `.gitmodules` and `docs/SUBMODULES.md`.
+- **Documentation**: Updated `docs/ROADMAP.md` to reflect Phase 2 completion. Updated `CHANGELOG.md` for v0.3.0.
+- **Verification**: `fo_cli.exe` builds and runs successfully on Windows (MSVC).
+
+**Next Steps:**
+1.  **CI/CD**: Set up GitHub Actions to ensure cross-platform build stability.
+2.  **OCR Implementation**: Integrate Tesseract via vcpkg to replace the stub.
+3.  **Advanced Features**: Implement perceptual hashing and AI classification (Phase 3/6).
+
+**Handoff Note:**
+The project is now in a stable, buildable state on Windows. The CLI is feature-complete for the current roadmap phase (scanning, hashing, metadata, duplicates, persistence). The next major step is setting up CI to prevent regression and then moving to advanced content analysis features.
+

@@ -18,6 +18,11 @@ set(XXHASH_INCLUDE ${LIBS_DIR}/xxHash)
 # SQLite3
 set(SQLITE3_SOURCES ${LIBS_DIR}/sqlite3/sqlite3.c)
 
+# Dirent (Windows shim)
+if(WIN32)
+    set(DIRENT_SOURCES ${LIBS_DIR}/dirent/src/dirent.c)
+endif()
+
 file(GLOB_RECURSE FO_CORE_HEADERS ${FO_CORE_INCLUDE_DIR}/*.hpp)
 file(GLOB FO_CORE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 list(APPEND FO_CORE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/duplicate_finders.cpp)
@@ -49,6 +54,7 @@ add_library(fo_core STATIC
     ${TINYXML2_SOURCES}
     ${HASHLIBRARY_SOURCES}
     ${SQLITE3_SOURCES}
+    ${DIRENT_SOURCES}
 )
 
 target_include_directories(fo_core
@@ -57,7 +63,7 @@ target_include_directories(fo_core
     PRIVATE ${LIBS_DIR}/tinyxml2
     PRIVATE ${LIBS_DIR}/hash-library
     PRIVATE ${XXHASH_INCLUDE}
-    PRIVATE ${LIBS_DIR}/dirent
+    PRIVATE ${LIBS_DIR}/dirent/src
     PRIVATE ${LIBS_DIR}/sqlite3
 )
 

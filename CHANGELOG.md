@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Persistence**: Scanned files and duplicate groups are now persisted to `fo.db` (configurable via `--db`).
 - **Schema**: Initial V1 schema with `files`, `file_hashes`, `duplicate_groups`, and `duplicate_members` tables.
 - **CLI**: Added `--db=<path>` option.
+- **CLI Commands**: Implemented `hash` and `metadata` commands.
+- **Repositories**: Added `IgnoreRepository` and `ScanSessionRepository`.
+- **Submodules**: Fixed missing `vcpkg` submodule mapping.
 
 ## [0.2.0] - 2025-12-25
 

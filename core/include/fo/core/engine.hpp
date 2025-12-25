@@ -5,6 +5,8 @@
 #include "database.hpp"
 #include "file_repository.hpp"
 #include "duplicate_repository.hpp"
+#include "ignore_repository.hpp"
+#include "scan_session_repository.hpp"
 #include <memory>
 
 namespace fo::core {
@@ -23,6 +25,8 @@ public:
         , hasher_(Registry<IHasher>::instance().create(cfg_.hasher))
         , file_repo_(db_manager_)
         , duplicate_repo_(db_manager_)
+        , ignore_repo_(db_manager_)
+        , session_repo_(db_manager_)
     {
         db_manager_.open(cfg_.db_path);
         db_manager_.migrate();
@@ -32,17 +36,33 @@ public:
                                const std::vector<std::string>& include_exts,
                                bool follow_symlinks) {
         if (!scanner_) throw std::runtime_error("scanner not found: " + cfg_.scanner);
-        auto files = scanner_->scan(roots, include_exts, follow_symlinks);
         
-        // Persist to DB
-        db_manager_.execute("BEGIN TRANSACTION;");
+        int64_t session_id = session_repo_.start_session();
+        std::vector<FileInfo> files;
+        
         try {
+            files = scanner_->scan(roots, include_exts, follow_symlinks);
+            
+            // Filter ignored files
+            // Note: Ideally scanner should support ignore list to avoid scanning them at all.
+            // For now, we filter post-scan.
+            auto ignore_rules = ignore_repo_.get_all();
+            if (!ignore_rules.empty()) {
+                std::erase_if(files, [&](const FileInfo& f) {
+                    return ignore_repo_.is_ignored(f.path.string());
+                });
+            }
+
+            // Persist to DB
+            db_manager_.execute("BEGIN TRANSACTION;");
             for (auto& f : files) {
                 file_repo_.upsert(f);
             }
             db_manager_.execute("COMMIT;");
+            
+            session_repo_.end_session(session_id, "completed", static_cast<int>(files.size()));
         } catch (...) {
-            db_manager_.execute("ROLLBACK;");
+            session_repo_.end_session(session_id, "failed", 0);
             throw;
         }
         
@@ -76,9 +96,6 @@ public:
             db_manager_.execute("COMMIT;");
         } catch (...) {
             db_manager_.execute("ROLLBACK;");
-            // Don't throw, just log error? Or throw?
-            // Throwing might abort the CLI output.
-            // For now, let's throw to be safe.
             throw;
         }
 
@@ -88,6 +105,8 @@ public:
     IHasher& hasher() { return *hasher_; }
     FileRepository& file_repository() { return file_repo_; }
     DuplicateRepository& duplicate_repository() { return duplicate_repo_; }
+    IgnoreRepository& ignore_repository() { return ignore_repo_; }
+    ScanSessionRepository& session_repository() { return session_repo_; }
     DatabaseManager& database() { return db_manager_; }
 
 private:
@@ -104,6 +123,8 @@ private:
     DatabaseManager db_manager_;
     FileRepository file_repo_;
     DuplicateRepository duplicate_repo_;
+    IgnoreRepository ignore_repo_;
+    ScanSessionRepository session_repo_;
 };
 
 } // namespace fo::core

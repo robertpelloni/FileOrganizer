@@ -1,6 +1,7 @@
 #include "fo/core/engine.hpp"
 #include "fo/core/registry.hpp"
 #include "fo/core/provider_registration.hpp"
+#include "fo/core/ocr_interface.hpp"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -26,8 +27,8 @@ static void print_usage() {
               << "  --format=<json>     Output format\n"
               << "  --list-scanners     List available scanners\n"
               << "  --list-hashers      List available hashers\n"
-              << "  --list-metadata     List available metadata providers\n";
-              //<< "  --list-ocr          List available OCR providers\n";
+              << "  --list-metadata     List available metadata providers\n"
+              << "  --list-ocr          List available OCR providers\n";
 }
 
 int main(int argc, char** argv) {
@@ -39,10 +40,16 @@ int main(int argc, char** argv) {
     }
 
     std::string command = argv[1];
+    if (command == "-h" || command == "--help") {
+        print_usage();
+        return 0;
+    }
+
     std::vector<std::filesystem::path> roots;
     std::vector<std::string> exts;
     bool follow_symlinks = false;
     std::string format;
+    std::string lang = "eng";
     fo::core::EngineConfig cfg;
 
     for (int i = 2; i < argc; ++i) {
@@ -69,16 +76,17 @@ int main(int argc, char** argv) {
             std::cout << "\n";
             return 0;
         }
-        // else if (a == "--list-ocr") {
-        //     auto& reg = fo::core::Registry<fo::core::IOCRProvider>::instance();
-        //     std::cout << "Available OCR providers:";
-        //     for (auto& n : reg.names()) std::cout << " " << n;
-        //     std::cout << "\n";
-        //     return 0;
-        // }
+        else if (a == "--list-ocr") {
+            auto& reg = fo::core::Registry<fo::core::IOCRProvider>::instance();
+            std::cout << "Available OCR providers:";
+            for (auto& n : reg.names()) std::cout << " " << n;
+            std::cout << "\n";
+            return 0;
+        }
         else if (a.rfind("--scanner=", 0) == 0) cfg.scanner = a.substr(10);
         else if (a.rfind("--hasher=", 0) == 0) cfg.hasher = a.substr(9);
         else if (a.rfind("--db=", 0) == 0) cfg.db_path = a.substr(5);
+        else if (a.rfind("--lang=", 0) == 0) lang = a.substr(7);
         else if (a.rfind("--ext=", 0) == 0) {
             auto list = a.substr(6);
             size_t pos = 0;
@@ -118,11 +126,51 @@ int main(int argc, char** argv) {
                 }
             }
         } else if (command == "hash") {
-            // ... to be implemented
+            auto files = engine.scan(roots, exts, follow_symlinks);
+            auto& hasher = engine.hasher();
+            for (const auto& f : files) {
+                std::string h = hasher.fast64(f.path);
+                std::cout << h << "  " << f.path.string() << "\n";
+                // Optionally persist hash
+                if (f.id != 0) {
+                    engine.file_repository().add_hash(f.id, hasher.name(), h);
+                }
+            }
         } else if (command == "metadata") {
-            // ... to be implemented
+            auto files = engine.scan(roots, exts, follow_symlinks);
+            // Use default metadata provider for now, or add CLI option
+            auto provider = fo::core::Registry<fo::core::IMetadataProvider>::instance().create("tinyexif");
+            if (!provider) {
+                std::cerr << "Metadata provider 'tinyexif' not found.\n";
+                return 1;
+            }
+            for (const auto& f : files) {
+                fo::core::ImageMetadata meta;
+                if (provider->read(f.path, meta)) {
+                    std::cout << f.path.string() << ":\n";
+                    if (meta.date.has_taken) {
+                        auto t = std::chrono::system_clock::to_time_t(meta.date.taken);
+                        std::cout << "  Taken: " << std::ctime(&t); // ctime includes newline
+                    }
+                    if (meta.has_gps) {
+                        std::cout << "  GPS: " << meta.gps_lat << ", " << meta.gps_lon << "\n";
+                    }
+                }
+            }
         } else if (command == "ocr") {
-            // ... to be implemented
+            auto files = engine.scan(roots, exts, follow_symlinks);
+            auto provider = fo::core::Registry<fo::core::IOCRProvider>::instance().create("tesseract");
+            if (!provider) {
+                std::cerr << "OCR provider 'tesseract' not found.\n";
+                return 1;
+            }
+            for (const auto& f : files) {
+                auto result = provider->recognize(f.path, lang);
+                if (result) {
+                    std::cout << f.path.string() << ":\n";
+                    std::cout << "  Text: " << result->text << "\n";
+                }
+            }
         } else {
             std::cerr << "Unknown command: " << command << "\n";
             return 1;

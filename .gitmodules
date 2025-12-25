@@ -409,3 +409,8 @@
 [submodule "libs/Bringing-Old-Photos-Back-to-Life"]
 	path = libs/Bringing-Old-Photos-Back-to-Life
 	url = https://github.com/microsoft/Bringing-Old-Photos-Back-to-Life
+
+[submodule "vcpkg"]
+path = vcpkg
+url = https://github.com/microsoft/vcpkg
+

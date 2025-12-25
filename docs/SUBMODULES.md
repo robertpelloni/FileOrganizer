@@ -153,3 +153,4 @@ This document lists all submodules in the FileOrganizer project, their current v
 | libs/zlib | zlib-1.3.1 | 65dd212 |
 
 *Generated on 2025-12-25*
+| vcpkg | heads/master | 06479b4 |

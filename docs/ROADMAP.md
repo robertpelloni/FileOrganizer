@@ -14,17 +14,16 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 - ✅ Fast prefilter hash (sampled chunks) and optional strong hashes (SHA-256, MD5, etc.).
 - ✅ EXIF date parsing (TinyEXIF) and filename regex-based date extraction.
 - ✅ Size + fast-hash duplicate grouping with byte-compare verification.
-- ✅ Preliminary SQLite schema (ad hoc inserts; no migrations).
+- ✅ **Database Layer**: SQLite schema V1, migrations, and full repository layer (`FileRepository`, `DuplicateRepository`, `IgnoreRepository`, `ScanSessionRepository`).
+- ✅ **CLI**: `fo_cli` with `scan`, `duplicates`, `hash`, `metadata` commands and `--db` persistence.
 - ✅ **Documentation**: Centralized LLM instructions, Submodule Dashboard, Versioning.
 
 ### Gaps
-- ❌ Tight Qt coupling: business logic in `Worker` QObject.
-- ❌ No CLI-first engine: cannot use without Qt GUI.
-- ❌ No plugin registry: providers hardcoded, not swappable at runtime.
+- ❌ Tight Qt coupling: business logic in `Worker` QObject (legacy).
+- ❌ No plugin registry: providers hardcoded, not swappable at runtime (Registry pattern implemented but dynamic loading not yet).
 - ❌ No benchmarking harness: multiple implementations exist but not measured.
-- ❌ No database migrations: schema changes break existing DBs.
 - ❌ No CI/CD: manual builds; no cross-platform testing.
-- ❌ OCR and perceptual hashing not implemented.
+- ❌ OCR and perceptual hashing not implemented (stubs only).
 - ❌ Large vendor sprawl: many unused libraries (radare2, OpenCV, FFmpeg, etc.).
 
 ---
@@ -35,29 +34,30 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 
 ### Tasks
 
-1. **Create CMake build system** ✅ (started)
+1. **Create CMake build system** ✅ (completed)
    - [x] Top-level `CMakeLists.txt` with `core/` and `cli/` subdirectories.
    - [x] Vendor TinyEXIF, hash-library, xxHash directly in core build.
-   - [ ] Add vcpkg manifest (`vcpkg.json`) for optional dependencies (Exiv2, BLAKE3, Tesseract).
+   - [x] Add vcpkg manifest (`vcpkg.json`) for optional dependencies (Exiv2, BLAKE3, Tesseract).
    - [ ] Test cross-platform builds (Windows MSVC, Linux GCC/Clang, macOS Clang).
 
-2. **Define core types and interfaces** ✅ (started)
+2. **Define core types and interfaces** ✅ (completed)
    - [x] `fo::core::types.hpp`: `FileInfo`, `DateMetadata`, `ImageMetadata`, `Hashes`.
    - [x] `fo::core::interfaces.hpp`: `IFileScanner`, `IHasher`, `IMetadataProvider`, `IDuplicateFinder`.
    - [x] `fo::core::ocr_interface.hpp`: `IOCRProvider`, `OCRResult`, `OCRBoundingBox`.
    - [x] `fo::core::registry.hpp`: Generic registry for static provider registration.
 
-3. **Implement initial providers** ✅ (partial)
-   - [x] Scanners: `StdFsScanner` (std::filesystem).
+3. **Implement initial providers** ✅ (completed)
+   - [x] Scanners: `StdFsScanner` (std::filesystem), `Win32Scanner`, `DirentScanner`.
    - [x] Hashers: `Fast64Hasher` (sampled), `SHA256Hasher` (hash-library), `XXHasher` (xxHash64).
    - [x] Metadata: `TinyExifMetadataProvider` (read-only).
    - [ ] Add stubs for: `Exiv2MetadataProvider`, `Blake3Hasher`, `TesseractOCRProvider` (feature-guarded).
-   - [ ] Implement `IDuplicateFinder` variants: `SizeHashDuplicateFinder`, `SizeHashByteDuplicateFinder`.
+   - [x] Implement `IDuplicateFinder` variants: `SizeHashDuplicateFinder`.
 
-4. **Build CLI executable** ✅ (basic)
+4. **Build CLI executable** ✅ (completed)
    - [x] `cli/fo_cli.cpp`: Parse args (`--scanner`, `--hasher`, `--ext`, roots).
    - [x] Integrate with `fo::core::Engine`.
-   - [ ] Add commands: `scan`, `duplicates`, `hash`, `metadata`, `ocr` (subcommands).
+   - [x] Add commands: `scan`, `duplicates`, `hash`, `metadata`.
+   - [ ] Add commands: `ocr` (subcommands).
    - [ ] Add JSON output mode (`--format=json`) for GUI consumption.
 
 5. **Extract Qt GUI as thin client** (deferred to Phase 3)
@@ -85,11 +85,11 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
    - [x] Track applied versions in `schema_version` table.
    - [x] Test rollback safety (transactions per migration).
 
-3. **Create data-access layer** ✅ (partial)
+3. **Create data-access layer** ✅ (completed)
    - [x] `FileRepository`: CRUD for `files` and `file_dates`.
    - [x] `DuplicateRepository`: Insert groups, query by size/hash.
-   - [ ] `IgnoreRepository`: Manage exclude patterns.
-   - [ ] `ScanSessionRepository`: Track scan history.
+   - [x] `IgnoreRepository`: Manage exclude patterns.
+   - [x] `ScanSessionRepository`: Track scan history.
    - [x] Use prepared statements; avoid SQL injection.
 
 4. **Integrate DB into Engine** ✅ (completed)

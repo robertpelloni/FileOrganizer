@@ -46,6 +46,21 @@ CREATE TABLE IF NOT EXISTS duplicate_members (
     FOREIGN KEY (group_id) REFERENCES duplicate_groups(id) ON DELETE CASCADE,
     FOREIGN KEY (file_id) REFERENCES files(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS ignore_list (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    pattern TEXT NOT NULL UNIQUE,
+    reason TEXT
+);
+
+CREATE TABLE IF NOT EXISTS scan_sessions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    start_time INTEGER NOT NULL,
+    end_time INTEGER,
+    status TEXT,
+    scanned_count INTEGER DEFAULT 0,
+    duration_ms INTEGER DEFAULT 0
+);
 )";
 
 // ------------------
