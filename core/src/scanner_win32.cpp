@@ -86,10 +86,14 @@ public:
                     ULARGE_INTEGER sz; sz.LowPart = ffd.nFileSizeLow; sz.HighPart = ffd.nFileSizeHigh;
                     fi.size = static_cast<std::uintmax_t>(sz.QuadPart);
 
-                    // For correctness, fetch last_write_time via std::filesystem (costly but portable)
-                    std::error_code ec;
-                    auto ft = std::filesystem::last_write_time(p, ec);
-                    if (!ec) fi.mtime = ft;
+                    // Optimization: Convert FILETIME directly to file_time_type
+                    // This avoids opening the file handle again via std::filesystem
+                    ULARGE_INTEGER date_val;
+                    date_val.LowPart = ffd.ftLastWriteTime.dwLowDateTime;
+                    date_val.HighPart = ffd.ftLastWriteTime.dwHighDateTime;
+                    
+                    // MSVC std::chrono::file_clock uses 100ns ticks since 1601-01-01, matching FILETIME.
+                    fi.mtime = std::chrono::file_clock::time_point(std::chrono::file_clock::duration(date_val.QuadPart));
 
                     out.push_back(std::move(fi));
                 }

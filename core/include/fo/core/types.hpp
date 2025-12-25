@@ -8,9 +8,11 @@
 namespace fo::core {
 
 struct FileInfo {
+    int64_t id = 0; // Database ID, 0 if not persisted
     std::filesystem::path path;
     std::uintmax_t size = 0;
     std::chrono::file_clock::time_point mtime{};
+    bool is_dir = false;
 };
 
 struct DateMetadata {

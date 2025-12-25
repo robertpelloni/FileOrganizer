@@ -20,6 +20,7 @@ static void print_usage() {
               << "\nOptions:\n"
               << "  --scanner=<name>    Select scanner (e.g., std, win32, dirent)\n"
               << "  --hasher=<name>     Select hasher (e.g., fast64, blake3)\n"
+              << "  --db=<path>         Database path (default: fo.db)\n"
               << "  --ext=<.jpg,.png>   Comma-separated list of extensions\n"
               << "  --follow-symlinks   Follow symbolic links\n"
               << "  --format=<json>     Output format\n"
@@ -77,6 +78,7 @@ int main(int argc, char** argv) {
         // }
         else if (a.rfind("--scanner=", 0) == 0) cfg.scanner = a.substr(10);
         else if (a.rfind("--hasher=", 0) == 0) cfg.hasher = a.substr(9);
+        else if (a.rfind("--db=", 0) == 0) cfg.db_path = a.substr(5);
         else if (a.rfind("--ext=", 0) == 0) {
             auto list = a.substr(6);
             size_t pos = 0;

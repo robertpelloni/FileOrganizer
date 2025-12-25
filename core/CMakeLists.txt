@@ -15,6 +15,9 @@ set(HASHLIBRARY_SOURCES
 # xxHash is header-only if XXH_INLINE_ALL is defined; no separate .c needed
 set(XXHASH_INCLUDE ${LIBS_DIR}/xxHash)
 
+# SQLite3
+set(SQLITE3_SOURCES ${LIBS_DIR}/sqlite3/sqlite3.c)
+
 file(GLOB_RECURSE FO_CORE_HEADERS ${FO_CORE_INCLUDE_DIR}/*.hpp)
 file(GLOB FO_CORE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 list(APPEND FO_CORE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/duplicate_finders.cpp)
@@ -45,6 +48,7 @@ add_library(fo_core STATIC
     ${TINYEXIF_SOURCES}
     ${TINYXML2_SOURCES}
     ${HASHLIBRARY_SOURCES}
+    ${SQLITE3_SOURCES}
 )
 
 target_include_directories(fo_core
@@ -54,6 +58,7 @@ target_include_directories(fo_core
     PRIVATE ${LIBS_DIR}/hash-library
     PRIVATE ${XXHASH_INCLUDE}
     PRIVATE ${LIBS_DIR}/dirent
+    PRIVATE ${LIBS_DIR}/sqlite3
 )
 
 # if(exiv2_FOUND)

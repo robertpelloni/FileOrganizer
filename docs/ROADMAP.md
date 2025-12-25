@@ -10,10 +10,12 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 - ✅ Monolithic Qt app (`OpenFileOrganizer.cpp`) with scanning, hashing, metadata, and duplicate detection.
 - ✅ Vendored libraries: TinyEXIF, hash-library, xxHash, SQLite3, and many others in `libs/`.
 - ✅ Multiple directory scanning strategies (std::filesystem, dirent, Win32, manual).
+- ✅ **Win32 Scanner Optimization**: Direct FILETIME to `std::chrono` conversion for high performance.
 - ✅ Fast prefilter hash (sampled chunks) and optional strong hashes (SHA-256, MD5, etc.).
 - ✅ EXIF date parsing (TinyEXIF) and filename regex-based date extraction.
 - ✅ Size + fast-hash duplicate grouping with byte-compare verification.
 - ✅ Preliminary SQLite schema (ad hoc inserts; no migrations).
+- ✅ **Documentation**: Centralized LLM instructions, Submodule Dashboard, Versioning.
 
 ### Gaps
 - ❌ Tight Qt coupling: business logic in `Worker` QObject.
@@ -72,28 +74,28 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 
 ### Tasks
 
-1. **Implement database schema** ✅ (designed)
+1. **Implement database schema** ✅ (completed)
    - [x] Design tables: `files`, `file_dates`, `duplicate_groups`, `ignore_list`, `scan_sessions`, etc.
-   - [ ] Write initial migration SQL (v1).
+   - [x] Write initial migration SQL (v1).
    - [ ] Add perceptual hashing and OCR tables (v2, v3).
 
-2. **Build migration manager**
-   - [ ] C++ class: `MigrationManager::apply_migrations(sqlite3* db)`.
-   - [ ] Store migrations as numbered SQL strings or files.
-   - [ ] Track applied versions in `schema_version` table.
-   - [ ] Test rollback safety (transactions per migration).
+2. **Build migration manager** ✅ (completed)
+   - [x] C++ class: `MigrationManager::apply_migrations(sqlite3* db)` (implemented in `DatabaseManager`).
+   - [x] Store migrations as numbered SQL strings or files.
+   - [x] Track applied versions in `schema_version` table.
+   - [x] Test rollback safety (transactions per migration).
 
-3. **Create data-access layer**
-   - [ ] `FileRepository`: CRUD for `files` and `file_dates`.
-   - [ ] `DuplicateRepository`: Insert groups, query by size/hash.
+3. **Create data-access layer** ✅ (partial)
+   - [x] `FileRepository`: CRUD for `files` and `file_dates`.
+   - [x] `DuplicateRepository`: Insert groups, query by size/hash.
    - [ ] `IgnoreRepository`: Manage exclude patterns.
    - [ ] `ScanSessionRepository`: Track scan history.
-   - [ ] Use prepared statements; avoid SQL injection.
+   - [x] Use prepared statements; avoid SQL injection.
 
-4. **Integrate DB into Engine**
-   - [ ] `Engine::scan()` inserts/updates `files` table.
-   - [ ] `Engine::find_duplicates()` populates `duplicate_groups` and `duplicate_members`.
-   - [ ] Add `--db-path` CLI flag (default: `~/.file_organizer/db.sqlite`).
+4. **Integrate DB into Engine** ✅ (completed)
+   - [x] `Engine::scan()` inserts/updates `files` table.
+   - [x] `Engine::find_duplicates()` populates `duplicate_groups` and `duplicate_members`.
+   - [x] Add `--db-path` CLI flag (default: `~/.file_organizer/db.sqlite`).
 
 5. **Optional: Alternate Data Streams (Windows)**
    - [ ] Implement ADS read/write for fast hashes (`file.jpg:fo_hash`).

@@ -2,6 +2,8 @@
 
 This document provides guidance for AI agents contributing to the FileOrganizer project.
 
+> **IMPORTANT**: Please refer to [docs/LLM_INSTRUCTIONS.md](docs/LLM_INSTRUCTIONS.md) for the universal instructions, versioning protocol, and coding standards.
+
 ## 1. Guiding Principles
 
 - **Follow the Roadmap:** The `docs/ROADMAP.md` provides the overall direction for the project.
@@ -126,3 +128,57 @@ Action for future runs:
 - Decision: Prefer `win32` as default on Windows; `std` remains default for cross-platform builds.
 - Status: Proposed (awaiting benchmark confirmation)
 - Consequences: Windows builds will include Win32-specific code paths; cross-platform behavior unchanged.
+
+### Update: 2025-12-25
+
+**Author:** GitHub Copilot (Gemini 3 Pro)
+
+**Scope:** Documentation overhaul, Versioning standardization, Win32 Scanner optimization.
+
+**Current Status:**
+- **Documentation**:
+    - Created docs/SUBMODULES.md (Dashboard).
+    - Created docs/LLM_INSTRUCTIONS.md (Universal Instructions).
+    - Created VERSION.md (0.2.0) and CHANGELOG.md.
+    - Updated AGENTS.md and created model-specific instruction files.
+- **Code**:
+    - Optimized core/src/scanner_win32.cpp to use direct FILETIME conversion, avoiding redundant std::filesystem calls.
+- **Project State**:
+    - Submodules are listed but vcpkg mapping is missing in .gitmodules.
+    - Roadmap updated to reflect recent progress.
+
+**Next Steps:**
+1.  **Database Implementation**: Begin Phase 2 tasks (Schema, Migrations, Repositories).
+2.  **CLI Expansion**: Add subcommands for scan, duplicates, etc.
+3.  **CI/CD**: Set up GitHub Actions for automated builds and tests.
+4.  **Fix vcpkg**: Resolve the missing submodule mapping for vcpkg.
+
+**Handoff Note:**
+The project is now better documented and versioned. The Win32 scanner is optimized. The next major focus should be the Database layer to enable persistent scanning and state management.
+
+
+### Update: 2025-12-25 (Session 2)
+
+**Author:** GitHub Copilot (Gemini 3 Pro)
+
+**Scope:** Database Implementation (Phase 2).
+
+**Current Status:**
+- **Database**: Implemented SQLite integration.
+    - \core/include/fo/core/database.hpp\: \DatabaseManager\ with migration support.
+    - \core/include/fo/core/file_repository.hpp\: \FileRepository\ for file persistence.
+    - \core/include/fo/core/duplicate_repository.hpp\: \DuplicateRepository\ for duplicate groups.
+    - Schema V1 defined in \core/src/database.cpp\.
+- **Engine**: Updated \Engine\ to persist scan results and duplicates to DB.
+- **CLI**: Added \--db\ argument.
+- **Versioning**: Bumped to 0.3.0.
+
+**Next Steps:**
+1.  **Build Environment**: Install a C++ compiler (MSVC, Clang, or GCC) to verify the build.
+2.  **Complete Phase 2**: Implement \IgnoreRepository\ and \ScanSessionRepository\.
+3.  **CLI Expansion**: Implement remaining subcommands (\hash\, \metadata\, \ocr\).
+4.  **CI/CD**: Set up GitHub Actions.
+
+**Handoff Note:**
+The core database infrastructure is in place. The Engine now persists data. The immediate priority is to verify the build and then complete the remaining repositories.
+
