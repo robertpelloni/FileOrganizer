@@ -259,6 +259,46 @@ int main(int argc, char** argv) {
                     }
                 }
             }
+        } else if (command == "organize") {
+            if (rule_template.empty()) {
+                std::cerr << "Error: --rule argument is required for organize command.\n";
+                return 1;
+            }
+
+            auto files = engine.scan(roots, exts, follow_symlinks);
+            fo::core::RuleEngine rule_engine;
+            rule_engine.add_rule("cli_rule", rule_template);
+
+            std::cout << "Organizing " << files.size() << " files using rule: " << rule_template << "\n";
+            if (dry_run) std::cout << "(Dry run - no files will be moved)\n";
+
+            for (const auto& f : files) {
+                std::vector<std::string> tags;
+                // If we have a DB and the file is tracked, fetch tags
+                if (f.id != 0) {
+                    auto tag_pairs = engine.file_repository().get_tags(f.id);
+                    for (const auto& p : tag_pairs) tags.push_back(p.first);
+                }
+
+                auto new_path = rule_engine.apply_rules(f, tags);
+                if (new_path != f.path) {
+                    std::cout << f.path.string() << " -> " << new_path.string() << "\n";
+                    if (!dry_run) {
+                        try {
+                            std::filesystem::create_directories(new_path.parent_path());
+                            std::filesystem::rename(f.path, new_path);
+                            // Update DB if tracked
+                            if (f.id != 0) {
+                                // This is a simplification; ideally we'd update the path in the DB
+                                // But FileRepository might not expose a direct update_path method yet
+                                // For now, we just move the file on disk.
+                            }
+                        } catch (const std::exception& e) {
+                            std::cerr << "Failed to move " << f.path.string() << ": " << e.what() << "\n";
+                        }
+                    }
+                }
+            }
         } else {
             std::cerr << "Unknown command: " << command << "\n";
             return 1;

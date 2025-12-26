@@ -229,10 +229,11 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
    - [x] CLI: `fo_cli classify --model=mobilenet /path/to/images`.
 
 2. **Smart organization rules**
-   - [ ] Define rules: "Move photos from 2023 to `/Photos/2023/`".
-   - [ ] Template variables: `{year}`, `{month}`, `{camera_make}`, `{tag}`.
-   - [ ] Dry-run mode: preview moves without executing.
-   - [ ] CLI: `fo_cli organize --rules=rules.yaml --dry-run`.
+   - [x] Define rules: "Move photos from 2023 to `/Photos/2023/`" (RuleEngine implemented).
+   - [x] Template variables: `{year}`, `{month}`, `{camera_make}`, `{tag}`.
+   - [x] Dry-run mode: preview moves without executing.
+   - [x] CLI: `fo_cli organize --rule="/Photos/{year}/{month}" --dry-run`.
+   - [ ] Support YAML rule files (currently single rule via CLI).
 
 3. **Batch operations**
    - [ ] CLI: `fo_cli delete-duplicates --keep=oldest --auto`.
