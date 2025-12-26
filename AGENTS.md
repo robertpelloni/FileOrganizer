@@ -328,6 +328,32 @@ The AI classification feature is implemented but requires a model file to functi
 **Handoff Note:**
 The AI Classification feature is now feature-complete including persistence. The system is ready for a full build and test cycle.
 
+### Update: 2025-12-25 (Session 9)
+
+**Author:** GitHub Copilot (Gemini 3 Pro)
+
+**Scope:** Smart Organization Rules (Phase 6).
+
+**Current Status:**
+- **Smart Organization**:
+    - Implemented `RuleEngine` in `core/include/fo/core/rule_engine.hpp` and `core/src/rule_engine.cpp`.
+    - Supports template variables: `{year}`, `{month}`, `{day}`, `{ext}`, `{name}`, `{tag}`.
+    - Added `organize` command to `fo_cli` with `--rule` and `--dry-run` options.
+- **Documentation**:
+    - Created `docs/SUBMODULES.md` (Submodule Dashboard).
+    - Updated `docs/LLM_INSTRUCTIONS.md` and model-specific docs.
+    - Updated `docs/ROADMAP.md` to reflect progress on Smart Organization.
+- **Submodules**:
+    - Attempted to update submodules but encountered git remote issues. Generated dashboard instead.
+
+**Next Steps:**
+1.  **Build & Verify**: Compile the new `RuleEngine` and `organize` command.
+2.  **Rule Expansion**: Add support for more complex rules (e.g., regex matching, conditional logic).
+3.  **YAML Config**: Allow loading rules from a YAML file instead of just CLI arguments.
+
+**Handoff Note:**
+The Smart Organization feature is implemented and integrated into the CLI. The `RuleEngine` provides a flexible way to organize files based on metadata. The next step is to verify the build and expand the rule capabilities.
+
 
 
 
