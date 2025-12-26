@@ -4,6 +4,7 @@
 #include "fo/core/ocr_interface.hpp"
 #include "fo/core/perceptual_hash_interface.hpp"
 #include "fo/core/classification_interface.hpp"
+#include "fo/core/rule_engine.hpp"
 #include "fo/core/version.hpp"
 #include <iostream>
 #include <string>
@@ -24,10 +25,13 @@ static void print_usage() {
               << "  ocr          Extract text from images\n"
               << "  similar      Find similar images\n"
               << "  classify     Classify images using AI\n"
+              << "  organize     Organize files based on rules\n"
               << "\nOptions:\n"
               << "  --scanner=<name>    Select scanner (e.g., std, win32, dirent)\n"
               << "  --hasher=<name>     Select hasher (e.g., fast64, blake3)\n"
               << "  --db=<path>         Database path (default: fo.db)\n"
+              << "  --rule=<template>   Organization rule (e.g., '/Photos/{year}/{month}')\n"
+              << "  --dry-run           Simulate organization without moving files\n"
               << "  --ext=<.jpg,.png>   Comma-separated list of extensions\n"
               << "  --follow-symlinks   Follow symbolic links\n"
               << "  --format=<json>     Output format\n"
@@ -73,6 +77,8 @@ int main(int argc, char** argv) {
     bool follow_symlinks = false;
     std::string format;
     std::string lang = "eng";
+    std::string rule_template;
+    bool dry_run = false;
     int threshold = 10;
     fo::core::EngineConfig cfg;
 
@@ -117,6 +123,8 @@ int main(int argc, char** argv) {
         else if (a.rfind("--scanner=", 0) == 0) cfg.scanner = a.substr(10);
         else if (a.rfind("--hasher=", 0) == 0) cfg.hasher = a.substr(9);
         else if (a.rfind("--db=", 0) == 0) cfg.db_path = a.substr(5);
+        else if (a.rfind("--rule=", 0) == 0) rule_template = a.substr(7);
+        else if (a == "--dry-run") dry_run = true;
         else if (a.rfind("--lang=", 0) == 0) lang = a.substr(7);
         else if (a.rfind("--threshold=", 0) == 0) threshold = std::stoi(a.substr(12));
         else if (a.rfind("--ext=", 0) == 0) {
