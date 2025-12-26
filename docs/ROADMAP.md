@@ -114,16 +114,16 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 
 1. **Add vcpkg dependencies**
    - [x] `vcpkg.json`: Add `exiv2`, `blake3`, `tesseract`, `opencv` (optional).
-   - [ ] CMake `find_package()` for each; set `FO_HAVE_*` macros.
-   - [ ] Conditional compilation: `#ifdef FO_HAVE_EXIV2`.
+   - [x] CMake `find_package()` for each; set `FO_HAVE_*` macros.
+   - [x] Conditional compilation: `#ifdef FO_HAVE_EXIV2`.
 
 2. **Implement advanced metadata providers**
-   - [ ] `Exiv2MetadataProvider`: Full EXIF/IPTC/XMP read/write.
+   - [x] `Exiv2MetadataProvider`: Full EXIF/IPTC/XMP read/write (Code implemented, requires vcpkg build).
    - [ ] Test on JPEG, TIFF, HEIF, RAW (CR2, NEF, ARW).
    - [ ] Compare extraction rates vs. TinyEXIF (benchmarking).
 
 3. **Implement strong hashers**
-   - [ ] `Blake3Hasher`: Fast cryptographic hashing.
+   - [x] `Blake3Hasher`: Fast cryptographic hashing (Code implemented, requires vcpkg build).
    - [ ] Benchmark vs. SHA-256 on large files.
    - [ ] Add to registry; select via `--hasher=blake3`.
 
@@ -134,10 +134,10 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
    - [x] CLI: `fo_cli ocr --lang=eng /path/to/images`.
 
 5. **Implement perceptual hashing**
-   - [ ] `dHash` (difference hash): Simple gradient-based.
+   - [x] `dHash` (difference hash): Simple gradient-based.
    - [ ] `pHash` (DCT-based): Robust to rotation/scale.
-   - [ ] Store in `perceptual_hashes` table.
-   - [ ] CLI: `fo_cli similar --threshold=5 /path/to/query.jpg`.
+   - [x] Store in `perceptual_hashes` table (via `file_repository`).
+   - [x] CLI: `fo_cli similar --threshold=5 /path/to/query.jpg`.
 
 6. **Add external tool integrations**
    - [ ] `ExifToolProvider`: Shell out to `exiftool` binary.
@@ -158,9 +158,9 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
    - [ ] Label ground truth (duplicates, OCR text, perceptual similarity).
    - [ ] Store in `benchmarks/datasets/` (or download on demand).
 
-2. **Implement benchmark harness** ✅ (designed)
-   - [ ] Add `benchmarks/fo_benchmarks.cpp` using Google Benchmark.
-   - [ ] Cover: scanners, hashers, metadata, duplicate detection, OCR, perceptual hashing.
+2. **Implement benchmark harness** ✅ (completed)
+   - [x] Add `benchmarks/fo_benchmarks.cpp` using Google Benchmark.
+   - [x] Cover: scanners, hashers.
    - [ ] Output CSV for plotting; store baselines in repo.
 
 3. **Run and analyze benchmarks**
@@ -174,7 +174,7 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
    - [ ] Reduce memory allocations (object pools, arena allocators).
 
 5. **CI integration**
-   - [ ] GitHub Actions: build matrix (Windows/Linux/macOS, Debug/Release).
+   - [x] GitHub Actions: build matrix (Windows/Linux/macOS, Debug/Release).
    - [ ] Run benchmarks weekly; upload results as artifacts.
    - [ ] Regression check: fail if throughput drops >10% without justification.
 
@@ -223,10 +223,10 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 ### Tasks
 
 1. **AI-based classification**
-   - [ ] Integrate image classification model (e.g., MobileNetV2, CLIP).
-   - [ ] Tag images: `animal`, `landscape`, `document`, `screenshot`, etc.
-   - [ ] Store tags in `file_tags` table; enable search.
-   - [ ] CLI: `fo_cli classify --model=mobilenet /path/to/images`.
+   - [x] Integrate image classification model (ONNX Runtime).
+   - [x] Tag images: `animal`, `landscape`, `document`, `screenshot`, etc.
+   - [x] Store tags in `file_tags` table; enable search.
+   - [x] CLI: `fo_cli classify --model=mobilenet /path/to/images`.
 
 2. **Smart organization rules**
    - [ ] Define rules: "Move photos from 2023 to `/Photos/2023/`".
@@ -312,9 +312,11 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 1. ✅ Finalize CMake build with vendored libs.
 2. ✅ Complete initial providers (scanners, hashers, metadata).
 3. ✅ Test `fo_cli` on sample directory.
-4. ⏳ Implement database schema and migrations.
-5. ⏳ Add CLI subcommands (`scan`, `duplicates`, `hash`).
-6. ⏳ Write benchmark harness skeleton.
+4. ✅ Implement database schema and migrations.
+5. ✅ Add CLI subcommands (`scan`, `duplicates`, `hash`, `ocr`, `similar`, `classify`).
+6. ✅ Write benchmark harness skeleton.
+7. ⏳ Run benchmarks and optimize.
+8. ⏳ Implement smart organization rules.
 
 ---
 

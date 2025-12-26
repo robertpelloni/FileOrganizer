@@ -25,6 +25,22 @@ public:
     // Returns vector of pair<algo, value>
     std::vector<std::pair<std::string, std::string>> get_hashes(int64_t file_id);
 
+    // Get file by ID.
+    std::optional<FileInfo> get_by_id(int64_t id);
+
+    // Find files with similar perceptual hash.
+    // Assumes 'dhash' algorithm stored as decimal or hex string.
+    // Returns list of file IDs.
+    std::vector<int64_t> find_similar_images(uint64_t target_hash, int threshold);
+
+    // Add a tag to a file.
+    // source: 'user', 'ai', 'exif'
+    void add_tag(int64_t file_id, const std::string& tag, double confidence = 1.0, const std::string& source = "user");
+
+    // Get all tags for a file.
+    // Returns vector of pair<tag, confidence>
+    std::vector<std::pair<std::string, double>> get_tags(int64_t file_id);
+
 private:
     DatabaseManager& db_;
 };

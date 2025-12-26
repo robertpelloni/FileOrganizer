@@ -63,6 +63,23 @@ CREATE TABLE IF NOT EXISTS scan_sessions (
 );
 )";
 
+static const char* MIGRATION_2 = R"(
+CREATE TABLE IF NOT EXISTS tags (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS file_tags (
+    file_id INTEGER NOT NULL,
+    tag_id INTEGER NOT NULL,
+    confidence REAL DEFAULT 1.0,
+    source TEXT,
+    PRIMARY KEY (file_id, tag_id),
+    FOREIGN KEY (file_id) REFERENCES files(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+);
+)";
+
 // ------------------
 
 DatabaseManager::DatabaseManager() : db_(nullptr) {}
@@ -168,8 +185,9 @@ void DatabaseManager::migrate() {
     if (current_ver < 1) {
         apply_migration(1, MIGRATION_1);
     }
-    // Future migrations:
-    // if (current_ver < 2) apply_migration(2, MIGRATION_2);
+    if (current_ver < 2) {
+        apply_migration(2, MIGRATION_2);
+    }
 }
 
 } // namespace fo::core

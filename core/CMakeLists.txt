@@ -36,25 +36,35 @@ file(GLOB_RECURSE FO_CORE_HEADERS ${FO_CORE_INCLUDE_DIR}/*.hpp)
 file(GLOB FO_CORE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 list(APPEND FO_CORE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/duplicate_finders.cpp)
 
-# # Find optional provider dependencies
-# find_package(exiv2 CONFIG)
-# find_package(BLAKE3 CONFIG)
-# find_package(Tesseract CONFIG)
+# Find optional provider dependencies
+find_package(exiv2 CONFIG QUIET)
+find_package(blake3 CONFIG QUIET)
+find_package(Tesseract CONFIG QUIET)
+find_package(OpenCV CONFIG QUIET)
+find_package(onnxruntime CONFIG QUIET)
 
-# if(exiv2_FOUND)
-#     message(STATUS "Found exiv2, enabling exiv2 metadata provider")
-#     list(APPEND FO_CORE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/providers/exiv2/exiv2_metadata_provider.cpp)
-# endif()
+if(exiv2_FOUND)
+    message(STATUS "Found exiv2, enabling exiv2 metadata provider")
+    # Source file is already in FO_CORE_SOURCES via GLOB
+endif()
 
-# if(BLAKE3_FOUND)
-#     message(STATUS "Found BLAKE3, enabling blake3 hasher")
-#     list(APPEND FO_CORE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/providers/blake3/blake3_hasher.cpp)
-# endif()
+if(blake3_FOUND)
+    message(STATUS "Found BLAKE3, enabling blake3 hasher")
+    # Source file is already in FO_CORE_SOURCES via GLOB
+endif()
 
-# if(Tesseract_FOUND)
-#     message(STATUS "Found Tesseract, enabling tesseract OCR provider")
-#     list(APPEND FO_CORE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/providers/tesseract/tesseract_ocr_provider.cpp)
-# endif()
+if(Tesseract_FOUND)
+    message(STATUS "Found Tesseract, enabling tesseract OCR provider")
+    # Source file is already in FO_CORE_SOURCES via GLOB
+endif()
+
+if(OpenCV_FOUND)
+    message(STATUS "Found OpenCV, enabling perceptual hash provider")
+endif()
+
+if(onnxruntime_FOUND)
+    message(STATUS "Found onnxruntime, enabling AI classification provider")
+endif()
 
 add_library(fo_core STATIC
     ${FO_CORE_HEADERS}
@@ -76,20 +86,33 @@ target_include_directories(fo_core
     PRIVATE ${LIBS_DIR}/sqlite3
 )
 
-# if(exiv2_FOUND)
-#     target_compile_definitions(fo_core PRIVATE FO_HAVE_EXIV2)
-#     target_link_libraries(fo_core PUBLIC exiv2::exiv2lib)
-# endif()
+if(exiv2_FOUND)
+    target_compile_definitions(fo_core PRIVATE FO_HAVE_EXIV2)
+    target_link_libraries(fo_core PUBLIC exiv2::exiv2lib)
+endif()
 
-# if(BLAKE3_FOUND)
-#     target_compile_definitions(fo_core PRIVATE FO_HAVE_BLAKE3)
-#     target_link_libraries(fo_core PUBLIC BLAKE3::blake3)
-# endif()
+if(blake3_FOUND)
+    target_compile_definitions(fo_core PRIVATE FO_HAVE_BLAKE3)
+    target_link_libraries(fo_core PUBLIC blake3::blake3)
+endif()
 
-# if(Tesseract_FOUND)
-#     target_compile_definitions(fo_core PRIVATE FO_HAVE_TESSERACT)
-#     target_link_libraries(fo_core PUBLIC Tesseract::libtesseract)
-# endif()
+if(Tesseract_FOUND)
+    target_compile_definitions(fo_core PRIVATE FO_HAVE_TESSERACT)
+    target_link_libraries(fo_core PUBLIC Tesseract::libtesseract)
+endif()
+
+if(OpenCV_FOUND)
+    target_compile_definitions(fo_core PRIVATE FO_HAVE_OPENCV)
+    target_link_libraries(fo_core PUBLIC ${OpenCV_LIBS})
+    target_include_directories(fo_core PRIVATE ${OpenCV_INCLUDE_DIRS})
+endif()
+
+if(onnxruntime_FOUND)
+    target_compile_definitions(fo_core PRIVATE FO_HAVE_ONNXRUNTIME)
+    target_link_libraries(fo_core PUBLIC onnxruntime::onnxruntime)
+endif()
+
+
 
 target_compile_features(fo_core PUBLIC cxx_std_20)
 

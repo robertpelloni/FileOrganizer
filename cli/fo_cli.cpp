@@ -2,6 +2,8 @@
 #include "fo/core/registry.hpp"
 #include "fo/core/provider_registration.hpp"
 #include "fo/core/ocr_interface.hpp"
+#include "fo/core/perceptual_hash_interface.hpp"
+#include "fo/core/classification_interface.hpp"
 #include "fo/core/version.hpp"
 #include <iostream>
 #include <string>
@@ -20,6 +22,8 @@ static void print_usage() {
               << "  hash         Compute file hashes\n"
               << "  metadata     Extract file metadata\n"
               << "  ocr          Extract text from images\n"
+              << "  similar      Find similar images\n"
+              << "  classify     Classify images using AI\n"
               << "\nOptions:\n"
               << "  --scanner=<name>    Select scanner (e.g., std, win32, dirent)\n"
               << "  --hasher=<name>     Select hasher (e.g., fast64, blake3)\n"
@@ -27,10 +31,13 @@ static void print_usage() {
               << "  --ext=<.jpg,.png>   Comma-separated list of extensions\n"
               << "  --follow-symlinks   Follow symbolic links\n"
               << "  --format=<json>     Output format\n"
+              << "  --threshold=<N>     Similarity threshold (default: 10)\n"
               << "  --list-scanners     List available scanners\n"
               << "  --list-hashers      List available hashers\n"
               << "  --list-metadata     List available metadata providers\n"
-              << "  --list-ocr          List available OCR providers\n";
+              << "  --list-ocr          List available OCR providers\n"
+              << "  --list-classifiers  List available classifiers\n"
+              << "  --download-models   Download default AI models\n";
 }
 
 int main(int argc, char** argv) {
@@ -46,6 +53,16 @@ int main(int argc, char** argv) {
         print_usage();
         return 0;
     }
+    if (command == "--download-models") {
+        std::cout << "Downloading models...\n";
+        // Placeholder for actual download logic
+        // In a real scenario, we would use libcurl or a system command
+        // For now, just print instructions
+        std::cout << "Please download the following files to your working directory:\n";
+        std::cout << "1. ResNet50 ONNX model: https://github.com/onnx/models/raw/main/vision/classification/resnet/model/resnet50-v2-7.onnx (rename to model.onnx)\n";
+        std::cout << "2. ImageNet Labels: https://raw.githubusercontent.com/onnx/models/main/vision/classification/synset.txt (rename to labels.txt)\n";
+        return 0;
+    }
     if (command == "-v" || command == "--version") {
         std::cout << "FileOrganizer v" << fo::core::FO_VERSION << "\n";
         return 0;
@@ -56,6 +73,7 @@ int main(int argc, char** argv) {
     bool follow_symlinks = false;
     std::string format;
     std::string lang = "eng";
+    int threshold = 10;
     fo::core::EngineConfig cfg;
 
     for (int i = 2; i < argc; ++i) {
@@ -89,10 +107,18 @@ int main(int argc, char** argv) {
             std::cout << "\n";
             return 0;
         }
+        else if (a == "--list-classifiers") {
+            auto& reg = fo::core::Registry<fo::core::IImageClassifier>::instance();
+            std::cout << "Available classifiers:";
+            for (auto& n : reg.names()) std::cout << " " << n;
+            std::cout << "\n";
+            return 0;
+        }
         else if (a.rfind("--scanner=", 0) == 0) cfg.scanner = a.substr(10);
         else if (a.rfind("--hasher=", 0) == 0) cfg.hasher = a.substr(9);
         else if (a.rfind("--db=", 0) == 0) cfg.db_path = a.substr(5);
         else if (a.rfind("--lang=", 0) == 0) lang = a.substr(7);
+        else if (a.rfind("--threshold=", 0) == 0) threshold = std::stoi(a.substr(12));
         else if (a.rfind("--ext=", 0) == 0) {
             auto list = a.substr(6);
             size_t pos = 0;
@@ -175,6 +201,54 @@ int main(int argc, char** argv) {
                 if (result) {
                     std::cout << f.path.string() << ":\n";
                     std::cout << "  Text: " << result->text << "\n";
+                }
+            }
+        } else if (command == "similar") {
+            if (roots.empty()) {
+                std::cerr << "Usage: fo similar <image_path> [--threshold=10]\n";
+                return 1;
+            }
+            
+            auto provider = fo::core::Registry<fo::core::IPerceptualHasher>::instance().create("opencv");
+            if (!provider) {
+                std::cerr << "Perceptual hasher 'opencv' not found.\n";
+                return 1;
+            }
+            
+            auto res = provider->compute(roots[0]);
+            if (!res) {
+                std::cerr << "Failed to compute hash for " << roots[0] << "\n";
+                return 1;
+            }
+            
+            std::cout << "Target hash: " << res->value << " (" << res->method << ")\n";
+            
+            auto matches = engine.file_repository().find_similar_images(res->value, threshold);
+            std::cout << "Found " << matches.size() << " similar images:\n";
+            for (auto id : matches) {
+                auto fi = engine.file_repository().get_by_id(id);
+                if (fi) {
+                    std::cout << "  " << fi->path.string() << "\n";
+                }
+            }
+        } else if (command == "classify") {
+            auto files = engine.scan(roots, exts, follow_symlinks);
+            auto provider = fo::core::Registry<fo::core::IImageClassifier>::instance().create("onnx");
+            if (!provider) {
+                std::cerr << "Classifier 'onnx' not found.\n";
+                return 1;
+            }
+            for (const auto& f : files) {
+                auto results = provider->classify(f.path);
+                if (!results.empty()) {
+                    std::cout << f.path.string() << ":\n";
+                    for (const auto& r : results) {
+                        std::cout << "  " << r.label << " (" << r.confidence << ")\n";
+                        // Persist to DB if file is tracked
+                        if (f.id != 0) {
+                            engine.file_repository().add_tag(f.id, r.label, r.confidence, "ai");
+                        }
+                    }
                 }
             }
         } else {

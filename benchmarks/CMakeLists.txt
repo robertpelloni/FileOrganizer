@@ -13,3 +13,11 @@ if(MSVC)
 else()
   target_compile_options(fo_bench_scanner PRIVATE -Wall -Wextra -Wpedantic)
 endif()
+
+find_package(benchmark CONFIG QUIET)
+if(benchmark_FOUND)
+    add_executable(fo_benchmarks fo_benchmarks.cpp)
+    target_link_libraries(fo_benchmarks PRIVATE fo_core benchmark::benchmark benchmark::benchmark_main)
+    target_compile_features(fo_benchmarks PRIVATE cxx_std_20)
+endif()
+

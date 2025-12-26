@@ -6,3 +6,5 @@
 - Utilize your large context window to analyze the entire project structure and dependencies.
 - Ensure `VERSION.md` is respected as the single source of truth.
 - When updating version, update `CHANGELOG.md` and `VERSION.md`.
+- **Autonomy**: Proceed with implementation using available tools. Don't stop for confirmation unless blocked.
+

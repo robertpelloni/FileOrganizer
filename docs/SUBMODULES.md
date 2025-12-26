@@ -9,6 +9,7 @@ This document lists all submodules in the FileOrganizer project, their current v
 - **libs/**: Third-party dependencies and submodules.
 - **docs/**: Project documentation.
 - **benchmarks/**: Performance benchmarking tools.
+- **vcpkg/**: Microsoft C++ Package Manager (submodule).
 
 ## Submodules
 
@@ -151,6 +152,6 @@ This document lists all submodules in the FileOrganizer project, their current v
 | libs/xxHash | v0.7.4-980-g3ba6032 | 3ba6032 |
 | libs/ziptools | heads/main | 24ccea5 |
 | libs/zlib | zlib-1.3.1 | 65dd212 |
+| vcpkg | 2022.02.02-11671-g06479b4ca7 | 06479b4 |
 
 *Generated on 2025-12-25*
-| vcpkg | heads/master | 06479b4 |
