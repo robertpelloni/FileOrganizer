@@ -34,18 +34,18 @@ public:
 
     std::vector<FileInfo> scan(const std::vector<std::filesystem::path>& roots,
                                const std::vector<std::string>& include_exts,
-                               bool follow_symlinks) {
+                               bool follow_symlinks,
+                               bool prune = false) {
         if (!scanner_) throw std::runtime_error("scanner not found: " + cfg_.scanner);
         
         int64_t session_id = session_repo_.start_session();
         std::vector<FileInfo> files;
+        std::vector<int64_t> scanned_ids;
         
         try {
             files = scanner_->scan(roots, include_exts, follow_symlinks);
             
             // Filter ignored files
-            // Note: Ideally scanner should support ignore list to avoid scanning them at all.
-            // For now, we filter post-scan.
             auto ignore_rules = ignore_repo_.get_all();
             if (!ignore_rules.empty()) {
                 std::erase_if(files, [&](const FileInfo& f) {
@@ -56,8 +56,14 @@ public:
             // Persist to DB
             db_manager_.execute("BEGIN TRANSACTION;");
             for (auto& f : files) {
-                file_repo_.upsert(f);
+                auto res = file_repo_.upsert(f);
+                if (f.id != 0) scanned_ids.push_back(f.id);
             }
+            
+            if (prune) {
+                file_repo_.prune_missing(scanned_ids, roots);
+            }
+
             db_manager_.execute("COMMIT;");
             
             session_repo_.end_session(session_id, "completed", static_cast<int>(files.size()));

@@ -6,14 +6,22 @@
 
 namespace fo::core {
 
+struct UpsertResult {
+    bool is_new = false;
+    bool is_modified = false;
+};
+
 class FileRepository {
 public:
     explicit FileRepository(DatabaseManager& db);
 
-    // Insert or update a file. Returns the file ID.
-    // Updates size/mtime if path exists.
+    // Insert or update a file. Returns status.
+    // Updates size/mtime if path exists and changed.
     // Sets file.id to the new/existing ID.
-    void upsert(FileInfo& file);
+    UpsertResult upsert(FileInfo& file);
+
+    // Prune files that are not in the given list of IDs but are within the given roots.
+    void prune_missing(const std::vector<int64_t>& present_ids, const std::vector<std::filesystem::path>& roots);
 
     // Get file by path.
     std::optional<FileInfo> get_by_path(const std::filesystem::path& path);

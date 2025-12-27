@@ -28,30 +28,112 @@ static std::chrono::file_clock::time_point from_unix(int64_t t) {
 
 FileRepository::FileRepository(DatabaseManager& db) : db_(db) {}
 
-void FileRepository::upsert(FileInfo& file) {
-    std::string sql = "INSERT INTO files (path, size, mtime, is_dir) VALUES (?, ?, ?, ?) "
-                      "ON CONFLICT(path) DO UPDATE SET size=excluded.size, mtime=excluded.mtime, is_dir=excluded.is_dir "
-                      "RETURNING id;";
+UpsertResult FileRepository::upsert(FileInfo& file) {
+    UpsertResult result;
+    auto existing = get_by_path(file.path);
     
-    sqlite3_stmt* stmt;
-    int rc = sqlite3_prepare_v2(db_.get_db(), sql.c_str(), -1, &stmt, nullptr);
-    if (rc != SQLITE_OK) {
-        throw std::runtime_error("Failed to prepare upsert: " + std::string(sqlite3_errmsg(db_.get_db())));
-    }
+    if (!existing) {
+        result.is_new = true;
+        std::string sql = "INSERT INTO files (path, size, mtime, is_dir) VALUES (?, ?, ?, ?) RETURNING id;";
+        
+        sqlite3_stmt* stmt;
+        int rc = sqlite3_prepare_v2(db_.get_db(), sql.c_str(), -1, &stmt, nullptr);
+        if (rc != SQLITE_OK) {
+            throw std::runtime_error("Failed to prepare insert: " + std::string(sqlite3_errmsg(db_.get_db())));
+        }
 
-    std::string path_str = file.path.string();
-    sqlite3_bind_text(stmt, 1, path_str.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_int64(stmt, 2, static_cast<sqlite3_int64>(file.size));
-    sqlite3_bind_int64(stmt, 3, static_cast<sqlite3_int64>(to_unix(file.mtime)));
-    sqlite3_bind_int(stmt, 4, file.is_dir ? 1 : 0);
+        std::string path_str = file.path.string();
+        sqlite3_bind_text(stmt, 1, path_str.c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_int64(stmt, 2, static_cast<sqlite3_int64>(file.size));
+        sqlite3_bind_int64(stmt, 3, static_cast<sqlite3_int64>(to_unix(file.mtime)));
+        sqlite3_bind_int(stmt, 4, file.is_dir ? 1 : 0);
 
-    if (sqlite3_step(stmt) == SQLITE_ROW) {
-        file.id = sqlite3_column_int64(stmt, 0);
-    } else {
+        if (sqlite3_step(stmt) == SQLITE_ROW) {
+            file.id = sqlite3_column_int64(stmt, 0);
+        } else {
+            sqlite3_finalize(stmt);
+            throw std::runtime_error("Failed to execute insert: " + std::string(sqlite3_errmsg(db_.get_db())));
+        }
         sqlite3_finalize(stmt);
-        throw std::runtime_error("Failed to execute upsert: " + std::string(sqlite3_errmsg(db_.get_db())));
+    } else {
+        file.id = existing->id;
+        // Check if modified
+        // Note: mtime comparison might be tricky due to precision.
+        // We use second precision in DB (to_unix).
+        int64_t new_mtime = to_unix(file.mtime);
+        int64_t old_mtime = to_unix(existing->mtime);
+        
+        if (file.size != existing->size || new_mtime != old_mtime || file.is_dir != existing->is_dir) {
+            result.is_modified = true;
+            std::string sql = "UPDATE files SET size=?, mtime=?, is_dir=? WHERE id=?;";
+            
+            sqlite3_stmt* stmt;
+            int rc = sqlite3_prepare_v2(db_.get_db(), sql.c_str(), -1, &stmt, nullptr);
+            if (rc != SQLITE_OK) {
+                throw std::runtime_error("Failed to prepare update: " + std::string(sqlite3_errmsg(db_.get_db())));
+            }
+
+            sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(file.size));
+            sqlite3_bind_int64(stmt, 2, static_cast<sqlite3_int64>(new_mtime));
+            sqlite3_bind_int(stmt, 3, file.is_dir ? 1 : 0);
+            sqlite3_bind_int64(stmt, 4, file.id);
+
+            if (sqlite3_step(stmt) != SQLITE_DONE) {
+                sqlite3_finalize(stmt);
+                throw std::runtime_error("Failed to execute update: " + std::string(sqlite3_errmsg(db_.get_db())));
+            }
+            sqlite3_finalize(stmt);
+        }
     }
-    sqlite3_finalize(stmt);
+    return result;
+}
+
+void FileRepository::prune_missing(const std::vector<int64_t>& present_ids, const std::vector<std::filesystem::path>& roots) {
+    if (roots.empty()) return;
+
+    // 1. Create temp table
+    db_.execute("CREATE TEMPORARY TABLE IF NOT EXISTS present_files (id INTEGER PRIMARY KEY);");
+    db_.execute("DELETE FROM present_files;");
+
+    // 2. Insert IDs
+    // db_.execute("BEGIN TRANSACTION;"); // Caller handles transaction
+    sqlite3_stmt* stmt;
+    if (sqlite3_prepare_v2(db_.get_db(), "INSERT INTO present_files (id) VALUES (?);", -1, &stmt, nullptr) == SQLITE_OK) {
+        for (auto id : present_ids) {
+            sqlite3_bind_int64(stmt, 1, id);
+            sqlite3_step(stmt);
+            sqlite3_reset(stmt);
+        }
+        sqlite3_finalize(stmt);
+    }
+    // db_.execute("COMMIT;");
+
+    // 3. Delete missing files under roots
+    // db_.execute("BEGIN TRANSACTION;");
+    sqlite3_stmt* del_stmt;
+    std::string sql = "DELETE FROM files WHERE id NOT IN (SELECT id FROM present_files) AND (";
+    for (size_t i = 0; i < roots.size(); ++i) {
+        if (i > 0) sql += " OR ";
+        sql += "path LIKE ? || '%'";
+    }
+    sql += ");";
+
+    if (sqlite3_prepare_v2(db_.get_db(), sql.c_str(), -1, &del_stmt, nullptr) == SQLITE_OK) {
+        for (size_t i = 0; i < roots.size(); ++i) {
+            std::string root_str = roots[i].string();
+            // Ensure root ends with separator to avoid partial matches (e.g. /foo matching /foobar)
+            // But we need to be careful with root itself.
+            // If root is "C:/foo", we want "C:/foo/bar" but also "C:/foo" itself?
+            // Usually roots are directories.
+            // Let's just use the path string.
+            sqlite3_bind_text(del_stmt, static_cast<int>(i + 1), root_str.c_str(), -1, SQLITE_TRANSIENT);
+        }
+        sqlite3_step(del_stmt);
+        sqlite3_finalize(del_stmt);
+    }
+    // db_.execute("COMMIT;");
+    
+    db_.execute("DROP TABLE present_files;");
 }
 
 std::optional<FileInfo> FileRepository::get_by_path(const std::filesystem::path& path) {

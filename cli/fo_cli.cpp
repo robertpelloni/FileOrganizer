@@ -87,6 +87,7 @@ int main(int argc, char** argv) {
     std::string rename_pattern;
     std::string keep_strategy = "oldest";
     bool dry_run = false;
+    bool prune = false;
     int threshold = 10;
     fo::core::EngineConfig cfg;
 
@@ -136,6 +137,7 @@ int main(int argc, char** argv) {
         else if (a.rfind("--pattern=", 0) == 0) rename_pattern = a.substr(10);
         else if (a.rfind("--keep=", 0) == 0) keep_strategy = a.substr(7);
         else if (a == "--dry-run") dry_run = true;
+        else if (a == "--prune" || a == "--incremental") prune = true;
         else if (a.rfind("--lang=", 0) == 0) lang = a.substr(7);
         else if (a.rfind("--threshold=", 0) == 0) threshold = std::stoi(a.substr(12));
         else if (a.rfind("--ext=", 0) == 0) {
@@ -163,12 +165,12 @@ int main(int argc, char** argv) {
         fo::core::Engine engine(cfg);
 
         if (command == "scan") {
-            auto files = engine.scan(roots, exts, follow_symlinks);
+            auto files = engine.scan(roots, exts, follow_symlinks, prune);
             for (const auto& f : files) {
                 std::cout << f.path.string() << "\n";
             }
         } else if (command == "duplicates") {
-            auto files = engine.scan(roots, exts, follow_symlinks);
+            auto files = engine.scan(roots, exts, follow_symlinks, prune);
             auto groups = engine.find_duplicates(files);
             for (const auto& g : groups) {
                 std::cout << "== size=" << g.size << ", fast64=" << g.fast64 << "\n";
@@ -177,7 +179,7 @@ int main(int argc, char** argv) {
                 }
             }
         } else if (command == "hash") {
-            auto files = engine.scan(roots, exts, follow_symlinks);
+            auto files = engine.scan(roots, exts, follow_symlinks, prune);
             auto& hasher = engine.hasher();
             for (const auto& f : files) {
                 std::string h = hasher.fast64(f.path);
@@ -188,7 +190,7 @@ int main(int argc, char** argv) {
                 }
             }
         } else if (command == "metadata") {
-            auto files = engine.scan(roots, exts, follow_symlinks);
+            auto files = engine.scan(roots, exts, follow_symlinks, prune);
             // Use default metadata provider for now, or add CLI option
             auto provider = fo::core::Registry<fo::core::IMetadataProvider>::instance().create("tinyexif");
             if (!provider) {
@@ -209,7 +211,7 @@ int main(int argc, char** argv) {
                 }
             }
         } else if (command == "ocr") {
-            auto files = engine.scan(roots, exts, follow_symlinks);
+            auto files = engine.scan(roots, exts, follow_symlinks, prune);
             auto provider = fo::core::Registry<fo::core::IOCRProvider>::instance().create("tesseract");
             if (!provider) {
                 std::cerr << "OCR provider 'tesseract' not found.\n";
@@ -251,7 +253,7 @@ int main(int argc, char** argv) {
                 }
             }
         } else if (command == "classify") {
-            auto files = engine.scan(roots, exts, follow_symlinks);
+            auto files = engine.scan(roots, exts, follow_symlinks, prune);
             auto provider = fo::core::Registry<fo::core::IImageClassifier>::instance().create("onnx");
             if (!provider) {
                 std::cerr << "Classifier 'onnx' not found.\n";
@@ -276,7 +278,7 @@ int main(int argc, char** argv) {
                 return 1;
             }
 
-            auto files = engine.scan(roots, exts, follow_symlinks);
+            auto files = engine.scan(roots, exts, follow_symlinks, prune);
             fo::core::RuleEngine rule_engine;
             
             if (!rule_template.empty()) {
@@ -378,7 +380,7 @@ int main(int argc, char** argv) {
                 rename_pattern = "{parent}/" + rename_pattern;
             }
 
-            auto files = engine.scan(roots, exts, follow_symlinks);
+            auto files = engine.scan(roots, exts, follow_symlinks, prune);
             fo::core::RuleEngine rule_engine;
             rule_engine.add_rule({"rename_rule", "", rename_pattern});
 
