@@ -61,9 +61,16 @@ std::optional<std::filesystem::path> RuleEngine::apply_rules(const FileInfo& fil
         }
 
         if (match) {
-            std::string new_dir_str = expand_template(rule.destination_template, file, tags);
-            std::filesystem::path new_dir(new_dir_str);
-            return new_dir / file.path.filename();
+            std::string expanded = expand_template(rule.destination_template, file, tags);
+            std::filesystem::path new_path(expanded);
+            
+            // If template ends with separator, append filename
+            char last = rule.destination_template.back();
+            if (last == '/' || last == '\\') {
+                new_path /= file.path.filename();
+            }
+            
+            return new_path;
         }
     }
     return std::nullopt;
@@ -112,6 +119,7 @@ std::string RuleEngine::expand_template(const std::string& tmpl, const FileInfo&
         replace_all(result, "{ext}", file.path.extension().string().substr(1));
     }
     replace_all(result, "{name}", file.path.stem().string());
+    replace_all(result, "{parent}", file.path.parent_path().string());
 
     return result;
 }

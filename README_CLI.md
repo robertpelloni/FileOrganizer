@@ -26,18 +26,55 @@ cmake --build build --config Release
 ## Usage
 
 ```
-fo_cli [--scanner=std|win32|dirent] [--hasher=fast64] [--ext=.jpg,.png] [--follow-symlinks] [--list-scanners] DIR...
+fo_cli <command> [options] [paths...]
 ```
 
-- `--scanner=std`: C++20 std::filesystem recursive scanner (portable default)
-- `--scanner=win32` (Windows only): Native Win32 API (fastest, richest metadata)
-- `--scanner=dirent`: POSIX-style opendir/readdir + stat (competitive speed, basic metadata)
-- `--hasher=fast64`: non-cryptographic sampled 64-bit prefilter hash
-- `--ext=...`: comma-separated list of file extensions (with or without dots)
-- `--follow-symlinks`: follow directory symlinks
-- `--list-scanners`: print available scanner providers and exit
+### Commands
 
-Outputs timing and lists duplicate groups found by size + fast64.
+- `scan`: Scan directories and list files.
+- `duplicates`: Find and list duplicate files (size + hash).
+- `hash`: Compute and print file hashes.
+- `metadata`: Extract and print metadata (EXIF, GPS).
+- `ocr`: Extract text from images (requires Tesseract).
+- `similar`: Find visually similar images (requires OpenCV).
+- `classify`: Classify images using AI (requires ONNX Runtime).
+- `organize`: Move files based on rules (e.g., date, tags).
+- `rename`: Rename files based on patterns.
+- `delete-duplicates`: Delete duplicate files based on strategy.
+
+### Options
+
+- `--scanner=<name>`: Select scanner (std, win32, dirent).
+- `--hasher=<name>`: Select hasher (fast64, blake3).
+- `--db=<path>`: Path to SQLite database (default: `fo.db`).
+- `--ext=<.jpg,.png>`: Filter by extensions.
+- `--follow-symlinks`: Follow directory symlinks.
+- `--rule=<template>`: Organization rule (e.g., `/Photos/{year}/{month}`).
+- `--rules=<file.yaml>`: Load organization rules from YAML file.
+- `--pattern=<tmpl>`: Rename pattern (e.g., `{year}_{name}.{ext}`).
+- `--keep=<strategy>`: Keep strategy for duplicates (`oldest`, `newest`, `shortest`, `longest`).
+- `--dry-run`: Simulate operations without modifying files.
+- `--list-scanners`: List available scanners.
+- `--list-hashers`: List available hashers.
+- `--list-metadata`: List available metadata providers.
+- `--list-ocr`: List available OCR providers.
+- `--list-classifiers`: List available classifiers.
+
+### Examples
+
+```bash
+# Scan and find duplicates
+fo_cli duplicates --db=my.db /path/to/photos
+
+# Organize photos by date
+fo_cli organize --rule="/Sorted/{year}/{month}" --dry-run /path/to/photos
+
+# Rename files to include date
+fo_cli rename --pattern="{year}-{month}-{day}_{name}.{ext}" /path/to/photos
+
+# Delete duplicates, keeping the oldest file
+fo_cli delete-duplicates --keep=oldest --dry-run
+```
 
 ## Notes
 

@@ -1,0 +1,12 @@
+rules:
+  - name: "Photos by Year/Month"
+    filter_tag: "" # Apply to all files, or specify a tag like "image"
+    destination: "/Sorted/Photos/{year}/{month}/"
+
+  - name: "Documents"
+    filter_tag: "document"
+    destination: "/Sorted/Documents/"
+
+  - name: "Screenshots"
+    filter_tag: "screenshot"
+    destination: "/Sorted/Screenshots/{year}/"

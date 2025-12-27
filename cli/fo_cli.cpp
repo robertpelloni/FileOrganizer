@@ -26,12 +26,16 @@ static void print_usage() {
               << "  similar      Find similar images\n"
               << "  classify     Classify images using AI\n"
               << "  organize     Organize files based on rules\n"
+              << "  delete-duplicates Delete duplicate files\n"
+              << "  rename       Rename files based on pattern\n"
               << "\nOptions:\n"
               << "  --scanner=<name>    Select scanner (e.g., std, win32, dirent)\n"
               << "  --hasher=<name>     Select hasher (e.g., fast64, blake3)\n"
               << "  --db=<path>         Database path (default: fo.db)\n"
               << "  --rule=<template>   Organization rule (e.g., '/Photos/{year}/{month}')\n"
               << "  --rules=<file.yaml> Load organization rules from YAML file\n"
+              << "  --pattern=<tmpl>    Rename pattern (e.g., '{year}_{name}.{ext}')\n"
+              << "  --keep=<strategy>   Keep strategy: oldest, newest, shortest, longest (default: oldest)\n"
               << "  --dry-run           Simulate organization without moving files\n"
               << "  --ext=<.jpg,.png>   Comma-separated list of extensions\n"
               << "  --follow-symlinks   Follow symbolic links\n"
@@ -80,6 +84,8 @@ int main(int argc, char** argv) {
     std::string lang = "eng";
     std::string rule_template;
     std::string rules_file;
+    std::string rename_pattern;
+    std::string keep_strategy = "oldest";
     bool dry_run = false;
     int threshold = 10;
     fo::core::EngineConfig cfg;
@@ -127,6 +133,8 @@ int main(int argc, char** argv) {
         else if (a.rfind("--db=", 0) == 0) cfg.db_path = a.substr(5);
         else if (a.rfind("--rule=", 0) == 0) rule_template = a.substr(7);
         else if (a.rfind("--rules=", 0) == 0) rules_file = a.substr(8);
+        else if (a.rfind("--pattern=", 0) == 0) rename_pattern = a.substr(10);
+        else if (a.rfind("--keep=", 0) == 0) keep_strategy = a.substr(7);
         else if (a == "--dry-run") dry_run = true;
         else if (a.rfind("--lang=", 0) == 0) lang = a.substr(7);
         else if (a.rfind("--threshold=", 0) == 0) threshold = std::stoi(a.substr(12));
@@ -312,6 +320,102 @@ int main(int argc, char** argv) {
                     }
                 }
             }
+                    }
+                }
+            }
+        } else if (command == "delete-duplicates") {
+            auto groups = engine.duplicate_repository().get_all_groups();
+            std::cout << "Found " << groups.size() << " duplicate groups.\n";
+            if (dry_run) std::cout << "(Dry run - no files will be deleted)\n";
+
+            int deleted_count = 0;
+            int kept_count = 0;
+
+            for (const auto& g : groups) {
+                std::vector<fo::core::FileInfo> members;
+                // Add primary
+                auto p = engine.file_repository().get_by_id(g.primary_file_id);
+                if (p) members.push_back(*p);
+                // Add others
+                for (auto mid : g.member_ids) {
+                    if (mid == g.primary_file_id) continue; // Avoid double counting if primary is in members
+                    auto m = engine.file_repository().get_by_id(mid);
+                    if (m) members.push_back(*m);
+                }
+
+                if (members.size() < 2) continue;
+
+                // Sort based on strategy
+                std::sort(members.begin(), members.end(), [&](const fo::core::FileInfo& a, const fo::core::FileInfo& b) {
+                    if (keep_strategy == "newest") return a.last_write_time > b.last_write_time;
+                    if (keep_strategy == "shortest") return a.path.string().length() < b.path.string().length();
+                    if (keep_strategy == "longest") return a.path.string().length() > b.path.string().length();
+                    // Default: oldest
+                    return a.last_write_time < b.last_write_time;
+                });
+
+                // Keep the first one
+                const auto& keep = members[0];
+                kept_count++;
+                std::cout << "Keeping: " << keep.path.string() << "\n";
+
+                // Delete the rest
+                for (size_t i = 1; i < members.size(); ++i) {
+                    const auto& del = members[i];
+                    std::cout << "  Deleting: " << del.path.string() << "\n";
+                    if (!dry_run) {
+                        try {
+                            std::filesystem::remove(del.path);
+                            deleted_count++;
+                            // Ideally remove from DB too, but next scan will fix it
+                        } catch (const std::exception& e) {
+                            std::cerr << "    Failed to delete: " << e.what() << "\n";
+                        }
+                    }
+                }
+            }
+            std::cout << "Deleted " << deleted_count << " files. Kept " << kept_count << " files.\n";
+
+        } else if (command == "rename") {
+            if (rename_pattern.empty()) {
+                std::cerr << "Error: --pattern argument is required for rename command.\n";
+                return 1;
+            }
+
+            // If pattern doesn't start with {parent} or /, prepend {parent}/
+            if (rename_pattern.find("{parent}") == std::string::npos && 
+                rename_pattern.find("/") == std::string::npos && 
+                rename_pattern.find("\\") == std::string::npos) {
+                rename_pattern = "{parent}/" + rename_pattern;
+            }
+
+            auto files = engine.scan(roots, exts, follow_symlinks);
+            fo::core::RuleEngine rule_engine;
+            rule_engine.add_rule({"rename_rule", "", rename_pattern});
+
+            std::cout << "Renaming " << files.size() << " files using pattern: " << rename_pattern << "\n";
+            if (dry_run) std::cout << "(Dry run - no files will be renamed)\n";
+
+            for (const auto& f : files) {
+                std::vector<std::string> tags;
+                if (f.id != 0) {
+                    auto tag_pairs = engine.file_repository().get_tags(f.id);
+                    for (const auto& p : tag_pairs) tags.push_back(p.first);
+                }
+
+                auto new_path = rule_engine.apply_rules(f, tags);
+                if (new_path && *new_path != f.path) {
+                    std::cout << f.path.string() << " -> " << new_path->string() << "\n";
+                    if (!dry_run) {
+                        try {
+                            std::filesystem::rename(f.path, *new_path);
+                        } catch (const std::exception& e) {
+                            std::cerr << "Failed to rename " << f.path.string() << ": " << e.what() << "\n";
+                        }
+                    }
+                }
+            }
+
         } else {
             std::cerr << "Unknown command: " << command << "\n";
             return 1;

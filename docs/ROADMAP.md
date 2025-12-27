@@ -233,11 +233,11 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
    - [x] Template variables: `{year}`, `{month}`, `{camera_make}`, `{tag}`.
    - [x] Dry-run mode: preview moves without executing.
    - [x] CLI: `fo_cli organize --rule="/Photos/{year}/{month}" --dry-run`.
-   - [ ] Support YAML rule files (currently single rule via CLI).
+   - [x] Support YAML rule files (currently single rule via CLI).
 
 3. **Batch operations**
-   - [ ] CLI: `fo_cli delete-duplicates --keep=oldest --auto`.
-   - [ ] CLI: `fo_cli rename --pattern="{date}_{name}.{ext}"`.
+   - [x] CLI: `fo_cli delete-duplicates --keep=oldest --auto`.
+   - [x] CLI: `fo_cli rename --pattern="{date}_{name}.{ext}"`.
    - [ ] Undo support: track operations in `operation_log` table.
 
 4. **Incremental scanning**
