@@ -54,6 +54,8 @@ fo_cli <command> [options] [paths...]
 - `--pattern=<tmpl>`: Rename pattern (e.g., `{year}_{name}.{ext}`).
 - `--keep=<strategy>`: Keep strategy for duplicates (`oldest`, `newest`, `shortest`, `longest`).
 - `--dry-run`: Simulate operations without modifying files.
+- `--incremental`: Perform an incremental scan (detect new/modified files).
+- `--prune`: Remove deleted files from the database during scan.
 - `--list-scanners`: List available scanners.
 - `--list-hashers`: List available hashers.
 - `--list-metadata`: List available metadata providers.

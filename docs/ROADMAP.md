@@ -240,7 +240,7 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
    - [x] CLI: `fo_cli rename --pattern="{date}_{name}.{ext}"`.
    - [ ] Undo support: track operations in `operation_log` table.
 
-4. **Incremental scanning**
+4. **Incremental scanning** ✅ (completed)
    - [x] Track file mtimes in DB; skip unchanged files.
    - [x] CLI: `fo_cli scan --incremental`.
    - [x] Detect moved files (same hash, new path); prompt to update DB.
