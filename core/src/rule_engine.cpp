@@ -82,9 +82,9 @@ std::string RuleEngine::expand_template(const std::string& tmpl, const FileInfo&
     // Extract date
     // Portable conversion from file_time_type to system_clock is messy in C++20 until C++23
     // We use a rough approximation
-    auto ftime = file.last_write_time;
+    auto ftime = file.mtime;
     auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(
-        ftime - std::filesystem::file_time_type::clock::now() + std::chrono::system_clock::now()
+        ftime - std::chrono::file_clock::now() + std::chrono::system_clock::now()
     );
     std::time_t tt = std::chrono::system_clock::to_time_t(sctp);
     std::tm* gmt = std::gmtime(&tt);

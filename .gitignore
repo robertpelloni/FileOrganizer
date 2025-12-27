@@ -366,3 +366,5 @@ FodyWeavers.xsd
 libs/_unsorted/
 /ignore.db
 build/
+
+core/include/fo/core/version.hpp

@@ -295,31 +295,22 @@ int main(int argc, char** argv) {
 
             for (const auto& f : files) {
                 std::vector<std::string> tags;
-                // If we have a DB and the file is tracked, fetch tags
                 if (f.id != 0) {
                     auto tag_pairs = engine.file_repository().get_tags(f.id);
                     for (const auto& p : tag_pairs) tags.push_back(p.first);
                 }
 
-                auto new_path = rule_engine.apply_rules(f, tags);
-                if (new_path != f.path) {
+                auto new_path_opt = rule_engine.apply_rules(f, tags);
+                if (new_path_opt && *new_path_opt != f.path) {
+                    auto new_path = *new_path_opt;
                     std::cout << f.path.string() << " -> " << new_path.string() << "\n";
                     if (!dry_run) {
                         try {
                             std::filesystem::create_directories(new_path.parent_path());
                             std::filesystem::rename(f.path, new_path);
-                            // Update DB if tracked
-                            if (f.id != 0) {
-                                // This is a simplification; ideally we'd update the path in the DB
-                                // But FileRepository might not expose a direct update_path method yet
-                                // For now, we just move the file on disk.
-                            }
                         } catch (const std::exception& e) {
                             std::cerr << "Failed to move " << f.path.string() << ": " << e.what() << "\n";
                         }
-                    }
-                }
-            }
                     }
                 }
             }
@@ -338,7 +329,7 @@ int main(int argc, char** argv) {
                 if (p) members.push_back(*p);
                 // Add others
                 for (auto mid : g.member_ids) {
-                    if (mid == g.primary_file_id) continue; // Avoid double counting if primary is in members
+                    if (mid == g.primary_file_id) continue;
                     auto m = engine.file_repository().get_by_id(mid);
                     if (m) members.push_back(*m);
                 }
@@ -347,11 +338,11 @@ int main(int argc, char** argv) {
 
                 // Sort based on strategy
                 std::sort(members.begin(), members.end(), [&](const fo::core::FileInfo& a, const fo::core::FileInfo& b) {
-                    if (keep_strategy == "newest") return a.last_write_time > b.last_write_time;
+                    if (keep_strategy == "newest") return a.mtime > b.mtime;
                     if (keep_strategy == "shortest") return a.path.string().length() < b.path.string().length();
                     if (keep_strategy == "longest") return a.path.string().length() > b.path.string().length();
                     // Default: oldest
-                    return a.last_write_time < b.last_write_time;
+                    return a.mtime < b.mtime;
                 });
 
                 // Keep the first one
@@ -367,7 +358,6 @@ int main(int argc, char** argv) {
                         try {
                             std::filesystem::remove(del.path);
                             deleted_count++;
-                            // Ideally remove from DB too, but next scan will fix it
                         } catch (const std::exception& e) {
                             std::cerr << "    Failed to delete: " << e.what() << "\n";
                         }
@@ -382,7 +372,6 @@ int main(int argc, char** argv) {
                 return 1;
             }
 
-            // If pattern doesn't start with {parent} or /, prepend {parent}/
             if (rename_pattern.find("{parent}") == std::string::npos && 
                 rename_pattern.find("/") == std::string::npos && 
                 rename_pattern.find("\\") == std::string::npos) {
@@ -403,12 +392,13 @@ int main(int argc, char** argv) {
                     for (const auto& p : tag_pairs) tags.push_back(p.first);
                 }
 
-                auto new_path = rule_engine.apply_rules(f, tags);
-                if (new_path && *new_path != f.path) {
-                    std::cout << f.path.string() << " -> " << new_path->string() << "\n";
+                auto new_path_opt = rule_engine.apply_rules(f, tags);
+                if (new_path_opt && *new_path_opt != f.path) {
+                    auto new_path = *new_path_opt;
+                    std::cout << f.path.string() << " -> " << new_path.string() << "\n";
                     if (!dry_run) {
                         try {
-                            std::filesystem::rename(f.path, *new_path);
+                            std::filesystem::rename(f.path, new_path);
                         } catch (const std::exception& e) {
                             std::cerr << "Failed to rename " << f.path.string() << ": " << e.what() << "\n";
                         }
