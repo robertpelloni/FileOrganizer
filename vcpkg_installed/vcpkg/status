@@ -1,0 +1,123 @@
+Package: vcpkg-cmake-config
+Version: 2024-05-23
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 2906a4d6d4fbe00f00a6a30d16da93309f8df9792cd54971138fc48947f027f7
+Status: install ok installed
+
+Package: vcpkg-cmake
+Version: 2024-04-23
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 09d99340919b8b743642927b1f2ad78210a3e3aa1a57589fa346f985424e4d46
+Status: install ok installed
+
+Package: benchmark
+Version: 1.9.4
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: f246415dc51ae1e417eb5a4182cc1628df4900eba43bb8ed7e1cd68b57cdad1f
+Description: A library to benchmark code snippets, similar to unit tests.
+Status: purge ok not-installed
+
+Package: blake3
+Version: 1.8.2
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: bfda5336b9d96f06ca29f8a1bc9042799e7d9f3c43d393b79bcf03ff72e64505
+Description: BLAKE3 cryptographic hash function.
+Status: purge ok not-installed
+
+Package: vcpkg-cmake-get-vars
+Version: 2025-05-29
+Depends: vcpkg-cmake
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 27585fa501dc99477c675e7cbc66e0904fa2637f5684c79d431549e02f7f5766
+Status: purge ok not-installed
+
+Package: vcpkg-tool-meson
+Version: 1.9.0
+Port-Version: 3
+Depends: vcpkg-cmake-get-vars
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 7e9b9eb0809557b143d036886de0095558b84500e07f0fd482a7c0160dd68366
+Description: Meson build system
+Status: purge ok not-installed
+
+Package: inih
+Version: 62
+Depends: vcpkg-tool-meson
+Architecture: x64-windows
+Multi-Arch: same
+Abi: bd2a47b0d56580e09ffc1c8a9aa82afcc16b287fbe6b7979728ca67abc56c13b
+Description: Simple .INI file parser
+Default-Features: cpp
+Status: purge ok not-installed
+
+Package: inih
+Feature: cpp
+Architecture: x64-windows
+Multi-Arch: same
+Description: Build the C++ library
+Status: purge ok not-installed
+
+Package: gtest
+Version: 1.17.0
+Port-Version: 2
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 1d6383c89e8c47e62265d004762dc86c1631bbf89a5e2bdb63282435c511ff97
+Description: Google Testing and Mocking Framework
+Status: purge ok not-installed
+
+Package: nlohmann-json
+Version: 3.12.0
+Port-Version: 1
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 0900634aa406c4469cfc2d740a5745156d2c926680bfda8af3f522974ea8ef96
+Description: JSON for Modern C++
+Status: install ok installed
+
+Package: wil
+Version: 1.0.250325.1
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: c17d7e83f0fa91c34c2f9bcf77b67a0cc2ef274221e6dd34cc1c908a07e14f77
+Description: The Windows Implementation Libraries (WIL) is a header-only C++ library created to make life easier for developers on Windows through readable type-safe C++ interfaces for common Windows coding patterns.
+Status: purge ok not-installed
+
+Package: sqlite3
+Version: 3.51.1
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 351e5381ebe89acae433f8ce2b4ae8a7bd12bbcae870fcb0bf2560e409a11ef1
+Description: SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine.
+Default-Features: json1
+Status: install ok installed
+
+Package: sqlite3
+Feature: json1
+Architecture: x64-windows
+Multi-Arch: same
+Description: Enable JSON functionality for sqlite3
+Status: install ok installed
+
+Package: yaml-cpp
+Version: 0.8.0
+Port-Version: 3
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 01d6224243a1b7bab3cfaece4e5cf67217b68c556d9b79ab9213dd1b2b20a961
+Description: yaml-cpp is a YAML parser and emitter in C++ matching the YAML 1.2 spec.
+Status: install ok installed
+

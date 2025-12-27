@@ -23,6 +23,15 @@ public:
     // Prune files that are not in the given list of IDs but are within the given roots.
     void prune_missing(const std::vector<int64_t>& present_ids, const std::vector<std::filesystem::path>& roots);
 
+    // Update the path of a file (move/rename).
+    void update_path(int64_t id, const std::filesystem::path& new_path);
+
+    // Get files that are in the DB under the given roots but NOT in the present_ids list.
+    std::vector<FileInfo> get_missing_files(const std::vector<std::filesystem::path>& roots, const std::vector<int64_t>& present_ids);
+
+    // Delete files by ID.
+    void delete_files(const std::vector<int64_t>& ids);
+
     // Get file by path.
     std::optional<FileInfo> get_by_path(const std::filesystem::path& path);
 

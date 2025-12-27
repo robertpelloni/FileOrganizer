@@ -1,0 +1,10 @@
+find_package(GTest CONFIG REQUIRED)
+
+add_executable(fo_tests
+    test_rule_engine.cpp
+)
+
+target_link_libraries(fo_tests PRIVATE GTest::gtest GTest::gtest_main fo_core)
+
+include(GoogleTest)
+gtest_discover_tests(fo_tests)

@@ -412,3 +412,31 @@ Batch operations are implemented but untested due to missing compiler. The code 
 
 
 
+
+### Update: 2025-12-27 (Session 12)
+
+**Author:** GitHub Copilot (Gemini 3 Pro)
+
+**Scope:** Release v0.5.0, Build Fixes.
+
+**Current Status:**
+- **Build System**: Successfully configured and built using MSVC 19.50 and Ninja.
+    - Fixed environment variable issues by invoking cvars64.bat.
+- **Code Fixes**:
+    - Fixed std::optional usage and syntax errors in cli/fo_cli.cpp.
+    - Fixed FileInfo member access (mtime vs last_write_time) in ule_engine.cpp.
+    - Implemented portable(ish) ile_clock to system_clock conversion.
+- **Release**:
+    - Bumped version to 0.5.0.
+    - Updated CHANGELOG.md.
+    - Verified o_cli.exe --version reports 0.5.0.
+- **Submodules**: Updated all submodules.
+
+**Next Steps:**
+1.  **Incremental Scanning**: Implement Phase 6, Task 4.
+2.  **GUI**: Begin Phase 7 (Qt GUI).
+3.  **Testing**: Add unit tests for the new RuleEngine and Batch Operations.
+
+**Handoff Note:**
+The project is now building and running on Windows with MSVC. v0.5.0 is released locally. The build environment requires cvars64.bat to be active.
+

@@ -136,6 +136,93 @@ void FileRepository::prune_missing(const std::vector<int64_t>& present_ids, cons
     db_.execute("DROP TABLE present_files;");
 }
 
+void FileRepository::update_path(int64_t id, const std::filesystem::path& new_path) {
+    std::string sql = "UPDATE files SET path = ? WHERE id = ?;";
+    sqlite3_stmt* stmt;
+    int rc = sqlite3_prepare_v2(db_.get_db(), sql.c_str(), -1, &stmt, nullptr);
+    if (rc != SQLITE_OK) throw std::runtime_error("Failed to prepare update_path");
+
+    std::string path_str = new_path.string();
+    sqlite3_bind_text(stmt, 1, path_str.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_int64(stmt, 2, id);
+
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        sqlite3_finalize(stmt);
+        throw std::runtime_error("Failed to execute update_path");
+    }
+    sqlite3_finalize(stmt);
+}
+
+std::vector<FileInfo> FileRepository::get_missing_files(const std::vector<std::filesystem::path>& roots, const std::vector<int64_t>& present_ids) {
+    std::vector<FileInfo> missing;
+    if (roots.empty()) return missing;
+
+    // 1. Create temp table and insert present_ids
+    db_.execute("CREATE TEMPORARY TABLE IF NOT EXISTS present_files (id INTEGER PRIMARY KEY);");
+    db_.execute("DELETE FROM present_files;");
+
+    sqlite3_stmt* stmt;
+    if (sqlite3_prepare_v2(db_.get_db(), "INSERT INTO present_files (id) VALUES (?);", -1, &stmt, nullptr) == SQLITE_OK) {
+        for (auto id : present_ids) {
+            sqlite3_bind_int64(stmt, 1, id);
+            sqlite3_step(stmt);
+            sqlite3_reset(stmt);
+        }
+        sqlite3_finalize(stmt);
+    }
+
+    // 2. Select missing files
+    std::string sql = "SELECT id, path, size, mtime, is_dir FROM files WHERE id NOT IN (SELECT id FROM present_files) AND (";
+    for (size_t i = 0; i < roots.size(); ++i) {
+        if (i > 0) sql += " OR ";
+        sql += "path LIKE ? || '%'";
+    }
+    sql += ");";
+
+    sqlite3_stmt* sel_stmt;
+    if (sqlite3_prepare_v2(db_.get_db(), sql.c_str(), -1, &sel_stmt, nullptr) == SQLITE_OK) {
+        for (size_t i = 0; i < roots.size(); ++i) {
+            std::string root_str = roots[i].string();
+            sqlite3_bind_text(sel_stmt, static_cast<int>(i + 1), root_str.c_str(), -1, SQLITE_TRANSIENT);
+        }
+        
+        while (sqlite3_step(sel_stmt) == SQLITE_ROW) {
+            FileInfo fi;
+            fi.id = sqlite3_column_int64(sel_stmt, 0);
+            const char* path_c = reinterpret_cast<const char*>(sqlite3_column_text(sel_stmt, 1));
+            if (path_c) fi.path = std::filesystem::u8path(path_c);
+            fi.size = static_cast<std::uintmax_t>(sqlite3_column_int64(sel_stmt, 2));
+            fi.mtime = from_unix(sqlite3_column_int64(sel_stmt, 3));
+            fi.is_dir = sqlite3_column_int(sel_stmt, 4) != 0;
+            missing.push_back(fi);
+        }
+        sqlite3_finalize(sel_stmt);
+    }
+    
+    db_.execute("DROP TABLE present_files;");
+    return missing;
+}
+
+void FileRepository::delete_files(const std::vector<int64_t>& ids) {
+    if (ids.empty()) return;
+    
+    db_.execute("CREATE TEMPORARY TABLE IF NOT EXISTS delete_ids (id INTEGER PRIMARY KEY);");
+    db_.execute("DELETE FROM delete_ids;");
+    
+    sqlite3_stmt* stmt;
+    if (sqlite3_prepare_v2(db_.get_db(), "INSERT INTO delete_ids (id) VALUES (?);", -1, &stmt, nullptr) == SQLITE_OK) {
+        for (auto id : ids) {
+            sqlite3_bind_int64(stmt, 1, id);
+            sqlite3_step(stmt);
+            sqlite3_reset(stmt);
+        }
+        sqlite3_finalize(stmt);
+    }
+    
+    db_.execute("DELETE FROM files WHERE id IN (SELECT id FROM delete_ids);");
+    db_.execute("DROP TABLE delete_ids;");
+}
+
 std::optional<FileInfo> FileRepository::get_by_path(const std::filesystem::path& path) {
     std::string sql = "SELECT id, size, mtime, is_dir FROM files WHERE path = ?;";
     sqlite3_stmt* stmt;

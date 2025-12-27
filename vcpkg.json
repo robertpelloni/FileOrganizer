@@ -2,15 +2,8 @@
   "name": "file-organizer",
   "version-string": "0.4.0",
   "dependencies": [
-    "exiv2",
-    "blake3",
-    "tesseract",
     "sqlite3",
     "nlohmann-json",
-    "opencv",
-    "onnxruntime",
-    "benchmark",
-    "gtest",
     "yaml-cpp"
   ]
 }

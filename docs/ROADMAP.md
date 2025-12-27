@@ -241,9 +241,9 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
    - [ ] Undo support: track operations in `operation_log` table.
 
 4. **Incremental scanning**
-   - [ ] Track file mtimes in DB; skip unchanged files.
-   - [ ] CLI: `fo_cli scan --incremental`.
-   - [ ] Detect moved files (same hash, new path); prompt to update DB.
+   - [x] Track file mtimes in DB; skip unchanged files.
+   - [x] CLI: `fo_cli scan --incremental`.
+   - [x] Detect moved files (same hash, new path); prompt to update DB.
 
 5. **Export and reporting**
    - [ ] CLI: `fo_cli export --format=json|csv|html /path/to/report`.
