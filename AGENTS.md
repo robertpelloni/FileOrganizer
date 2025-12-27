@@ -354,6 +354,29 @@ The AI Classification feature is now feature-complete including persistence. The
 **Handoff Note:**
 The Smart Organization feature is implemented and integrated into the CLI. The `RuleEngine` provides a flexible way to organize files based on metadata. The next step is to verify the build and expand the rule capabilities.
 
+### Update: 2025-12-27 (Session 10)
+
+**Author:** GitHub Copilot (Gemini 3 Pro)
+
+**Scope:** YAML Rule Support and Git Sync.
+
+**Current Status:**
+- **Git Sync**: Performed `git pull` and `git submodule update`.
+- **YAML Support**:
+    - Added `yaml-cpp` to `vcpkg.json`.
+    - Updated `core/CMakeLists.txt` to find and link `yaml-cpp`.
+    - Implemented `RuleEngine::load_rules_from_yaml` in `core/src/rule_engine.cpp`.
+    - Updated `fo_cli` to support `--rules=<file.yaml>`.
+- **Build System**: Verified that `core/CMakeLists.txt` uses `GLOB` so `rule_engine.cpp` is automatically included.
+
+**Next Steps:**
+1.  **Build**: Run `vcpkg install` and `cmake` to build with the new `yaml-cpp` dependency.
+2.  **Verify**: Create a sample `rules.yaml` and test the `organize` command.
+3.  **Roadmap**: Proceed to "Batch operations" or "Incremental scanning" (Phase 6).
+
+**Handoff Note:**
+The project now supports defining organization rules in YAML files. The build system is updated to include `yaml-cpp`. The immediate next step is to build and verify this new functionality.
+
 
 
 

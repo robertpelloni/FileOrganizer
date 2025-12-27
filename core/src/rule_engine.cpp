@@ -5,12 +5,44 @@
 #include <iomanip>
 #include <iostream>
 
+#ifdef FO_HAVE_YAMLCPP
+#include <yaml-cpp/yaml.h>
+#endif
+
 namespace fo::core {
 
 RuleEngine::RuleEngine() {}
 
 void RuleEngine::add_rule(const OrganizationRule& rule) {
     rules_.push_back(rule);
+}
+
+bool RuleEngine::load_rules_from_yaml(const std::filesystem::path& yaml_path) {
+#ifdef FO_HAVE_YAMLCPP
+    try {
+        YAML::Node config = YAML::LoadFile(yaml_path.string());
+        if (config["rules"]) {
+            for (const auto& node : config["rules"]) {
+                OrganizationRule rule;
+                if (node["name"]) rule.name = node["name"].as<std::string>();
+                if (node["filter_tag"]) rule.filter_tag = node["filter_tag"].as<std::string>();
+                if (node["destination"]) rule.destination_template = node["destination"].as<std::string>();
+                
+                if (!rule.destination_template.empty()) {
+                    add_rule(rule);
+                }
+            }
+            return true;
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "Error loading YAML rules: " << e.what() << "\n";
+    }
+    return false;
+#else
+    (void)yaml_path;
+    std::cerr << "YAML support not enabled. Please build with yaml-cpp.\n";
+    return false;
+#endif
 }
 
 std::optional<std::filesystem::path> RuleEngine::apply_rules(const FileInfo& file, const std::vector<std::string>& tags) {

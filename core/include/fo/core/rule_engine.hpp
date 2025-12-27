@@ -20,6 +20,10 @@ public:
     
     void add_rule(const OrganizationRule& rule);
     
+    // Load rules from a YAML file
+    // Returns true on success
+    bool load_rules_from_yaml(const std::filesystem::path& yaml_path);
+
     // Returns the new path if a rule matches, otherwise std::nullopt
     std::optional<std::filesystem::path> apply_rules(const FileInfo& file, const std::vector<std::string>& tags);
 

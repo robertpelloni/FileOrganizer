@@ -42,6 +42,7 @@ find_package(blake3 CONFIG QUIET)
 find_package(Tesseract CONFIG QUIET)
 find_package(OpenCV CONFIG QUIET)
 find_package(onnxruntime CONFIG QUIET)
+find_package(yaml-cpp CONFIG QUIET)
 
 if(exiv2_FOUND)
     message(STATUS "Found exiv2, enabling exiv2 metadata provider")
@@ -110,6 +111,11 @@ endif()
 if(onnxruntime_FOUND)
     target_compile_definitions(fo_core PRIVATE FO_HAVE_ONNXRUNTIME)
     target_link_libraries(fo_core PUBLIC onnxruntime::onnxruntime)
+endif()
+
+if(yaml-cpp_FOUND)
+    target_compile_definitions(fo_core PRIVATE FO_HAVE_YAMLCPP)
+    target_link_libraries(fo_core PUBLIC yaml-cpp::yaml-cpp)
 endif()
 
 

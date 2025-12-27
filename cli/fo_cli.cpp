@@ -31,6 +31,7 @@ static void print_usage() {
               << "  --hasher=<name>     Select hasher (e.g., fast64, blake3)\n"
               << "  --db=<path>         Database path (default: fo.db)\n"
               << "  --rule=<template>   Organization rule (e.g., '/Photos/{year}/{month}')\n"
+              << "  --rules=<file.yaml> Load organization rules from YAML file\n"
               << "  --dry-run           Simulate organization without moving files\n"
               << "  --ext=<.jpg,.png>   Comma-separated list of extensions\n"
               << "  --follow-symlinks   Follow symbolic links\n"
@@ -78,6 +79,7 @@ int main(int argc, char** argv) {
     std::string format;
     std::string lang = "eng";
     std::string rule_template;
+    std::string rules_file;
     bool dry_run = false;
     int threshold = 10;
     fo::core::EngineConfig cfg;
@@ -124,6 +126,7 @@ int main(int argc, char** argv) {
         else if (a.rfind("--hasher=", 0) == 0) cfg.hasher = a.substr(9);
         else if (a.rfind("--db=", 0) == 0) cfg.db_path = a.substr(5);
         else if (a.rfind("--rule=", 0) == 0) rule_template = a.substr(7);
+        else if (a.rfind("--rules=", 0) == 0) rules_file = a.substr(8);
         else if (a == "--dry-run") dry_run = true;
         else if (a.rfind("--lang=", 0) == 0) lang = a.substr(7);
         else if (a.rfind("--threshold=", 0) == 0) threshold = std::stoi(a.substr(12));
@@ -260,16 +263,26 @@ int main(int argc, char** argv) {
                 }
             }
         } else if (command == "organize") {
-            if (rule_template.empty()) {
-                std::cerr << "Error: --rule argument is required for organize command.\n";
+            if (rule_template.empty() && rules_file.empty()) {
+                std::cerr << "Error: --rule or --rules argument is required for organize command.\n";
                 return 1;
             }
 
             auto files = engine.scan(roots, exts, follow_symlinks);
             fo::core::RuleEngine rule_engine;
-            rule_engine.add_rule("cli_rule", rule_template);
+            
+            if (!rule_template.empty()) {
+                rule_engine.add_rule({"cli_rule", "", rule_template});
+            }
+            
+            if (!rules_file.empty()) {
+                if (!rule_engine.load_rules_from_yaml(rules_file)) {
+                    std::cerr << "Failed to load rules from " << rules_file << "\n";
+                    return 1;
+                }
+            }
 
-            std::cout << "Organizing " << files.size() << " files using rule: " << rule_template << "\n";
+            std::cout << "Organizing " << files.size() << " files...\n";
             if (dry_run) std::cout << "(Dry run - no files will be moved)\n";
 
             for (const auto& f : files) {

@@ -10,6 +10,7 @@
     "opencv",
     "onnxruntime",
     "benchmark",
-    "gtest"
+    "gtest",
+    "yaml-cpp"
   ]
 }
