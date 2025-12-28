@@ -17,6 +17,7 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 - ✅ **Database Layer**: SQLite schema V1, migrations, and full repository layer (`FileRepository`, `DuplicateRepository`, `IgnoreRepository`, `ScanSessionRepository`).
 - ✅ **CLI**: `fo_cli` with `scan`, `duplicates`, `hash`, `metadata` commands and `--db` persistence.
 - ✅ **Documentation**: Centralized LLM instructions, Submodule Dashboard, Versioning.
+- ✅ **Submodules**: All submodules updated to latest upstream; dashboard generated.
 
 ### Gaps
 - ❌ Tight Qt coupling: business logic in `Worker` QObject (legacy).

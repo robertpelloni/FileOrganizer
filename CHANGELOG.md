@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.1] - 2025-12-27
+
+### Added
+- **Submodule Dashboard**: Automated generation of `docs/SUBMODULES.md` listing all submodules, versions, and build info.
+- **Documentation**: Added project structure explanation to the dashboard.
+
+### Changed
+- **Submodules**: Updated all submodules to their latest upstream versions.
+- **Build**: Verified build stability with updated dependencies.
+
 ## [0.5.0] - 2025-12-27
 
 ### Added

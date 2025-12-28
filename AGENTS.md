@@ -468,4 +468,24 @@ The project is now building and running on Windows with MSVC. v0.5.0 is released
 **Handoff Note:**
 The CLI is functional and supports incremental scanning. However, the build is "stripped down". Future agents should be aware that `FO_HAVE_OPENCV` etc. will be false until dependencies are restored.
 
+### Update: 2025-12-27 (Session 14)
+
+**Author:** GitHub Copilot (Gemini 3 Pro)
+
+**Scope:** Submodule Updates, Dashboard, and Maintenance.
+
+**Current Status:**
+- **Submodules**: Updated all submodules to latest upstream versions.
+- **Dashboard**: Created `docs/SUBMODULES.md` with automated generation script (`generate_dashboard.py`).
+- **Build System**: Verified build stability with MSVC 2022 (Insiders) and Ninja.
+- **Documentation**: Updated `CHANGELOG.md`, `VERSION.md` (0.5.1), and `docs/ROADMAP.md`.
+
+**Next Steps:**
+1.  **Restore Features**: Re-enable `exiv2`, `blake3`, `tesseract`, `opencv` in `vcpkg.json` and fix build errors.
+2.  **GUI**: Proceed to Phase 7 (Qt GUI).
+3.  **Testing**: Re-enable `GTest`.
+
+**Handoff Note:**
+The project is up-to-date with upstream dependencies. A dashboard is available to track submodule status. The build is stable but still "stripped down" (missing advanced providers).
+
 
