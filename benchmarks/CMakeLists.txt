@@ -1,17 +1,15 @@
-set(BENCH_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/bench_scanner.cpp
-)
+add_executable(fo_bench_dhash bench_dhash.cpp)
 
-add_executable(fo_bench_scanner ${BENCH_SOURCES})
+target_link_libraries(fo_bench_dhash PRIVATE fo_core)
 
-target_link_libraries(fo_bench_scanner PRIVATE fo_core)
+target_include_directories(fo_bench_dhash PRIVATE ${CMAKE_SOURCE_DIR}/core/include)
 
-target_compile_features(fo_bench_scanner PRIVATE cxx_std_20)
+target_compile_features(fo_bench_dhash PRIVATE cxx_std_20)
 
 if(MSVC)
-  target_compile_options(fo_bench_scanner PRIVATE /W4 /permissive-)
+  target_compile_options(fo_bench_dhash PRIVATE /W4 /permissive-)
 else()
-  target_compile_options(fo_bench_scanner PRIVATE -Wall -Wextra -Wpedantic)
+  target_compile_options(fo_bench_dhash PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
 find_package(benchmark CONFIG QUIET)
