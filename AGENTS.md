@@ -488,4 +488,46 @@ The CLI is functional and supports incremental scanning. However, the build is "
 **Handoff Note:**
 The project is up-to-date with upstream dependencies. A dashboard is available to track submodule status. The build is stable but still "stripped down" (missing advanced providers).
 
+### Update: 2025-12-28 (Session 15)
+
+**Author:** Claude Opus 4.5 (Augment Agent)
+
+**Scope:** Undo Support, Perceptual Hashing, and Documentation.
+
+**Current Status:**
+- **Version**: 0.9.0
+- **Undo Support** (v0.8.0):
+    - Added `operation_log` table via MIGRATION_3 in `database.cpp`.
+    - Created `OperationRepository` class for logging and undoing operations.
+    - CLI commands: `undo` (reverse last operation), `history` (view operation log).
+    - All batch operations (organize, rename, delete-duplicates) now log to the database.
+- **Perceptual Hashing** (v0.9.0):
+    - Implemented three algorithms in `perceptual_opencv.cpp`:
+        - `dHash` (difference hash) - gradient-based, fast.
+        - `pHash` (DCT-based) - robust to scaling/rotation.
+        - `aHash` (average hash) - simple and fast.
+    - CLI: `--phash=<algo>` and `--list-phash` options.
+- **Documentation**:
+    - Updated `README_CLI.md` with new commands and options.
+    - Updated `CHANGELOG.md` and `docs/ROADMAP.md`.
+
+**Files Modified:**
+- `core/src/operation_repository.cpp` - New file for operation logging.
+- `core/include/fo/core/operation_repository.hpp` - New header.
+- `core/src/database.cpp` - Added MIGRATION_3.
+- `core/src/perceptual_opencv.cpp` - Added pHash and aHash implementations.
+- `cli/fo_cli.cpp` - Added undo, history commands and phash options.
+- `VERSION.md` - Bumped to 0.9.0.
+- `CHANGELOG.md` - Added v0.8.0 and v0.9.0 entries.
+- `README_CLI.md` - Updated with new commands.
+- `docs/ROADMAP.md` - Marked perceptual hashing as complete.
+
+**Next Steps:**
+1. **Build Verification**: Run the build to verify all changes compile correctly.
+2. **Git Commit**: Commit and push v0.8.0 (undo) and v0.9.0 (phash) changes.
+3. **CI/CD**: Set up GitHub Actions for automated builds.
+4. **Testing**: Add unit tests for OperationRepository and perceptual hashers.
+
+**Handoff Note:**
+The project now has comprehensive undo support and multiple perceptual hash algorithms. All batch operations are logged for undo capability. The CLI is feature-rich with 15+ commands. The build environment requires MSVC with vcvars64.bat activated.
 

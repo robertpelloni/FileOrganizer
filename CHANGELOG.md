@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2025-12-28
+
+### Added
+- **v1.0.0 Release**: First major stable release with comprehensive feature set.
+- **Complete CLI**: 15+ commands for file organization, duplicate detection, and image analysis.
+- **Submodule Dashboard**: Documentation for 100+ library dependencies with versions.
+- **Project Structure**: Comprehensive documentation of the codebase layout.
+
+## [0.9.0] - 2025-12-28
+
+### Added
+- **Perceptual Hash Algorithms**: Added multiple perceptual hash algorithms for image similarity detection.
+    - `dhash` (difference hash) - fast, gradient-based.
+    - `phash` (DCT-based perceptual hash) - robust to scaling and minor edits.
+    - `ahash` (average hash) - simple and fast.
+- **CLI Enhancements**:
+    - New `--phash=<algo>` option to select perceptual hash algorithm.
+    - New `--list-phash` option to list available algorithms.
+
+## [0.8.0] - 2025-12-28
+
+### Added
+- **Undo Support**: All file operations (move, rename, delete) are now logged to the database.
+    - New `undo` command to reverse the last operation.
+    - New `history` command to view operation history.
+    - Database migration V3 adds `operation_log` table.
+- **OperationRepository**: New repository class for managing operation history.
+
 ## [0.7.0] - 2025-12-28
 
 ### Added

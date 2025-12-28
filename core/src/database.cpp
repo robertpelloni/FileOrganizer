@@ -80,6 +80,24 @@ CREATE TABLE IF NOT EXISTS file_tags (
 );
 )";
 
+static const char* MIGRATION_3 = R"(
+CREATE TABLE IF NOT EXISTS operation_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    timestamp INTEGER NOT NULL,
+    operation_type TEXT NOT NULL,
+    source_path TEXT NOT NULL,
+    dest_path TEXT,
+    file_size INTEGER,
+    file_hash TEXT,
+    status TEXT DEFAULT 'completed',
+    undone INTEGER DEFAULT 0
+);
+
+CREATE INDEX IF NOT EXISTS idx_operation_log_timestamp ON operation_log(timestamp);
+CREATE INDEX IF NOT EXISTS idx_operation_log_status ON operation_log(status);
+CREATE INDEX IF NOT EXISTS idx_operation_log_undone ON operation_log(undone);
+)";
+
 // ------------------
 
 DatabaseManager::DatabaseManager() : db_(nullptr) {}
@@ -187,6 +205,9 @@ void DatabaseManager::migrate() {
     }
     if (current_ver < 2) {
         apply_migration(2, MIGRATION_2);
+    }
+    if (current_ver < 3) {
+        apply_migration(3, MIGRATION_3);
     }
 }
 

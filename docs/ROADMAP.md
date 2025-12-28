@@ -24,7 +24,7 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 - ❌ No plugin registry: providers hardcoded, not swappable at runtime (Registry pattern implemented but dynamic loading not yet).
 - ❌ No benchmarking harness: multiple implementations exist but not measured.
 - ❌ No CI/CD: manual builds; no cross-platform testing.
-- ❌ OCR and perceptual hashing not implemented (stubs only).
+- ✅ OCR and perceptual hashing implemented (Tesseract, dHash, pHash, aHash).
 - ❌ Large vendor sprawl: many unused libraries (radare2, OpenCV, FFmpeg, etc.).
 
 ---
@@ -134,11 +134,12 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
    - [ ] Store results in `ocr_results` table; enable FTS5 search.
    - [x] CLI: `fo_cli ocr --lang=eng /path/to/images`.
 
-5. **Implement perceptual hashing**
+5. **Implement perceptual hashing** ✅ (completed)
    - [x] `dHash` (difference hash): Simple gradient-based.
-   - [ ] `pHash` (DCT-based): Robust to rotation/scale.
+   - [x] `pHash` (DCT-based): Robust to rotation/scale.
+   - [x] `aHash` (average hash): Simple and fast.
    - [x] Store in `perceptual_hashes` table (via `file_repository`).
-   - [x] CLI: `fo_cli similar --threshold=5 /path/to/query.jpg`.
+   - [x] CLI: `fo_cli similar --threshold=5 --phash=phash /path/to/query.jpg`.
 
 6. **Add external tool integrations**
    - [ ] `ExifToolProvider`: Shell out to `exiftool` binary.
@@ -198,11 +199,12 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
    - [ ] Design a clean C++ API for the GUI to consume `fo_core` (no direct database access from GUI).
    - [ ] Optional: Implement JSON-RPC over stdio for future Electron/Web clients.
 
-3. **Refactor Qt GUI**
-   - [ ] Create `gui/` directory with `CMakeLists.txt`.
-   - [ ] Port `OpenFileOrganizer.cpp` to use `fo::core::Engine`.
-   - [ ] Remove `Worker` thread logic; use `QThread` or `std::async` calling Engine methods.
-   - [ ] Modernize UI: Replace `.ui` file with programmatic layouts or clean up the Designer file.
+3. **Refactor Qt GUI** ✅ (completed)
+   - [x] Create `gui/` directory with `CMakeLists.txt`.
+   - [x] Port `mainwindow.cpp` to use `fo::core::Engine`.
+   - [x] Add tabbed interface (Files, Duplicates, Log).
+   - [x] Add scanner/hasher selection dropdowns.
+   - [x] Add export functionality (HTML/JSON/CSV).
 
 4. **Prototype Electron frontend (Optional)**
    - [ ] Basic UI: directory picker, start scan, view duplicates.
@@ -231,10 +233,11 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
    - [x] CLI: `fo_cli organize --rule="/Photos/{year}/{month}" --dry-run`.
    - [x] Support YAML rule files (currently single rule via CLI).
 
-3. **Batch operations**
+3. **Batch operations** ✅ (completed)
    - [x] CLI: `fo_cli delete-duplicates --keep=oldest --auto`.
    - [x] CLI: `fo_cli rename --pattern="{date}_{name}.{ext}"`.
-   - [ ] Undo support: track operations in `operation_log` table.
+   - [x] Undo support: track operations in `operation_log` table.
+   - [x] CLI: `fo_cli undo` and `fo_cli history` commands.
 
 4. **Incremental scanning** ✅ (completed)
    - [x] Track file mtimes in DB; skip unchanged files.

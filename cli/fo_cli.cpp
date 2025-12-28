@@ -7,6 +7,7 @@
 #include "fo/core/rule_engine.hpp"
 #include "fo/core/export.hpp"
 #include "fo/core/version.hpp"
+#include "fo/core/operation_repository.hpp"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -32,6 +33,8 @@ static void print_usage() {
               << "  delete-duplicates Delete duplicate files\n"
               << "  rename       Rename files based on pattern\n"
               << "  export       Export scan results to JSON/CSV/HTML\n"
+              << "  undo         Undo the last file operation\n"
+              << "  history      Show operation history\n"
               << "\nOptions:\n"
               << "  --scanner=<name>    Select scanner (e.g., std, win32, dirent)\n"
               << "  --hasher=<name>     Select hasher (e.g., fast64, blake3)\n"
@@ -46,11 +49,13 @@ static void print_usage() {
               << "  --follow-symlinks   Follow symbolic links\n"
               << "  --format=<fmt>      Output format (json, csv, html)\n"
               << "  --threshold=<N>     Similarity threshold (default: 10)\n"
+              << "  --phash=<algo>      Perceptual hash algorithm (dhash, phash, ahash)\n"
               << "  --list-scanners     List available scanners\n"
               << "  --list-hashers      List available hashers\n"
               << "  --list-metadata     List available metadata providers\n"
               << "  --list-ocr          List available OCR providers\n"
               << "  --list-classifiers  List available classifiers\n"
+              << "  --list-phash        List available perceptual hash algorithms\n"
               << "  --download-models   Download default AI models\n";
 }
 
@@ -92,6 +97,7 @@ int main(int argc, char** argv) {
     std::string rename_pattern;
     std::string keep_strategy = "oldest";
     std::string output_path;
+    std::string phash_algo = "dhash";
     bool dry_run = false;
     bool prune = false;
     int threshold = 10;
@@ -135,6 +141,14 @@ int main(int argc, char** argv) {
             std::cout << "\n";
             return 0;
         }
+        else if (a == "--list-phash") {
+            auto& reg = fo::core::Registry<fo::core::IPerceptualHasher>::instance();
+            std::cout << "Available perceptual hash algorithms:";
+            for (auto& n : reg.names()) std::cout << " " << n;
+            std::cout << "\n";
+            return 0;
+        }
+        else if (a.rfind("--phash=", 0) == 0) phash_algo = a.substr(8);
         else if (a.rfind("--scanner=", 0) == 0) cfg.scanner = a.substr(10);
         else if (a.rfind("--hasher=", 0) == 0) cfg.hasher = a.substr(9);
         else if (a.rfind("--db=", 0) == 0) cfg.db_path = a.substr(5);
@@ -304,24 +318,25 @@ int main(int argc, char** argv) {
             }
         } else if (command == "similar") {
             if (roots.empty()) {
-                std::cerr << "Usage: fo similar <image_path> [--threshold=10]\n";
+                std::cerr << "Usage: fo similar <image_path> [--threshold=10] [--phash=dhash|phash|ahash]\n";
                 return 1;
             }
-            
-            auto provider = fo::core::Registry<fo::core::IPerceptualHasher>::instance().create("opencv");
+
+            auto provider = fo::core::Registry<fo::core::IPerceptualHasher>::instance().create(phash_algo);
             if (!provider) {
-                std::cerr << "Perceptual hasher 'opencv' not found.\n";
+                std::cerr << "Perceptual hasher '" << phash_algo << "' not found. Use --list-phash to see available options.\n";
                 return 1;
             }
-            
+
             auto res = provider->compute(roots[0]);
             if (!res) {
                 std::cerr << "Failed to compute hash for " << roots[0] << "\n";
                 return 1;
             }
-            
+
             std::cout << "Target hash: " << res->value << " (" << res->method << ")\n";
-            
+            std::cout << "Algorithm: " << phash_algo << ", Threshold: " << threshold << "\n";
+
             auto matches = engine.file_repository().find_similar_images(res->value, threshold);
             std::cout << "Found " << matches.size() << " similar images:\n";
             for (auto id : matches) {
@@ -388,6 +403,16 @@ int main(int argc, char** argv) {
                         try {
                             std::filesystem::create_directories(new_path.parent_path());
                             std::filesystem::rename(f.path, new_path);
+
+                            // Log the operation
+                            fo::core::OperationRepository op_repo(engine.database());
+                            fo::core::OperationRecord rec;
+                            rec.timestamp = std::chrono::system_clock::now();
+                            rec.type = fo::core::OperationType::Move;
+                            rec.source_path = f.path.string();
+                            rec.dest_path = new_path.string();
+                            rec.file_size = f.size;
+                            op_repo.log_operation(rec);
                         } catch (const std::exception& e) {
                             std::cerr << "Failed to move " << f.path.string() << ": " << e.what() << "\n";
                         }
@@ -438,6 +463,15 @@ int main(int argc, char** argv) {
                         try {
                             std::filesystem::remove(del.path);
                             deleted_count++;
+
+                            // Log the operation
+                            fo::core::OperationRepository op_repo(engine.database());
+                            fo::core::OperationRecord rec;
+                            rec.timestamp = std::chrono::system_clock::now();
+                            rec.type = fo::core::OperationType::Delete;
+                            rec.source_path = del.path.string();
+                            rec.file_size = del.size;
+                            op_repo.log_operation(rec);
                         } catch (const std::exception& e) {
                             std::cerr << "    Failed to delete: " << e.what() << "\n";
                         }
@@ -479,6 +513,16 @@ int main(int argc, char** argv) {
                     if (!dry_run) {
                         try {
                             std::filesystem::rename(f.path, new_path);
+
+                            // Log the operation
+                            fo::core::OperationRepository op_repo(engine.database());
+                            fo::core::OperationRecord rec;
+                            rec.timestamp = std::chrono::system_clock::now();
+                            rec.type = fo::core::OperationType::Rename;
+                            rec.source_path = f.path.string();
+                            rec.dest_path = new_path.string();
+                            rec.file_size = f.size;
+                            op_repo.log_operation(rec);
                         } catch (const std::exception& e) {
                             std::cerr << "Failed to rename " << f.path.string() << ": " << e.what() << "\n";
                         }
@@ -513,6 +557,59 @@ int main(int argc, char** argv) {
                 } else {
                     std::cerr << "Failed to export to " << output_path << "\n";
                     return 1;
+                }
+            }
+
+        } else if (command == "undo") {
+            fo::core::OperationRepository op_repo(engine.database());
+            auto undone = op_repo.undo_last();
+            if (undone) {
+                std::cout << "Undone: ";
+                switch (undone->type) {
+                    case fo::core::OperationType::Move:
+                        std::cout << "move " << undone->dest_path << " -> " << undone->source_path;
+                        break;
+                    case fo::core::OperationType::Copy:
+                        std::cout << "copy (deleted " << undone->dest_path << ")";
+                        break;
+                    case fo::core::OperationType::Rename:
+                        std::cout << "rename " << undone->dest_path << " -> " << undone->source_path;
+                        break;
+                    case fo::core::OperationType::Delete:
+                        std::cout << "delete (cannot restore)";
+                        break;
+                }
+                std::cout << "\n";
+            } else {
+                std::cout << "No operations to undo.\n";
+            }
+
+        } else if (command == "history") {
+            fo::core::OperationRepository op_repo(engine.database());
+            auto ops = op_repo.get_all(50);
+
+            if (ops.empty()) {
+                std::cout << "No operation history.\n";
+            } else {
+                std::cout << "Operation History (most recent first):\n";
+                std::cout << std::string(80, '-') << "\n";
+                for (const auto& op : ops) {
+                    auto t = std::chrono::system_clock::to_time_t(op.timestamp);
+                    std::string type_str;
+                    switch (op.type) {
+                        case fo::core::OperationType::Move: type_str = "MOVE"; break;
+                        case fo::core::OperationType::Copy: type_str = "COPY"; break;
+                        case fo::core::OperationType::Rename: type_str = "RENAME"; break;
+                        case fo::core::OperationType::Delete: type_str = "DELETE"; break;
+                    }
+                    std::cout << std::put_time(std::localtime(&t), "%Y-%m-%d %H:%M:%S") << " "
+                              << std::setw(8) << type_str << " "
+                              << (op.undone ? "[UNDONE] " : "")
+                              << op.source_path;
+                    if (!op.dest_path.empty()) {
+                        std::cout << " -> " << op.dest_path;
+                    }
+                    std::cout << "\n";
                 }
             }
 

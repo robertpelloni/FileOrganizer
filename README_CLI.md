@@ -42,6 +42,8 @@ fo_cli <command> [options] [paths...]
 - `rename`: Rename files based on patterns.
 - `delete-duplicates`: Delete duplicate files based on strategy.
 - `export`: Export scan results to JSON, CSV, or HTML format.
+- `undo`: Undo the last file operation (move, rename, copy).
+- `history`: Show operation history.
 
 ### Options
 
@@ -59,11 +61,14 @@ fo_cli <command> [options] [paths...]
 - `--prune`: Remove deleted files from the database during scan.
 - `--format=<fmt>`: Export format (`json`, `csv`, `html`).
 - `--output=<path>`: Output file path for export command.
+- `--phash=<algo>`: Perceptual hash algorithm (`dhash`, `phash`, `ahash`).
+- `--threshold=<N>`: Similarity threshold for `similar` command (default: 10).
 - `--list-scanners`: List available scanners.
 - `--list-hashers`: List available hashers.
 - `--list-metadata`: List available metadata providers.
 - `--list-ocr`: List available OCR providers.
 - `--list-classifiers`: List available classifiers.
+- `--list-phash`: List available perceptual hash algorithms.
 
 ### Examples
 
@@ -85,6 +90,15 @@ fo_cli export --format=html --output=report.html /path/to/photos
 
 # Export duplicates to JSON for processing
 fo_cli export --format=json --output=results.json /path/to/photos
+
+# Find similar images using pHash (DCT-based)
+fo_cli similar --phash=phash --threshold=5 /path/to/query.jpg
+
+# View operation history
+fo_cli history
+
+# Undo the last operation
+fo_cli undo
 ```
 
 ## Notes

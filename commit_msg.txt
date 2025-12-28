@@ -1,9 +1,0 @@
-feat(gui): refactor Qt GUI to use fo_core Engine v0.7.0
-
-- Integrate fo_core Engine for scanning and duplicate detection
-- Add tabbed interface for Files, Duplicates, and Log views
-- Add scanner and hasher selection dropdowns
-- Add export functionality with HTML/JSON/CSV support
-- Add menu bar, toolbar, and status bar
-- Add progress bar for long operations
-

@@ -1,18 +1,66 @@
 # Submodule Dashboard
 
-**Last Updated:** 2025-12-27 22:01:10
+**Version:** 1.0.0
+**Last Updated:** 2025-12-28
 
 ## Project Structure
 
-The project is organized as follows:
+```
+FileOrganizer/
+├── core/                    # Core library (fo_core)
+│   ├── include/fo/core/     # Public headers
+│   │   ├── interfaces.hpp   # IFileScanner, IHasher, IMetadataProvider, etc.
+│   │   ├── types.hpp        # FileInfo, DateMetadata, DuplicateGroup
+│   │   ├── registry.hpp     # Generic plugin registry
+│   │   ├── engine.hpp       # Main Engine class
+│   │   ├── database.hpp     # DatabaseManager with migrations
+│   │   ├── file_repository.hpp
+│   │   ├── duplicate_repository.hpp
+│   │   ├── operation_repository.hpp  # Undo support
+│   │   ├── rule_engine.hpp  # Organization rules
+│   │   ├── export.hpp       # JSON/CSV/HTML export
+│   │   └── version.hpp      # Auto-generated version
+│   └── src/                 # Implementation files
+│       ├── scanner_*.cpp    # std, win32, dirent scanners
+│       ├── hasher_*.cpp     # fast64, sha256, xxhash, blake3
+│       ├── perceptual_opencv.cpp  # dHash, pHash, aHash
+│       ├── ocr_tesseract.cpp      # Tesseract OCR
+│       ├── classifier_onnx.cpp    # AI classification
+│       └── ...
+├── cli/                     # Command Line Interface
+│   └── fo_cli.cpp           # Main CLI application
+├── gui/                     # Qt6 GUI Application
+│   ├── mainwindow.cpp/h     # Main window with tabs
+│   └── CMakeLists.txt
+├── tests/                   # Unit tests (Google Test)
+│   ├── test_export.cpp
+│   ├── test_hasher.cpp
+│   └── test_scanner.cpp
+├── benchmarks/              # Performance benchmarks
+│   └── fo_benchmarks.cpp
+├── docs/                    # Documentation
+│   ├── ROADMAP.md           # Development roadmap
+│   ├── SUBMODULES.md        # This file
+│   ├── LLM_INSTRUCTIONS.md  # Universal AI instructions
+│   └── ...
+├── libs/                    # 100+ git submodules (see below)
+├── vcpkg/                   # vcpkg package manager
+├── VERSION.md               # Single source of truth for version
+├── CHANGELOG.md             # Release history
+├── AGENTS.md                # AI agent handoff log
+├── CMakeLists.txt           # Root CMake configuration
+└── build.bat                # Windows build script
+```
 
-- **core/**: Contains the core logic of the FileOrganizer application (scanning, hashing, database, etc.).
-- **cli/**: Contains the Command Line Interface (CLI) application.
-- **libs/**: Contains all external dependencies included as git submodules.
-- **docs/**: Project documentation.
-- **benchmarks/**: Performance benchmarks.
-- **tests/**: Unit and integration tests.
-- **vcpkg/**: The vcpkg package manager submodule.
+### Key Components
+
+| Component | Description |
+|-----------|-------------|
+| **fo_core** | Static library with all core functionality |
+| **fo_cli** | CLI executable with 15+ commands |
+| **fo_gui** | Qt6 GUI application (optional) |
+| **fo_tests** | Unit test executable |
+| **fo_benchmarks** | Benchmark executable |
 
 ## Submodules Status
 
