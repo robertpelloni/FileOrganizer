@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.1] - 2025-12-28
+
+### Added
+- **JSON Output Mode**: `--format=json` now works with `scan`, `duplicates`, `hash`, and `metadata` commands.
+- **Public Escape Functions**: `Exporter::json_escape`, `csv_escape`, `html_escape` are now public static methods.
+
 ## [0.6.0] - 2025-12-28
 
 ### Added

@@ -62,9 +62,18 @@ public:
     
     // Format file size for human readability
     static std::string format_size(std::uintmax_t bytes);
-    
+
     // Format timestamp to ISO 8601
     static std::string format_time(std::chrono::file_clock::time_point tp);
+
+    // Escape string for JSON output
+    static std::string json_escape(const std::string& s);
+
+    // Escape string for CSV output
+    static std::string csv_escape(const std::string& s);
+
+    // Escape string for HTML output
+    static std::string html_escape(const std::string& s);
 };
 
 } // namespace fo::core

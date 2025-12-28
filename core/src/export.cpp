@@ -53,8 +53,7 @@ ScanStats Exporter::compute_stats(const std::vector<FileInfo>& files,
     return stats;
 }
 
-// Escape a string for JSON
-static std::string json_escape(const std::string& s) {
+std::string Exporter::json_escape(const std::string& s) {
     std::ostringstream oss;
     for (char c : s) {
         switch (c) {
@@ -71,8 +70,7 @@ static std::string json_escape(const std::string& s) {
     return oss.str();
 }
 
-// Escape a string for CSV
-static std::string csv_escape(const std::string& s) {
+std::string Exporter::csv_escape(const std::string& s) {
     if (s.find(',') != std::string::npos || s.find('"') != std::string::npos || s.find('\n') != std::string::npos) {
         std::ostringstream oss;
         oss << '"';
@@ -86,8 +84,7 @@ static std::string csv_escape(const std::string& s) {
     return s;
 }
 
-// Escape a string for HTML
-static std::string html_escape(const std::string& s) {
+std::string Exporter::html_escape(const std::string& s) {
     std::ostringstream oss;
     for (char c : s) {
         switch (c) {

@@ -11,7 +11,9 @@
 #include <string>
 #include <vector>
 #include <chrono>
-#include "fo/core/provider_registration.hpp"
+#include <iomanip>
+#include <sstream>
+#include <ctime>
 
 using namespace std::chrono;
 
@@ -171,47 +173,118 @@ int main(int argc, char** argv) {
 
         if (command == "scan") {
             auto files = engine.scan(roots, exts, follow_symlinks, prune);
-            for (const auto& f : files) {
-                std::cout << f.path.string() << "\n";
+            if (format == "json") {
+                std::cout << "[\n";
+                for (size_t i = 0; i < files.size(); ++i) {
+                    std::cout << "  {\"path\": \"" << fo::core::Exporter::json_escape(files[i].path.string())
+                              << "\", \"size\": " << files[i].size << "}";
+                    if (i + 1 < files.size()) std::cout << ",";
+                    std::cout << "\n";
+                }
+                std::cout << "]\n";
+            } else {
+                for (const auto& f : files) {
+                    std::cout << f.path.string() << "\n";
+                }
             }
         } else if (command == "duplicates") {
             auto files = engine.scan(roots, exts, follow_symlinks, prune);
             auto groups = engine.find_duplicates(files);
-            for (const auto& g : groups) {
-                std::cout << "== size=" << g.size << ", fast64=" << g.fast64 << "\n";
-                for (const auto& f : g.files) {
-                    std::cout << "  " << f.path.string() << "\n";
+            if (format == "json") {
+                std::cout << "[\n";
+                for (size_t i = 0; i < groups.size(); ++i) {
+                    const auto& g = groups[i];
+                    std::cout << "  {\"size\": " << g.size << ", \"hash\": \"" << g.fast64 << "\", \"files\": [\n";
+                    for (size_t j = 0; j < g.files.size(); ++j) {
+                        std::cout << "    \"" << fo::core::Exporter::json_escape(g.files[j].path.string()) << "\"";
+                        if (j + 1 < g.files.size()) std::cout << ",";
+                        std::cout << "\n";
+                    }
+                    std::cout << "  ]}";
+                    if (i + 1 < groups.size()) std::cout << ",";
+                    std::cout << "\n";
+                }
+                std::cout << "]\n";
+            } else {
+                for (const auto& g : groups) {
+                    std::cout << "== size=" << g.size << ", fast64=" << g.fast64 << "\n";
+                    for (const auto& f : g.files) {
+                        std::cout << "  " << f.path.string() << "\n";
+                    }
                 }
             }
         } else if (command == "hash") {
             auto files = engine.scan(roots, exts, follow_symlinks, prune);
             auto& hasher = engine.hasher();
-            for (const auto& f : files) {
-                std::string h = hasher.fast64(f.path);
-                std::cout << h << "  " << f.path.string() << "\n";
-                // Optionally persist hash
-                if (f.id != 0) {
-                    engine.file_repository().add_hash(f.id, hasher.name(), h);
+            if (format == "json") {
+                std::cout << "[\n";
+                for (size_t i = 0; i < files.size(); ++i) {
+                    std::string h = hasher.fast64(files[i].path);
+                    std::cout << "  {\"path\": \"" << fo::core::Exporter::json_escape(files[i].path.string())
+                              << "\", \"hash\": \"" << h << "\"}";
+                    if (i + 1 < files.size()) std::cout << ",";
+                    std::cout << "\n";
+                    if (files[i].id != 0) {
+                        engine.file_repository().add_hash(files[i].id, hasher.name(), h);
+                    }
+                }
+                std::cout << "]\n";
+            } else {
+                for (const auto& f : files) {
+                    std::string h = hasher.fast64(f.path);
+                    std::cout << h << "  " << f.path.string() << "\n";
+                    if (f.id != 0) {
+                        engine.file_repository().add_hash(f.id, hasher.name(), h);
+                    }
                 }
             }
         } else if (command == "metadata") {
             auto files = engine.scan(roots, exts, follow_symlinks, prune);
-            // Use default metadata provider for now, or add CLI option
             auto provider = fo::core::Registry<fo::core::IMetadataProvider>::instance().create("tinyexif");
             if (!provider) {
                 std::cerr << "Metadata provider 'tinyexif' not found.\n";
                 return 1;
             }
-            for (const auto& f : files) {
-                fo::core::ImageMetadata meta;
-                if (provider->read(f.path, meta)) {
-                    std::cout << f.path.string() << ":\n";
-                    if (meta.date.has_taken) {
-                        auto t = std::chrono::system_clock::to_time_t(meta.date.taken);
-                        std::cout << "  Taken: " << std::ctime(&t); // ctime includes newline
+            if (format == "json") {
+                std::cout << "[\n";
+                bool first = true;
+                for (const auto& f : files) {
+                    fo::core::ImageMetadata meta;
+                    if (provider->read(f.path, meta)) {
+                        if (!first) std::cout << ",\n";
+                        first = false;
+                        std::cout << "  {\"path\": \"" << fo::core::Exporter::json_escape(f.path.string()) << "\"";
+                        if (meta.date.has_taken) {
+                            auto t = std::chrono::system_clock::to_time_t(meta.date.taken);
+                            std::tm tm_buf;
+#ifdef _WIN32
+                            localtime_s(&tm_buf, &t);
+#else
+                            localtime_r(&t, &tm_buf);
+#endif
+                            std::ostringstream oss;
+                            oss << std::put_time(&tm_buf, "%Y-%m-%dT%H:%M:%S");
+                            std::cout << ", \"taken\": \"" << oss.str() << "\"";
+                        }
+                        if (meta.has_gps) {
+                            std::cout << ", \"gps_lat\": " << meta.gps_lat << ", \"gps_lon\": " << meta.gps_lon;
+                        }
+                        std::cout << "}";
                     }
-                    if (meta.has_gps) {
-                        std::cout << "  GPS: " << meta.gps_lat << ", " << meta.gps_lon << "\n";
+                }
+                std::cout << "\n]\n";
+            } else {
+                for (const auto& f : files) {
+                    fo::core::ImageMetadata meta;
+                    if (provider->read(f.path, meta)) {
+                        std::cout << f.path.string() << ":\n";
+                        if (meta.date.has_taken) {
+                            auto t = std::chrono::system_clock::to_time_t(meta.date.taken);
+                            std::cout << "  Taken: " << std::ctime(&t);
+                        }
+                        if (meta.has_gps) {
+                            std::cout << "  GPS: " << meta.gps_lat << ", " << meta.gps_lon << "\n";
+                        }
                     }
                 }
             }

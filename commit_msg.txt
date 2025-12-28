@@ -1,0 +1,6 @@
+feat(cli): add JSON output mode for scan, duplicates, hash, metadata commands
+
+- Add --format=json support to scan, duplicates, hash, metadata commands
+- Make json_escape, csv_escape, html_escape public static methods in Exporter
+- Add necessary includes for time formatting in CLI
+
