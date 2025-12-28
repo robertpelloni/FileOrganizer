@@ -1,0 +1,27 @@
+[1/27] Building CXX object core/CMakeFiles/fo_core.dir/src/hasher_blake3.cpp.o
+[2/27] Building CXX object core/CMakeFiles/fo_core.dir/src/hasher_sha256.cpp.o
+[3/27] Building CXX object core/CMakeFiles/fo_core.dir/src/dupe_size_fast.cpp.o
+[4/27] Building CXX object core/CMakeFiles/fo_core.dir/src/hasher_fast64.cpp.o
+[5/27] Building CXX object core/CMakeFiles/fo_core.dir/src/hasher_xxhash.cpp.o
+[6/27] Building CXX object core/CMakeFiles/fo_core.dir/src/ocr_tesseract.cpp.o
+[7/27] Building CXX object core/CMakeFiles/fo_core.dir/src/scanner_win32.cpp.o
+[8/27] Building CXX object core/CMakeFiles/fo_core.dir/src/engine.cpp.o
+[9/27] Building CXX object core/CMakeFiles/fo_core.dir/src/metadata_exiv2.cpp.o
+[10/27] Building CXX object core/CMakeFiles/fo_core.dir/src/metadata_tinyexif.cpp.o
+[11/27] Building CXX object core/CMakeFiles/fo_core.dir/src/scanner_dirent.cpp.o
+[12/27] Building CXX object core/CMakeFiles/fo_core.dir/__/libs/TinyEXIF/TinyEXIF.cpp.o
+[13/27] Building CXX object core/CMakeFiles/fo_core.dir/__/libs/hash-library/sha256.cpp.o
+[14/27] Building CXX object core/CMakeFiles/fo_core.dir/__/libs/hash-library/sha1.cpp.o
+[15/27] Building CXX object core/CMakeFiles/fo_core.dir/src/providers/dhash_reg.cpp.o
+[16/27] Building CXX object core/CMakeFiles/fo_core.dir/__/libs/hash-library/md5.cpp.o
+[17/27] Building CXX object core/CMakeFiles/fo_core.dir/src/scanner_std.cpp.o
+[18/27] Building CXX object core/CMakeFiles/fo_core.dir/__/libs/hash-library/crc32.cpp.o
+[19/27] Building CXX object core/CMakeFiles/fo_core.dir/src/providers/dhash.cpp.o
+[20/27] Building CXX object core/CMakeFiles/fo_core.dir/__/libs/hash-library/keccak.cpp.o
+[21/27] Building CXX object core/CMakeFiles/fo_core.dir/src/providers/register_all_providers.cpp.o
+[22/27] Building CXX object core/CMakeFiles/fo_core.dir/__/libs/hash-library/sha3.cpp.o
+[23/27] Linking CXX static library core/libfo_core.a
+[24/27] Building CXX object benchmarks/CMakeFiles/fo_bench_dhash.dir/bench_dhash.cpp.o
+[25/27] Linking CXX executable benchmarks/fo_bench_dhash
+[26/27] Building CXX object cli/CMakeFiles/fo_cli.dir/fo_cli.cpp.o
+[27/27] Linking CXX executable cli/fo_cli

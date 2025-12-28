@@ -1,4 +1,5 @@
 #include "fo/core/engine.hpp"
+#include "fo/core/provider_registration.hpp"
 #include "fo/core/registry.hpp"
 #include <iostream>
 #include <string>
@@ -12,6 +13,8 @@ static void print_usage() {
 }
 
 int main(int argc, char** argv) {
+    fo::core::register_all_providers();
+
     std::vector<std::filesystem::path> roots;
     std::vector<std::string> exts;
     bool follow_symlinks = false;

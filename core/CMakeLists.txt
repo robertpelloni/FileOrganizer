@@ -16,6 +16,8 @@ set(XXHASH_INCLUDE ${LIBS_DIR}/xxHash)
 
 file(GLOB_RECURSE FO_CORE_HEADERS ${FO_CORE_INCLUDE_DIR}/*.hpp)
 file(GLOB FO_CORE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+file(GLOB PROVIDER_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/providers/*.cpp)
+list(APPEND FO_CORE_SOURCES ${PROVIDER_SOURCES})
 
 add_library(fo_core STATIC
     ${FO_CORE_HEADERS}
@@ -25,11 +27,13 @@ add_library(fo_core STATIC
 )
 
 target_include_directories(fo_core
-    PUBLIC ${FO_CORE_INCLUDE_DIR}
-    PRIVATE ${LIBS_DIR}/TinyEXIF
-    PRIVATE ${LIBS_DIR}/hash-library
-    PRIVATE ${XXHASH_INCLUDE}
-  PRIVATE ${LIBS_DIR}/dirent
+    PUBLIC ${CMAKE_SOURCE_DIR}/core/include
+    PUBLIC ${LIBS_DIR}/TinyEXIF
+    PUBLIC ${LIBS_DIR}/tinyxml2
+    PUBLIC ${LIBS_DIR}/hash-library
+    PUBLIC ${XXHASH_INCLUDE}
+    PUBLIC ${LIBS_DIR}/dirent
+    PUBLIC ${LIBS_DIR}/stb
 )
 
 target_compile_features(fo_core PUBLIC cxx_std_20)

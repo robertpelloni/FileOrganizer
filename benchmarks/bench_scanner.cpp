@@ -8,8 +8,9 @@
 
 #include "fo/core/interfaces.hpp"
 #include "fo/core/registry.hpp"
+#include "fo/core/providers/dhash.hpp"
 
-using clock_t = std::chrono::steady_clock;
+using steady_clock_t = std::chrono::steady_clock;
 
 static std::vector<std::string> split_csv(const std::string& s) {
     std::vector<std::string> out;
@@ -76,9 +77,9 @@ int main(int argc, char** argv) {
     std::uint64_t total_files_last = 0;
 
     for (int k = 0; k < iters; ++k) {
-        auto t0 = clock_t::now();
+        auto t0 = steady_clock_t::now();
         auto files = scanner->scan(roots, exts, false);
-        auto t1 = clock_t::now();
+        auto t1 = steady_clock_t::now();
         std::chrono::duration<double> dt = t1 - t0;
         double secs = dt.count();
         double fps = files.empty() ? 0.0 : (files.size() / secs);
