@@ -1,4 +1,5 @@
 #include "fo/providers/hasher_blake3.hpp"
+#include "fo/core/registry.hpp"
 #include <fstream>
 #include <vector>
 #include <iomanip>
@@ -87,3 +88,12 @@ std::optional<std::string> Blake3Hasher::strong(const std::filesystem::path& p) 
 }
 
 } // namespace fo::providers
+namespace fo::core {
+    static bool reg_hasher_blake3 = [](){
+#ifdef FO_HAVE_BLAKE3
+        Registry<IHasher>::instance().add("blake3", [](){ return std::make_unique<fo::providers::Blake3Hasher>(); });
+#endif
+        return true;
+    }();
+    void register_hasher_blake3() { (void)reg_hasher_blake3; }
+}

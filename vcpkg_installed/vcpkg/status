@@ -9,7 +9,7 @@ Package: vcpkg-cmake
 Version: 2024-04-23
 Architecture: x64-windows
 Multi-Arch: same
-Abi: 09d99340919b8b743642927b1f2ad78210a3e3aa1a57589fa346f985424e4d46
+Abi: d3c275d2ec1854f8a932d908c26814fde265d9d3643673104f04282ebfc4677d
 Status: install ok installed
 
 Package: benchmark
@@ -26,9 +26,9 @@ Version: 1.8.2
 Depends: vcpkg-cmake, vcpkg-cmake-config
 Architecture: x64-windows
 Multi-Arch: same
-Abi: bfda5336b9d96f06ca29f8a1bc9042799e7d9f3c43d393b79bcf03ff72e64505
+Abi: b4a9e0730eca61426c7dca0ab64b915a2edf764d6adf981c30b1c901ea190918
 Description: BLAKE3 cryptographic hash function.
-Status: purge ok not-installed
+Status: install ok installed
 
 Package: vcpkg-cmake-get-vars
 Version: 2025-05-29
@@ -81,7 +81,7 @@ Port-Version: 1
 Depends: vcpkg-cmake, vcpkg-cmake-config
 Architecture: x64-windows
 Multi-Arch: same
-Abi: 0900634aa406c4469cfc2d740a5745156d2c926680bfda8af3f522974ea8ef96
+Abi: b070f0208e2d9f6ad76478e0224dca3385003cf5f9b29a34acced1fb66972f20
 Description: JSON for Modern C++
 Status: install ok installed
 
@@ -99,7 +99,7 @@ Version: 3.51.1
 Depends: vcpkg-cmake, vcpkg-cmake-config
 Architecture: x64-windows
 Multi-Arch: same
-Abi: 351e5381ebe89acae433f8ce2b4ae8a7bd12bbcae870fcb0bf2560e409a11ef1
+Abi: 2fc4be94b44460ea7a169337c25eb9fd3e74ab17fc765f625a001358ca252629
 Description: SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine.
 Default-Features: json1
 Status: install ok installed
@@ -117,7 +117,7 @@ Port-Version: 3
 Depends: vcpkg-cmake, vcpkg-cmake-config
 Architecture: x64-windows
 Multi-Arch: same
-Abi: 01d6224243a1b7bab3cfaece4e5cf67217b68c556d9b79ab9213dd1b2b20a961
+Abi: e790e883209bcf9af8f88be4106c96b1c6c0a7531ea093472332cfd83de05f12
 Description: yaml-cpp is a YAML parser and emitter in C++ matching the YAML 1.2 spec.
 Status: install ok installed
 

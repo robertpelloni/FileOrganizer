@@ -38,7 +38,7 @@ list(APPEND FO_CORE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/duplicate_finders.cp
 
 # Find optional provider dependencies
 find_package(exiv2 CONFIG QUIET)
-find_package(blake3 CONFIG QUIET)
+find_package(blake3 CONFIG)
 find_package(Tesseract CONFIG QUIET)
 find_package(OpenCV CONFIG QUIET)
 find_package(onnxruntime CONFIG QUIET)
@@ -94,7 +94,7 @@ endif()
 
 if(blake3_FOUND)
     target_compile_definitions(fo_core PRIVATE FO_HAVE_BLAKE3)
-    target_link_libraries(fo_core PUBLIC blake3::blake3)
+    target_link_libraries(fo_core PUBLIC BLAKE3::blake3)
 endif()
 
 if(Tesseract_FOUND)

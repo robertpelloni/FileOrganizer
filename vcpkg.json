@@ -4,6 +4,7 @@
   "dependencies": [
     "sqlite3",
     "nlohmann-json",
-    "yaml-cpp"
+    "yaml-cpp",
+    "blake3"
   ]
 }

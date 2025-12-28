@@ -185,35 +185,30 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 
 ## Phase 5: GUI Decoupling and Frontends (Weeks 12–14)
 
-**Goal**: Support multiple GUI shells (Qt, Electron, GTK, SDL) via stable IPC.
+**Goal**: Implement a modern, decoupled GUI using Qt (primary) and potentially Electron (secondary).
 
 ### Tasks
 
-1. **Define IPC protocol**
-   - [ ] Choose mechanism: JSON-RPC over stdin/stdout, named pipes, WebSocket, or msgpack.
-   - [ ] Commands: `scan`, `duplicates`, `hash`, `metadata`, `ocr`, `status`, `cancel`.
-   - [ ] Events: `progress`, `file_scanned`, `duplicate_found`, `error`.
+1. **GUI Evaluation** ✅ (completed)
+   - [x] Evaluate Qt, Electron, wxWidgets, ImGui, Flutter.
+   - [x] Decision: **Qt Widgets** is the primary choice due to existing code, performance, and C++ integration.
+   - [x] See `docs/GUI_EVALUATION.md` for details.
 
-2. **Implement IPC server in CLI**
-   - [ ] `fo_cli serve --ipc=stdio` (JSON-RPC on stdin/stdout).
-   - [ ] Optional: `--ipc=ws://localhost:9000` (WebSocket for Electron).
-   - [ ] Stream progress events during long operations.
+2. **Define IPC/API Layer**
+   - [ ] Design a clean C++ API for the GUI to consume `fo_core` (no direct database access from GUI).
+   - [ ] Optional: Implement JSON-RPC over stdio for future Electron/Web clients.
 
 3. **Refactor Qt GUI**
-   - [ ] Replace `Worker` with IPC client (`QProcess` or WebSocket).
-   - [ ] UI sends commands; receives events via slots.
-   - [ ] Test roundtrip latency (should be <10ms for local IPC).
+   - [ ] Create `gui/` directory with `CMakeLists.txt`.
+   - [ ] Port `OpenFileOrganizer.cpp` to use `fo::core::Engine`.
+   - [ ] Remove `Worker` thread logic; use `QThread` or `std::async` calling Engine methods.
+   - [ ] Modernize UI: Replace `.ui` file with programmatic layouts or clean up the Designer file.
 
-4. **Prototype Electron frontend**
+4. **Prototype Electron frontend (Optional)**
    - [ ] Basic UI: directory picker, start scan, view duplicates.
    - [ ] Communicate with `fo_cli serve` via WebSocket or child process.
-   - [ ] Package as standalone app (Electron Builder).
 
-5. **Document GUI integration guide**
-   - [ ] Protocol spec: JSON schemas for commands/events.
-   - [ ] Example clients: Qt, Electron, Python (CLI wrapper).
-
-**Deliverable**: Decoupled architecture; Qt and Electron GUIs working with same engine.
+**Deliverable**: A clean, responsive Qt GUI that uses the shared `fo_core` library.
 
 ---
 

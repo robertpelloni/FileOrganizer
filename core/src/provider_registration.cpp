@@ -10,6 +10,7 @@ namespace fo::core {
         register_hasher_fast64();
         register_hasher_sha256();
         register_hasher_xxhash();
+        register_hasher_blake3();
         register_metadata_tinyexif();
     }
 }
