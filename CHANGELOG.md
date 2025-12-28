@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-12-28
+
+### Added
+- **JSON Output for All Commands**: Extended `--format=json` support to all CLI commands:
+    - `similar` - JSON output with query, hash, algorithm, threshold, and matches.
+    - `classify` - JSON output with file paths and classification results.
+    - `organize` - JSON output with dry_run flag, total files, and move operations.
+    - `delete-duplicates` - JSON output with strategy, groups, kept/deleted counts, and results.
+    - `rename` - JSON output with pattern, total files, and rename operations.
+    - `undo` - JSON output with success status and operation details.
+    - `history` - JSON output with operation records (already added in v0.6.1).
+
 ## [1.0.0] - 2025-12-28
 
 ### Added

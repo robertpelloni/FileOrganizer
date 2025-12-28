@@ -376,15 +376,33 @@ int main(int argc, char** argv) {
                 return 1;
             }
 
-            std::cout << "Target hash: " << res->value << " (" << res->method << ")\n";
-            std::cout << "Algorithm: " << phash_algo << ", Threshold: " << threshold << "\n";
-
             auto matches = engine.file_repository().find_similar_images(res->value, threshold);
-            std::cout << "Found " << matches.size() << " similar images:\n";
-            for (auto id : matches) {
-                auto fi = engine.file_repository().get_by_id(id);
-                if (fi) {
-                    std::cout << "  " << fi->path.string() << "\n";
+
+            if (format == "json") {
+                std::cout << "{\"query\": \"" << fo::core::Exporter::json_escape(roots[0].string()) << "\""
+                          << ", \"hash\": \"" << res->value << "\""
+                          << ", \"algorithm\": \"" << phash_algo << "\""
+                          << ", \"threshold\": " << threshold
+                          << ", \"matches\": [\n";
+                for (size_t i = 0; i < matches.size(); ++i) {
+                    auto fi = engine.file_repository().get_by_id(matches[i]);
+                    if (fi) {
+                        std::cout << "    {\"id\": " << fi->id
+                                  << ", \"path\": \"" << fo::core::Exporter::json_escape(fi->path.string()) << "\""
+                                  << ", \"size\": " << fi->size
+                                  << "}" << (i + 1 < matches.size() ? "," : "") << "\n";
+                    }
+                }
+                std::cout << "  ]\n}\n";
+            } else {
+                std::cout << "Target hash: " << res->value << " (" << res->method << ")\n";
+                std::cout << "Algorithm: " << phash_algo << ", Threshold: " << threshold << "\n";
+                std::cout << "Found " << matches.size() << " similar images:\n";
+                for (auto id : matches) {
+                    auto fi = engine.file_repository().get_by_id(id);
+                    if (fi) {
+                        std::cout << "  " << fi->path.string() << "\n";
+                    }
                 }
             }
         } else if (command == "classify") {
@@ -394,15 +412,40 @@ int main(int argc, char** argv) {
                 std::cerr << "Classifier 'onnx' not found.\n";
                 return 1;
             }
-            for (const auto& f : files) {
-                auto results = provider->classify(f.path);
-                if (!results.empty()) {
-                    std::cout << f.path.string() << ":\n";
-                    for (const auto& r : results) {
-                        std::cout << "  " << r.label << " (" << r.confidence << ")\n";
-                        // Persist to DB if file is tracked
-                        if (f.id != 0) {
-                            engine.file_repository().add_tag(f.id, r.label, r.confidence, "ai");
+
+            if (format == "json") {
+                std::cout << "[\n";
+                bool first_file = true;
+                for (const auto& f : files) {
+                    auto results = provider->classify(f.path);
+                    if (!results.empty()) {
+                        if (!first_file) std::cout << ",\n";
+                        first_file = false;
+                        std::cout << "  {\"path\": \"" << fo::core::Exporter::json_escape(f.path.string()) << "\""
+                                  << ", \"classifications\": [";
+                        for (size_t i = 0; i < results.size(); ++i) {
+                            const auto& r = results[i];
+                            std::cout << "{\"label\": \"" << fo::core::Exporter::json_escape(r.label) << "\""
+                                      << ", \"confidence\": " << r.confidence << "}";
+                            if (i + 1 < results.size()) std::cout << ", ";
+                            if (f.id != 0) {
+                                engine.file_repository().add_tag(f.id, r.label, r.confidence, "ai");
+                            }
+                        }
+                        std::cout << "]}";
+                    }
+                }
+                std::cout << "\n]\n";
+            } else {
+                for (const auto& f : files) {
+                    auto results = provider->classify(f.path);
+                    if (!results.empty()) {
+                        std::cout << f.path.string() << ":\n";
+                        for (const auto& r : results) {
+                            std::cout << "  " << r.label << " (" << r.confidence << ")\n";
+                            if (f.id != 0) {
+                                engine.file_repository().add_tag(f.id, r.label, r.confidence, "ai");
+                            }
                         }
                     }
                 }
@@ -415,11 +458,11 @@ int main(int argc, char** argv) {
 
             auto files = engine.scan(roots, exts, follow_symlinks, prune);
             fo::core::RuleEngine rule_engine;
-            
+
             if (!rule_template.empty()) {
                 rule_engine.add_rule({"cli_rule", "", rule_template});
             }
-            
+
             if (!rules_file.empty()) {
                 if (!rule_engine.load_rules_from_yaml(rules_file)) {
                     std::cerr << "Failed to load rules from " << rules_file << "\n";
@@ -427,8 +470,7 @@ int main(int argc, char** argv) {
                 }
             }
 
-            std::cout << "Organizing " << files.size() << " files...\n";
-            if (dry_run) std::cout << "(Dry run - no files will be moved)\n";
+            std::vector<std::pair<std::string, std::string>> moves;
 
             for (const auto& f : files) {
                 std::vector<std::string> tags;
@@ -440,13 +482,12 @@ int main(int argc, char** argv) {
                 auto new_path_opt = rule_engine.apply_rules(f, tags);
                 if (new_path_opt && *new_path_opt != f.path) {
                     auto new_path = *new_path_opt;
-                    std::cout << f.path.string() << " -> " << new_path.string() << "\n";
+                    moves.push_back({f.path.string(), new_path.string()});
                     if (!dry_run) {
                         try {
                             std::filesystem::create_directories(new_path.parent_path());
                             std::filesystem::rename(f.path, new_path);
 
-                            // Log the operation
                             fo::core::OperationRepository op_repo(engine.database());
                             fo::core::OperationRecord rec;
                             rec.timestamp = std::chrono::system_clock::now();
@@ -461,20 +502,35 @@ int main(int argc, char** argv) {
                     }
                 }
             }
+
+            if (format == "json") {
+                std::cout << "{\"dry_run\": " << (dry_run ? "true" : "false")
+                          << ", \"total_files\": " << files.size()
+                          << ", \"moves\": [\n";
+                for (size_t i = 0; i < moves.size(); ++i) {
+                    std::cout << "    {\"source\": \"" << fo::core::Exporter::json_escape(moves[i].first) << "\""
+                              << ", \"dest\": \"" << fo::core::Exporter::json_escape(moves[i].second) << "\"}"
+                              << (i + 1 < moves.size() ? "," : "") << "\n";
+                }
+                std::cout << "  ]\n}\n";
+            } else {
+                std::cout << "Organizing " << files.size() << " files...\n";
+                if (dry_run) std::cout << "(Dry run - no files will be moved)\n";
+                for (const auto& m : moves) {
+                    std::cout << m.first << " -> " << m.second << "\n";
+                }
+            }
         } else if (command == "delete-duplicates") {
             auto groups = engine.duplicate_repository().get_all_groups();
-            std::cout << "Found " << groups.size() << " duplicate groups.\n";
-            if (dry_run) std::cout << "(Dry run - no files will be deleted)\n";
 
             int deleted_count = 0;
             int kept_count = 0;
+            std::vector<std::pair<std::string, std::vector<std::string>>> results; // kept, deleted[]
 
             for (const auto& g : groups) {
                 std::vector<fo::core::FileInfo> members;
-                // Add primary
                 auto p = engine.file_repository().get_by_id(g.primary_file_id);
                 if (p) members.push_back(*p);
-                // Add others
                 for (auto mid : g.member_ids) {
                     if (mid == g.primary_file_id) continue;
                     auto m = engine.file_repository().get_by_id(mid);
@@ -483,30 +539,24 @@ int main(int argc, char** argv) {
 
                 if (members.size() < 2) continue;
 
-                // Sort based on strategy
                 std::sort(members.begin(), members.end(), [&](const fo::core::FileInfo& a, const fo::core::FileInfo& b) {
                     if (keep_strategy == "newest") return a.mtime > b.mtime;
                     if (keep_strategy == "shortest") return a.path.string().length() < b.path.string().length();
                     if (keep_strategy == "longest") return a.path.string().length() > b.path.string().length();
-                    // Default: oldest
                     return a.mtime < b.mtime;
                 });
 
-                // Keep the first one
                 const auto& keep = members[0];
                 kept_count++;
-                std::cout << "Keeping: " << keep.path.string() << "\n";
+                std::vector<std::string> deleted_paths;
 
-                // Delete the rest
                 for (size_t i = 1; i < members.size(); ++i) {
                     const auto& del = members[i];
-                    std::cout << "  Deleting: " << del.path.string() << "\n";
+                    deleted_paths.push_back(del.path.string());
                     if (!dry_run) {
                         try {
                             std::filesystem::remove(del.path);
                             deleted_count++;
-
-                            // Log the operation
                             fo::core::OperationRepository op_repo(engine.database());
                             fo::core::OperationRecord rec;
                             rec.timestamp = std::chrono::system_clock::now();
@@ -515,12 +565,42 @@ int main(int argc, char** argv) {
                             rec.file_size = del.size;
                             op_repo.log_operation(rec);
                         } catch (const std::exception& e) {
-                            std::cerr << "    Failed to delete: " << e.what() << "\n";
+                            std::cerr << "Failed to delete: " << e.what() << "\n";
                         }
                     }
                 }
+                results.push_back({keep.path.string(), deleted_paths});
             }
-            std::cout << "Deleted " << deleted_count << " files. Kept " << kept_count << " files.\n";
+
+            if (format == "json") {
+                std::cout << "{\"dry_run\": " << (dry_run ? "true" : "false")
+                          << ", \"strategy\": \"" << keep_strategy << "\""
+                          << ", \"groups\": " << groups.size()
+                          << ", \"kept\": " << kept_count
+                          << ", \"deleted\": " << deleted_count
+                          << ", \"results\": [\n";
+                for (size_t i = 0; i < results.size(); ++i) {
+                    const auto& [kept_path, deleted_paths] = results[i];
+                    std::cout << "    {\"kept\": \"" << fo::core::Exporter::json_escape(kept_path) << "\""
+                              << ", \"deleted\": [";
+                    for (size_t j = 0; j < deleted_paths.size(); ++j) {
+                        std::cout << "\"" << fo::core::Exporter::json_escape(deleted_paths[j]) << "\"";
+                        if (j + 1 < deleted_paths.size()) std::cout << ", ";
+                    }
+                    std::cout << "]}" << (i + 1 < results.size() ? "," : "") << "\n";
+                }
+                std::cout << "  ]\n}\n";
+            } else {
+                std::cout << "Found " << groups.size() << " duplicate groups.\n";
+                if (dry_run) std::cout << "(Dry run - no files will be deleted)\n";
+                for (const auto& [kept_path, deleted_paths] : results) {
+                    std::cout << "Keeping: " << kept_path << "\n";
+                    for (const auto& dp : deleted_paths) {
+                        std::cout << "  Deleting: " << dp << "\n";
+                    }
+                }
+                std::cout << "Deleted " << deleted_count << " files. Kept " << kept_count << " files.\n";
+            }
 
         } else if (command == "rename") {
             if (rename_pattern.empty()) {
@@ -528,8 +608,8 @@ int main(int argc, char** argv) {
                 return 1;
             }
 
-            if (rename_pattern.find("{parent}") == std::string::npos && 
-                rename_pattern.find("/") == std::string::npos && 
+            if (rename_pattern.find("{parent}") == std::string::npos &&
+                rename_pattern.find("/") == std::string::npos &&
                 rename_pattern.find("\\") == std::string::npos) {
                 rename_pattern = "{parent}/" + rename_pattern;
             }
@@ -538,8 +618,7 @@ int main(int argc, char** argv) {
             fo::core::RuleEngine rule_engine;
             rule_engine.add_rule({"rename_rule", "", rename_pattern});
 
-            std::cout << "Renaming " << files.size() << " files using pattern: " << rename_pattern << "\n";
-            if (dry_run) std::cout << "(Dry run - no files will be renamed)\n";
+            std::vector<std::pair<std::string, std::string>> renames;
 
             for (const auto& f : files) {
                 std::vector<std::string> tags;
@@ -551,12 +630,10 @@ int main(int argc, char** argv) {
                 auto new_path_opt = rule_engine.apply_rules(f, tags);
                 if (new_path_opt && *new_path_opt != f.path) {
                     auto new_path = *new_path_opt;
-                    std::cout << f.path.string() << " -> " << new_path.string() << "\n";
+                    renames.push_back({f.path.string(), new_path.string()});
                     if (!dry_run) {
                         try {
                             std::filesystem::rename(f.path, new_path);
-
-                            // Log the operation
                             fo::core::OperationRepository op_repo(engine.database());
                             fo::core::OperationRecord rec;
                             rec.timestamp = std::chrono::system_clock::now();
@@ -569,6 +646,25 @@ int main(int argc, char** argv) {
                             std::cerr << "Failed to rename " << f.path.string() << ": " << e.what() << "\n";
                         }
                     }
+                }
+            }
+
+            if (format == "json") {
+                std::cout << "{\"dry_run\": " << (dry_run ? "true" : "false")
+                          << ", \"pattern\": \"" << fo::core::Exporter::json_escape(rename_pattern) << "\""
+                          << ", \"total_files\": " << files.size()
+                          << ", \"renames\": [\n";
+                for (size_t i = 0; i < renames.size(); ++i) {
+                    std::cout << "    {\"source\": \"" << fo::core::Exporter::json_escape(renames[i].first) << "\""
+                              << ", \"dest\": \"" << fo::core::Exporter::json_escape(renames[i].second) << "\"}"
+                              << (i + 1 < renames.size() ? "," : "") << "\n";
+                }
+                std::cout << "  ]\n}\n";
+            } else {
+                std::cout << "Renaming " << files.size() << " files using pattern: " << rename_pattern << "\n";
+                if (dry_run) std::cout << "(Dry run - no files will be renamed)\n";
+                for (const auto& r : renames) {
+                    std::cout << r.first << " -> " << r.second << "\n";
                 }
             }
 
@@ -605,7 +701,25 @@ int main(int argc, char** argv) {
         } else if (command == "undo") {
             fo::core::OperationRepository op_repo(engine.database());
             auto undone = op_repo.undo_last();
-            if (undone) {
+
+            if (format == "json") {
+                if (undone) {
+                    std::string type_str;
+                    switch (undone->type) {
+                        case fo::core::OperationType::Move: type_str = "move"; break;
+                        case fo::core::OperationType::Copy: type_str = "copy"; break;
+                        case fo::core::OperationType::Rename: type_str = "rename"; break;
+                        case fo::core::OperationType::Delete: type_str = "delete"; break;
+                    }
+                    std::cout << "{\"success\": true"
+                              << ", \"type\": \"" << type_str << "\""
+                              << ", \"source\": \"" << fo::core::Exporter::json_escape(undone->source_path) << "\""
+                              << ", \"dest\": \"" << fo::core::Exporter::json_escape(undone->dest_path) << "\""
+                              << "}\n";
+                } else {
+                    std::cout << "{\"success\": false, \"message\": \"No operations to undo\"}\n";
+                }
+            } else if (undone) {
                 std::cout << "Undone: ";
                 switch (undone->type) {
                     case fo::core::OperationType::Move:
@@ -630,7 +744,30 @@ int main(int argc, char** argv) {
             fo::core::OperationRepository op_repo(engine.database());
             auto ops = op_repo.get_all(50);
 
-            if (ops.empty()) {
+            if (format == "json") {
+                std::cout << "[\n";
+                for (size_t i = 0; i < ops.size(); ++i) {
+                    const auto& op = ops[i];
+                    auto t = std::chrono::system_clock::to_time_t(op.timestamp);
+                    std::string type_str;
+                    switch (op.type) {
+                        case fo::core::OperationType::Move: type_str = "move"; break;
+                        case fo::core::OperationType::Copy: type_str = "copy"; break;
+                        case fo::core::OperationType::Rename: type_str = "rename"; break;
+                        case fo::core::OperationType::Delete: type_str = "delete"; break;
+                    }
+                    std::ostringstream ts;
+                    ts << std::put_time(std::localtime(&t), "%Y-%m-%dT%H:%M:%S");
+                    std::cout << "  {\"id\": " << op.id
+                              << ", \"type\": \"" << type_str << "\""
+                              << ", \"source\": \"" << fo::core::Exporter::json_escape(op.source_path) << "\""
+                              << ", \"dest\": \"" << fo::core::Exporter::json_escape(op.dest_path) << "\""
+                              << ", \"timestamp\": \"" << ts.str() << "\""
+                              << ", \"undone\": " << (op.undone ? "true" : "false")
+                              << "}" << (i + 1 < ops.size() ? "," : "") << "\n";
+                }
+                std::cout << "]\n";
+            } else if (ops.empty()) {
                 std::cout << "No operation history.\n";
             } else {
                 std::cout << "Operation History (most recent first):\n";
