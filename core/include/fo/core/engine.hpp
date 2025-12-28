@@ -15,6 +15,7 @@ struct EngineConfig {
     std::string scanner = "std";
     std::string hasher = "fast64";
     std::string db_path = "fo.db";
+    bool use_ads_cache = false;  // Use Windows NTFS Alternate Data Streams for hash caching
 };
 
 class Engine {
@@ -46,12 +47,17 @@ public:
     ScanSessionRepository& session_repository() { return session_repo_; }
     DatabaseManager& database() { return db_manager_; }
 
+    bool use_ads_cache() const { return cfg_.use_ads_cache; }
+
 private:
     // local implementation of duplicate finder from dupe_size_fast.cpp
     class SizeHashDuplicateFinder : public IDuplicateFinder {
     public:
+        explicit SizeHashDuplicateFinder(bool use_ads = false) : use_ads_(use_ads) {}
         std::string name() const override { return "size+fast64"; }
         std::vector<DuplicateGroup> group(const std::vector<FileInfo>& files, IHasher& hasher) override;
+    private:
+        bool use_ads_ = false;
     };
 
     EngineConfig cfg_{};

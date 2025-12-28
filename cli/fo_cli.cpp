@@ -50,6 +50,7 @@ static void print_usage() {
               << "  --format=<fmt>      Output format (json, csv, html)\n"
               << "  --threshold=<N>     Similarity threshold (default: 10)\n"
               << "  --phash=<algo>      Perceptual hash algorithm (dhash, phash, ahash)\n"
+              << "  --use-ads-cache     Use Windows NTFS Alternate Data Streams for hash caching\n"
               << "  --list-scanners     List available scanners\n"
               << "  --list-hashers      List available hashers\n"
               << "  --list-metadata     List available metadata providers\n"
@@ -201,6 +202,7 @@ int main(int argc, char** argv) {
         else if (a.rfind("--output=", 0) == 0) output_path = a.substr(9);
         else if (a == "--dry-run") dry_run = true;
         else if (a == "--prune" || a == "--incremental") prune = true;
+        else if (a == "--use-ads-cache") cfg.use_ads_cache = true;
         else if (a.rfind("--lang=", 0) == 0) lang = a.substr(7);
         else if (a.rfind("--threshold=", 0) == 0) threshold = std::stoi(a.substr(12));
         else if (a.rfind("--ext=", 0) == 0) {

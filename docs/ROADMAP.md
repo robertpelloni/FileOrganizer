@@ -98,10 +98,10 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
    - [x] `Engine::find_duplicates()` populates `duplicate_groups` and `duplicate_members`.
    - [x] Add `--db-path` CLI flag (default: `~/.file_organizer/db.sqlite`).
 
-5. **Optional: Alternate Data Streams (Windows)**
-   - [ ] Implement ADS read/write for fast hashes (`file.jpg:fo_hash`).
-   - [ ] CLI flag: `--use-ads-cache` (Windows only).
-   - [ ] Fallback to DB if ADS unavailable (network shares, FAT32).
+5. **Optional: Alternate Data Streams (Windows)** ✅ (completed)
+   - [x] Implement ADS read/write for fast hashes (`file.jpg:fo_cache`).
+   - [x] CLI flag: `--use-ads-cache` (Windows only).
+   - [x] Fallback to DB if ADS unavailable (network shares, FAT32).
 
 **Deliverable**: Persistent storage; incremental scans; query duplicates without re-hashing.
 

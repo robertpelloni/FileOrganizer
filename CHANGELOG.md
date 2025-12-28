@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-12-28
+
+### Added
+- **ADS Cache for Windows**: Implemented Alternate Data Streams (ADS) caching for NTFS.
+    - New `--use-ads-cache` CLI option to enable hash caching in file streams.
+    - Stores hash values directly in the file's ADS (e.g., `file.jpg:fo_cache`).
+    - Automatically invalidates cache when file mtime changes.
+    - Supports multiple hash types per file.
+    - Only works on NTFS/ReFS volumes; gracefully falls back on other filesystems.
+
 ## [1.1.0] - 2025-12-28
 
 ### Added

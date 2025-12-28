@@ -1,4 +1,5 @@
 #include "fo/core/engine.hpp"
+#include "fo/core/ads_cache.hpp"
 #include <unordered_map>
 #include <algorithm>
 #include <iostream>
@@ -109,7 +110,7 @@ std::vector<FileInfo> Engine::scan(const std::vector<std::filesystem::path>& roo
 std::vector<DuplicateGroup> Engine::find_duplicates(const std::vector<FileInfo>& files) {
     if (!hasher_) throw std::runtime_error("hasher not found: " + cfg_.hasher);
     // use size+fast64 strategy for now
-    class SizeHashDuplicateFinder local;
+    SizeHashDuplicateFinder local(cfg_.use_ads_cache);
     auto groups = local.group(files, *hasher_);
 
     // Persist duplicates
@@ -155,7 +156,21 @@ std::vector<DuplicateGroup> Engine::SizeHashDuplicateFinder::group(const std::ve
         if (vec.size() < 2) continue;
         std::unordered_map<std::string, std::vector<const FileInfo*>> by_fast;
         for (auto* fi : vec) {
-            auto h = hasher.fast64(fi->path);
+            std::string h;
+
+            // Try ADS cache first if enabled
+            if (use_ads_) {
+                auto cached = ADSCache::get_hash(fi->path, "fast64");
+                if (cached) {
+                    h = *cached;
+                } else {
+                    h = hasher.fast64(fi->path);
+                    ADSCache::set_hash(fi->path, "fast64", h);
+                }
+            } else {
+                h = hasher.fast64(fi->path);
+            }
+
             by_fast[h].push_back(fi);
         }
         for (auto& hv : by_fast) {
