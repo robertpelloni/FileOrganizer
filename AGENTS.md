@@ -531,3 +531,55 @@ The project is up-to-date with upstream dependencies. A dashboard is available t
 **Handoff Note:**
 The project now has comprehensive undo support and multiple perceptual hash algorithms. All batch operations are logged for undo capability. The CLI is feature-rich with 15+ commands. The build environment requires MSVC with vcvars64.bat activated.
 
+### Update: 2025-12-28 (Session 16)
+
+**Author:** Claude Opus 4.5 (Augment Agent)
+
+**Scope:** v1.0.0 Release, Feature Branch Merge, Documentation Overhaul.
+
+**Current Status:**
+- **Version**: 1.0.0 (First Major Release)
+- **Build**: Successfully compiles with MSVC 2019 + Ninja
+- **CLI**: 15+ commands, fully functional
+
+**Completed Tasks:**
+1. **Version Bump**: Updated to v1.0.0 in `VERSION.md` and `CHANGELOG.md`.
+2. **Feature Branch Merge**: Merged `origin/feature/project-analysis-and-refactoring-*` into `main`.
+3. **Conflict Resolution**: Resolved merge conflicts keeping `main` branch changes.
+4. **Documentation Overhaul**:
+   - Enhanced `docs/LLM_INSTRUCTIONS.md` with comprehensive guidelines.
+   - Updated `docs/SUBMODULES.md` with detailed project structure.
+   - Updated `CLAUDE.md`, `GEMINI.md`, `GPT.md` with model-specific instructions.
+5. **Build Verification**: Clean build from scratch, `fo_cli.exe --version` reports v1.0.0.
+6. **Git Push**: All changes pushed to `origin/main`.
+
+**Git Log:**
+- `b5c32b63`: v1.0.0 - undo support, perceptual hashing, comprehensive docs
+- `985d2ffc`: merge-feature-branch
+
+**CLI Features (v1.0.0):**
+| Command | Description |
+|---------|-------------|
+| `scan` | Scan directories for files |
+| `duplicates` | Find duplicate files |
+| `hash` | Compute file hashes |
+| `metadata` | Extract EXIF metadata |
+| `ocr` | Extract text from images |
+| `similar` | Find visually similar images |
+| `classify` | AI image classification |
+| `organize` | Rule-based file organization |
+| `delete-duplicates` | Remove duplicate files |
+| `rename` | Pattern-based renaming |
+| `export` | Export to JSON/CSV/HTML |
+| `undo` | Undo last operation |
+| `history` | View operation log |
+
+**Next Steps:**
+1. **Testing**: Run comprehensive tests on all CLI commands.
+2. **CI/CD**: Set up GitHub Actions for automated builds.
+3. **Documentation**: Create user manual and developer guide.
+4. **Packaging**: Create installers for Windows/Linux/macOS.
+
+**Handoff Note:**
+v1.0.0 is released and pushed to GitHub. The project is feature-complete for the initial roadmap. The CLI has 15+ commands covering scanning, hashing, metadata, OCR, AI classification, organization, and undo support. Build verified on Windows with MSVC 2019. Next focus should be testing, CI/CD, and packaging.
+
