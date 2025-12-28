@@ -1,7 +1,9 @@
-test: add unit tests for Exporter, Hasher, and Scanner
+feat(gui): refactor Qt GUI to use fo_core Engine v0.7.0
 
-- Add test_export.cpp with tests for escape functions, format_size, compute_stats
-- Add test_hasher.cpp with tests for fast64, sha256, xxhash providers
-- Add test_scanner.cpp with tests for std, win32, dirent scanners
-- Update tests/CMakeLists.txt to include new test files
+- Integrate fo_core Engine for scanning and duplicate detection
+- Add tabbed interface for Files, Duplicates, and Log views
+- Add scanner and hasher selection dropdowns
+- Add export functionality with HTML/JSON/CSV support
+- Add menu bar, toolbar, and status bar
+- Add progress bar for long operations
 
