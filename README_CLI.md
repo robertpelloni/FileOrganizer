@@ -61,6 +61,7 @@ fo_cli <command> [options] [paths...]
 - `--prune`: Remove deleted files from the database during scan.
 - `--format=<fmt>`: Export format (`json`, `csv`, `html`).
 - `--output=<path>`: Output file path for export command.
+- `--thumbnails`: Include thumbnails in HTML export (images only).
 - `--phash=<algo>`: Perceptual hash algorithm (`dhash`, `phash`, `ahash`).
 - `--threshold=<N>`: Similarity threshold for `similar` command (default: 10).
 - `--list-scanners`: List available scanners.
@@ -87,6 +88,9 @@ fo_cli delete-duplicates --keep=oldest --dry-run
 
 # Export scan results to HTML report
 fo_cli export --format=html --output=report.html /path/to/photos
+
+# Export with embedded thumbnails for images
+fo_cli export --format=html --thumbnails --output=gallery.html /path/to/photos
 
 # Export duplicates to JSON for processing
 fo_cli export --format=json --output=results.json /path/to/photos

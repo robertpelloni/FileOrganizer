@@ -51,6 +51,7 @@ static void print_usage() {
               << "  --threshold=<N>     Similarity threshold (default: 10)\n"
               << "  --phash=<algo>      Perceptual hash algorithm (dhash, phash, ahash)\n"
               << "  --use-ads-cache     Use Windows NTFS Alternate Data Streams for hash caching\n"
+              << "  --thumbnails        Include thumbnails in HTML export (images only)\n"
               << "  --list-scanners     List available scanners\n"
               << "  --list-hashers      List available hashers\n"
               << "  --list-metadata     List available metadata providers\n"
@@ -143,6 +144,7 @@ int main(int argc, char** argv) {
     std::string phash_algo = "dhash";
     bool dry_run = false;
     bool prune = false;
+    bool include_thumbnails = false;
     int threshold = 10;
     fo::core::EngineConfig cfg;
 
@@ -203,6 +205,7 @@ int main(int argc, char** argv) {
         else if (a == "--dry-run") dry_run = true;
         else if (a == "--prune" || a == "--incremental") prune = true;
         else if (a == "--use-ads-cache") cfg.use_ads_cache = true;
+        else if (a == "--thumbnails") include_thumbnails = true;
         else if (a.rfind("--lang=", 0) == 0) lang = a.substr(7);
         else if (a.rfind("--threshold=", 0) == 0) threshold = std::stoi(a.substr(12));
         else if (a.rfind("--ext=", 0) == 0) {
@@ -688,11 +691,11 @@ int main(int argc, char** argv) {
                 } else if (exp_format == fo::core::ExportFormat::CSV) {
                     fo::core::Exporter::to_csv(std::cout, files);
                 } else if (exp_format == fo::core::ExportFormat::HTML) {
-                    fo::core::Exporter::to_html(std::cout, files, groups, stats);
+                    fo::core::Exporter::to_html(std::cout, files, groups, stats, include_thumbnails);
                 }
             } else {
                 // Output to file
-                if (fo::core::Exporter::export_to_file(output_path, files, groups, stats, exp_format)) {
+                if (fo::core::Exporter::export_to_file(output_path, files, groups, stats, exp_format, include_thumbnails)) {
                     std::cout << "Exported to " << output_path << "\n";
                 } else {
                     std::cerr << "Failed to export to " << output_path << "\n";

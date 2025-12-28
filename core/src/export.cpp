@@ -1,4 +1,5 @@
 #include "fo/core/export.hpp"
+#include "fo/core/thumbnail.hpp"
 #include <fstream>
 #include <iomanip>
 #include <sstream>
@@ -178,7 +179,8 @@ void Exporter::duplicates_to_csv(std::ostream& out, const std::vector<DuplicateG
 void Exporter::to_html(std::ostream& out,
                        const std::vector<FileInfo>& files,
                        const std::vector<DuplicateGroup>& duplicates,
-                       const ScanStats& stats) {
+                       const ScanStats& stats,
+                       bool include_thumbnails) {
     out << R"(<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -198,6 +200,8 @@ th { background: #007bff; color: white; }
 tr:nth-child(even) { background: #f8f9fa; }
 .dup-group { background: #fff3cd; }
 .dup-member { padding-left: 30px; }
+.thumbnail { max-width: 100px; max-height: 100px; border-radius: 4px; }
+.thumb-cell { width: 110px; text-align: center; }
 </style>
 </head>
 <body>
@@ -214,13 +218,34 @@ tr:nth-child(even) { background: #f8f9fa; }
 
     // Duplicates section
     if (!duplicates.empty()) {
-        out << "<h2>Duplicate Files</h2>\n<table>\n<tr><th>Group</th><th>Size</th><th>Hash</th><th>Files</th></tr>\n";
+        if (include_thumbnails) {
+            out << "<h2>Duplicate Files</h2>\n<table>\n<tr><th class=\"thumb-cell\">Preview</th><th>Group</th><th>Size</th><th>Hash</th><th>Files</th></tr>\n";
+        } else {
+            out << "<h2>Duplicate Files</h2>\n<table>\n<tr><th>Group</th><th>Size</th><th>Hash</th><th>Files</th></tr>\n";
+        }
         int group_id = 1;
         for (const auto& g : duplicates) {
-            out << "<tr class=\"dup-group\"><td rowspan=\"" << g.files.size() << "\">" << group_id
-                << "</td><td rowspan=\"" << g.files.size() << "\">" << html_escape(format_size(g.size))
-                << "</td><td rowspan=\"" << g.files.size() << "\">" << html_escape(g.fast64.substr(0, 16)) << "..."
-                << "</td><td>" << html_escape(g.files[0].path.string()) << "</td></tr>\n";
+            // Generate thumbnail for first file in group if it's an image
+            std::string thumb_html;
+            if (include_thumbnails && !g.files.empty() && ThumbnailGenerator::is_image_file(g.files[0].path)) {
+                auto thumb = ThumbnailGenerator::generate_base64(g.files[0].path);
+                if (thumb) {
+                    thumb_html = "<img class=\"thumbnail\" src=\"data:image/jpeg;base64," + *thumb + "\" alt=\"thumbnail\">";
+                }
+            }
+
+            if (include_thumbnails) {
+                out << "<tr class=\"dup-group\"><td class=\"thumb-cell\" rowspan=\"" << g.files.size() << "\">" << thumb_html
+                    << "</td><td rowspan=\"" << g.files.size() << "\">" << group_id
+                    << "</td><td rowspan=\"" << g.files.size() << "\">" << html_escape(format_size(g.size))
+                    << "</td><td rowspan=\"" << g.files.size() << "\">" << html_escape(g.fast64.substr(0, 16)) << "..."
+                    << "</td><td>" << html_escape(g.files[0].path.string()) << "</td></tr>\n";
+            } else {
+                out << "<tr class=\"dup-group\"><td rowspan=\"" << g.files.size() << "\">" << group_id
+                    << "</td><td rowspan=\"" << g.files.size() << "\">" << html_escape(format_size(g.size))
+                    << "</td><td rowspan=\"" << g.files.size() << "\">" << html_escape(g.fast64.substr(0, 16)) << "..."
+                    << "</td><td>" << html_escape(g.files[0].path.string()) << "</td></tr>\n";
+            }
             for (size_t i = 1; i < g.files.size(); ++i) {
                 out << "<tr><td>" << html_escape(g.files[i].path.string()) << "</td></tr>\n";
             }
@@ -232,14 +257,32 @@ tr:nth-child(even) { background: #f8f9fa; }
     // Files section (limited to first 100 for performance)
     out << "<h2>Files (" << files.size() << " total";
     if (files.size() > 100) out << ", showing first 100";
-    out << ")</h2>\n<table>\n<tr><th>Path</th><th>Size</th><th>Modified</th></tr>\n";
+    if (include_thumbnails) {
+        out << ")</h2>\n<table>\n<tr><th class=\"thumb-cell\">Preview</th><th>Path</th><th>Size</th><th>Modified</th></tr>\n";
+    } else {
+        out << ")</h2>\n<table>\n<tr><th>Path</th><th>Size</th><th>Modified</th></tr>\n";
+    }
     size_t limit = std::min(files.size(), size_t(100));
     for (size_t i = 0; i < limit; ++i) {
         const auto& f = files[i];
         if (!f.is_dir) {
-            out << "<tr><td>" << html_escape(f.path.string()) << "</td><td>"
-                << html_escape(format_size(f.size)) << "</td><td>"
-                << html_escape(format_time(f.mtime)) << "</td></tr>\n";
+            std::string thumb_html;
+            if (include_thumbnails && ThumbnailGenerator::is_image_file(f.path)) {
+                auto thumb = ThumbnailGenerator::generate_base64(f.path);
+                if (thumb) {
+                    thumb_html = "<img class=\"thumbnail\" src=\"data:image/jpeg;base64," + *thumb + "\" alt=\"thumbnail\">";
+                }
+            }
+
+            if (include_thumbnails) {
+                out << "<tr><td class=\"thumb-cell\">" << thumb_html << "</td><td>" << html_escape(f.path.string()) << "</td><td>"
+                    << html_escape(format_size(f.size)) << "</td><td>"
+                    << html_escape(format_time(f.mtime)) << "</td></tr>\n";
+            } else {
+                out << "<tr><td>" << html_escape(f.path.string()) << "</td><td>"
+                    << html_escape(format_size(f.size)) << "</td><td>"
+                    << html_escape(format_time(f.mtime)) << "</td></tr>\n";
+            }
         }
     }
     out << "</table>\n";
@@ -250,7 +293,8 @@ bool Exporter::export_to_file(const std::filesystem::path& output_path,
                               const std::vector<FileInfo>& files,
                               const std::vector<DuplicateGroup>& duplicates,
                               const ScanStats& stats,
-                              ExportFormat format) {
+                              ExportFormat format,
+                              bool include_thumbnails) {
     std::ofstream out(output_path);
     if (!out) return false;
 
@@ -262,7 +306,7 @@ bool Exporter::export_to_file(const std::filesystem::path& output_path,
             to_csv(out, files);
             break;
         case ExportFormat::HTML:
-            to_html(out, files, duplicates, stats);
+            to_html(out, files, duplicates, stats, include_thumbnails);
             break;
     }
     return out.good();

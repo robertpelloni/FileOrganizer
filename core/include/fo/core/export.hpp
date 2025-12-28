@@ -44,17 +44,19 @@ public:
                                   const std::vector<DuplicateGroup>& duplicates);
     
     // Export scan results to HTML
-    static void to_html(std::ostream& out, 
+    static void to_html(std::ostream& out,
                         const std::vector<FileInfo>& files,
                         const std::vector<DuplicateGroup>& duplicates,
-                        const ScanStats& stats);
+                        const ScanStats& stats,
+                        bool include_thumbnails = false);
     
     // Convenience: export to file
     static bool export_to_file(const std::filesystem::path& output_path,
                                const std::vector<FileInfo>& files,
                                const std::vector<DuplicateGroup>& duplicates,
                                const ScanStats& stats,
-                               ExportFormat format);
+                               ExportFormat format,
+                               bool include_thumbnails = false);
     
     // Compute statistics from scan results
     static ScanStats compute_stats(const std::vector<FileInfo>& files,
