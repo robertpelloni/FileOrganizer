@@ -1,6 +1,7 @@
-feat(cli): add JSON output mode for scan, duplicates, hash, metadata commands
+test: add unit tests for Exporter, Hasher, and Scanner
 
-- Add --format=json support to scan, duplicates, hash, metadata commands
-- Make json_escape, csv_escape, html_escape public static methods in Exporter
-- Add necessary includes for time formatting in CLI
+- Add test_export.cpp with tests for escape functions, format_size, compute_stats
+- Add test_hasher.cpp with tests for fast64, sha256, xxhash providers
+- Add test_scanner.cpp with tests for std, win32, dirent scanners
+- Update tests/CMakeLists.txt to include new test files
 

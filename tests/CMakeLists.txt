@@ -2,6 +2,9 @@ find_package(GTest CONFIG REQUIRED)
 
 add_executable(fo_tests
     test_rule_engine.cpp
+    test_export.cpp
+    test_hasher.cpp
+    test_scanner.cpp
 )
 
 target_link_libraries(fo_tests PRIVATE GTest::gtest GTest::gtest_main fo_core)
