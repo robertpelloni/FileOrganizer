@@ -41,6 +41,7 @@ fo_cli <command> [options] [paths...]
 - `organize`: Move files based on rules (e.g., date, tags).
 - `rename`: Rename files based on patterns.
 - `delete-duplicates`: Delete duplicate files based on strategy.
+- `export`: Export scan results to JSON, CSV, or HTML format.
 
 ### Options
 
@@ -56,6 +57,8 @@ fo_cli <command> [options] [paths...]
 - `--dry-run`: Simulate operations without modifying files.
 - `--incremental`: Perform an incremental scan (detect new/modified files).
 - `--prune`: Remove deleted files from the database during scan.
+- `--format=<fmt>`: Export format (`json`, `csv`, `html`).
+- `--output=<path>`: Output file path for export command.
 - `--list-scanners`: List available scanners.
 - `--list-hashers`: List available hashers.
 - `--list-metadata`: List available metadata providers.
@@ -76,6 +79,12 @@ fo_cli rename --pattern="{year}-{month}-{day}_{name}.{ext}" /path/to/photos
 
 # Delete duplicates, keeping the oldest file
 fo_cli delete-duplicates --keep=oldest --dry-run
+
+# Export scan results to HTML report
+fo_cli export --format=html --output=report.html /path/to/photos
+
+# Export duplicates to JSON for processing
+fo_cli export --format=json --output=results.json /path/to/photos
 ```
 
 ## Notes

@@ -5,6 +5,7 @@
 #include "fo/core/perceptual_hash_interface.hpp"
 #include "fo/core/classification_interface.hpp"
 #include "fo/core/rule_engine.hpp"
+#include "fo/core/export.hpp"
 #include "fo/core/version.hpp"
 #include <iostream>
 #include <string>
@@ -28,6 +29,7 @@ static void print_usage() {
               << "  organize     Organize files based on rules\n"
               << "  delete-duplicates Delete duplicate files\n"
               << "  rename       Rename files based on pattern\n"
+              << "  export       Export scan results to JSON/CSV/HTML\n"
               << "\nOptions:\n"
               << "  --scanner=<name>    Select scanner (e.g., std, win32, dirent)\n"
               << "  --hasher=<name>     Select hasher (e.g., fast64, blake3)\n"
@@ -36,10 +38,11 @@ static void print_usage() {
               << "  --rules=<file.yaml> Load organization rules from YAML file\n"
               << "  --pattern=<tmpl>    Rename pattern (e.g., '{year}_{name}.{ext}')\n"
               << "  --keep=<strategy>   Keep strategy: oldest, newest, shortest, longest (default: oldest)\n"
+              << "  --output=<path>     Output file path for export command\n"
               << "  --dry-run           Simulate organization without moving files\n"
               << "  --ext=<.jpg,.png>   Comma-separated list of extensions\n"
               << "  --follow-symlinks   Follow symbolic links\n"
-              << "  --format=<json>     Output format\n"
+              << "  --format=<fmt>      Output format (json, csv, html)\n"
               << "  --threshold=<N>     Similarity threshold (default: 10)\n"
               << "  --list-scanners     List available scanners\n"
               << "  --list-hashers      List available hashers\n"
@@ -86,6 +89,7 @@ int main(int argc, char** argv) {
     std::string rules_file;
     std::string rename_pattern;
     std::string keep_strategy = "oldest";
+    std::string output_path;
     bool dry_run = false;
     bool prune = false;
     int threshold = 10;
@@ -136,6 +140,7 @@ int main(int argc, char** argv) {
         else if (a.rfind("--rules=", 0) == 0) rules_file = a.substr(8);
         else if (a.rfind("--pattern=", 0) == 0) rename_pattern = a.substr(10);
         else if (a.rfind("--keep=", 0) == 0) keep_strategy = a.substr(7);
+        else if (a.rfind("--output=", 0) == 0) output_path = a.substr(9);
         else if (a == "--dry-run") dry_run = true;
         else if (a == "--prune" || a == "--incremental") prune = true;
         else if (a.rfind("--lang=", 0) == 0) lang = a.substr(7);
@@ -405,6 +410,36 @@ int main(int argc, char** argv) {
                             std::cerr << "Failed to rename " << f.path.string() << ": " << e.what() << "\n";
                         }
                     }
+                }
+            }
+
+        } else if (command == "export") {
+            // Scan and find duplicates to get data for export
+            auto files = engine.scan(roots, exts, follow_symlinks, prune);
+            auto groups = engine.find_duplicates(files);
+            auto stats = fo::core::Exporter::compute_stats(files, groups);
+
+            // Determine format
+            fo::core::ExportFormat exp_format = fo::core::ExportFormat::JSON;
+            if (format == "csv") exp_format = fo::core::ExportFormat::CSV;
+            else if (format == "html") exp_format = fo::core::ExportFormat::HTML;
+
+            if (output_path.empty()) {
+                // Output to stdout
+                if (exp_format == fo::core::ExportFormat::JSON) {
+                    fo::core::Exporter::to_json(std::cout, files, groups, stats);
+                } else if (exp_format == fo::core::ExportFormat::CSV) {
+                    fo::core::Exporter::to_csv(std::cout, files);
+                } else if (exp_format == fo::core::ExportFormat::HTML) {
+                    fo::core::Exporter::to_html(std::cout, files, groups, stats);
+                }
+            } else {
+                // Output to file
+                if (fo::core::Exporter::export_to_file(output_path, files, groups, stats, exp_format)) {
+                    std::cout << "Exported to " << output_path << "\n";
+                } else {
+                    std::cerr << "Failed to export to " << output_path << "\n";
+                    return 1;
                 }
             }
 

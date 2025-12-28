@@ -368,3 +368,4 @@ libs/_unsorted/
 build/
 
 core/include/fo/core/version.hpp
+.aider*

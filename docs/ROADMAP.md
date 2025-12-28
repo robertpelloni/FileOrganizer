@@ -241,9 +241,10 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
    - [x] CLI: `fo_cli scan --incremental`.
    - [x] Detect moved files (same hash, new path); prompt to update DB.
 
-5. **Export and reporting**
-   - [ ] CLI: `fo_cli export --format=json|csv|html /path/to/report`.
-   - [ ] Generate HTML report with thumbnails, duplicate lists, statistics.
+5. **Export and reporting** ✅ (completed)
+   - [x] CLI: `fo_cli export --format=json|csv|html /path/to/report`.
+   - [x] Generate HTML report with duplicate lists, statistics.
+   - [ ] Thumbnails in HTML report (future enhancement).
 
 **Deliverable**: Production-ready tool with automation and power-user workflows.
 
