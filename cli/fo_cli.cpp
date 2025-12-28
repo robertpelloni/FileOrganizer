@@ -86,6 +86,48 @@ int main(int argc, char** argv) {
         std::cout << "FileOrganizer v" << fo::core::FO_VERSION << "\n";
         return 0;
     }
+    if (command == "--list-scanners") {
+        auto& reg = fo::core::Registry<fo::core::IFileScanner>::instance();
+        std::cout << "Available scanners:";
+        for (auto& n : reg.names()) std::cout << " " << n;
+        std::cout << "\n";
+        return 0;
+    }
+    if (command == "--list-hashers") {
+        auto& reg = fo::core::Registry<fo::core::IHasher>::instance();
+        std::cout << "Available hashers:";
+        for (auto& n : reg.names()) std::cout << " " << n;
+        std::cout << "\n";
+        return 0;
+    }
+    if (command == "--list-metadata") {
+        auto& reg = fo::core::Registry<fo::core::IMetadataProvider>::instance();
+        std::cout << "Available metadata providers:";
+        for (auto& n : reg.names()) std::cout << " " << n;
+        std::cout << "\n";
+        return 0;
+    }
+    if (command == "--list-ocr") {
+        auto& reg = fo::core::Registry<fo::core::IOCRProvider>::instance();
+        std::cout << "Available OCR providers:";
+        for (auto& n : reg.names()) std::cout << " " << n;
+        std::cout << "\n";
+        return 0;
+    }
+    if (command == "--list-classifiers") {
+        auto& reg = fo::core::Registry<fo::core::IImageClassifier>::instance();
+        std::cout << "Available classifiers:";
+        for (auto& n : reg.names()) std::cout << " " << n;
+        std::cout << "\n";
+        return 0;
+    }
+    if (command == "--list-phash") {
+        auto& reg = fo::core::Registry<fo::core::IPerceptualHasher>::instance();
+        std::cout << "Available perceptual hash algorithms:";
+        for (auto& n : reg.names()) std::cout << " " << n;
+        std::cout << "\n";
+        return 0;
+    }
 
     std::vector<std::filesystem::path> roots;
     std::vector<std::string> exts;
