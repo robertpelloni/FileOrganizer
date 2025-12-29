@@ -58,6 +58,7 @@ static void print_usage() {
               << "  --list-ocr          List available OCR providers\n"
               << "  --list-classifiers  List available classifiers\n"
               << "  --list-phash        List available perceptual hash algorithms\n"
+              << "  --modules           List all registered modules/providers\n"
               << "  --download-models   Download default AI models\n";
 }
 
@@ -86,6 +87,42 @@ int main(int argc, char** argv) {
     }
     if (command == "-v" || command == "--version") {
         std::cout << "FileOrganizer v" << fo::core::FO_VERSION << "\n";
+        std::cout << "Build Date: " << __DATE__ << " " << __TIME__ << "\n";
+        return 0;
+    }
+    if (command == "--modules") {
+        std::cout << "Registered Modules:\n";
+        
+        auto& scanners = fo::core::Registry<fo::core::IFileScanner>::instance();
+        std::cout << "  Scanners: ";
+        for (const auto& n : scanners.names()) std::cout << n << " ";
+        std::cout << "\n";
+
+        auto& hashers = fo::core::Registry<fo::core::IHasher>::instance();
+        std::cout << "  Hashers: ";
+        for (const auto& n : hashers.names()) std::cout << n << " ";
+        std::cout << "\n";
+
+        auto& meta = fo::core::Registry<fo::core::IMetadataProvider>::instance();
+        std::cout << "  Metadata: ";
+        for (const auto& n : meta.names()) std::cout << n << " ";
+        std::cout << "\n";
+
+        auto& ocr = fo::core::Registry<fo::core::IOCRProvider>::instance();
+        std::cout << "  OCR: ";
+        for (const auto& n : ocr.names()) std::cout << n << " ";
+        std::cout << "\n";
+
+        auto& classifiers = fo::core::Registry<fo::core::IImageClassifier>::instance();
+        std::cout << "  Classifiers: ";
+        for (const auto& n : classifiers.names()) std::cout << n << " ";
+        std::cout << "\n";
+
+        auto& phash = fo::core::Registry<fo::core::IPerceptualHasher>::instance();
+        std::cout << "  Perceptual Hash: ";
+        for (const auto& n : phash.names()) std::cout << n << " ";
+        std::cout << "\n";
+
         return 0;
     }
     if (command == "--list-scanners") {
