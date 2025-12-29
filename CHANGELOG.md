@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2025-12-28
+
+### Added
+- **Portable Packaging**: Scripts for creating distributable ZIP archives.
+    - `scripts/package.bat`: Windows packaging script.
+    - `scripts/package.sh`: Linux/macOS packaging script.
+    - Generates `FileOrganizer-{version}-{platform}.zip` with CLI, docs, and license.
+- **Phase 7 Completion**: All documentation and packaging infrastructure in place.
+
+### Changed
+- **Major Version Bump**: v2.0.0 marks feature-complete status for CLI tool.
+    - 15+ CLI commands
+    - 59 passing tests
+    - Comprehensive documentation (User Manual, Developer Guide, API Reference)
+    - Portable packaging scripts
+
 ## [1.9.0] - 2025-12-28
 
 ### Added

@@ -268,7 +268,7 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
    - [ ] Windows: MSI installer (WiX) or NSIS.
    - [ ] Linux: AppImage, Flatpak, or distro packages (.deb, .rpm).
    - [ ] macOS: .dmg with notarized binary.
-   - [ ] Portable: ZIP with CLI + optional GUI.
+   - [x] Portable: ZIP with CLI + optional GUI (`scripts/package.bat`, `scripts/package.sh`).
 
 3. **Testing**
    - [x] Unit tests: Google Test for core functions (59 tests passing).
