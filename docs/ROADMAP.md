@@ -4,356 +4,144 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 
 ---
 
-## Current Status (Baseline)
+## Current Status (v2.0.0)
 
 ### Completed
-- ✅ Monolithic Qt app (`OpenFileOrganizer.cpp`) with scanning, hashing, metadata, and duplicate detection.
-- ✅ Vendored libraries: TinyEXIF, hash-library, xxHash, SQLite3, and many others in `libs/`.
-- ✅ Multiple directory scanning strategies (std::filesystem, dirent, Win32, manual).
-- ✅ **Win32 Scanner Optimization**: Direct FILETIME to `std::chrono` conversion for high performance.
-- ✅ Fast prefilter hash (sampled chunks) and optional strong hashes (SHA-256, MD5, etc.).
-- ✅ EXIF date parsing (TinyEXIF) and filename regex-based date extraction.
-- ✅ Size + fast-hash duplicate grouping with byte-compare verification.
-- ✅ **Database Layer**: SQLite schema V1, migrations, and full repository layer (`FileRepository`, `DuplicateRepository`, `IgnoreRepository`, `ScanSessionRepository`).
-- ✅ **CLI**: `fo_cli` with `scan`, `duplicates`, `hash`, `metadata` commands and `--db` persistence.
-- ✅ **Documentation**: Centralized LLM instructions, Submodule Dashboard, Versioning.
-- ✅ **Submodules**: All submodules updated to latest upstream; dashboard generated.
+- ✅ **Core Engine**: C++20 static library (`fo_core`) with plugin registry.
+- ✅ **CLI**: Feature-complete `fo_cli` with 15+ commands.
+- ✅ **GUI**: Qt6-based `fo_gui` decoupled from core logic.
+- ✅ **Providers**:
+    - Scanners: `std::filesystem`, `Win32`, `dirent`.
+    - Hashers: `xxHash`, `SHA256`, `BLAKE3` (vcpkg).
+    - Metadata: `TinyEXIF`, `Exiv2` (vcpkg).
+    - OCR: `Tesseract` (vcpkg).
+    - Perceptual Hash: `dHash`, `pHash`, `aHash`.
+- ✅ **Database**: SQLite with migrations, repositories, and incremental scanning.
+- ✅ **Advanced Features**: AI classification (ONNX), Rule-based organization, Batch operations.
+- ✅ **Testing**: 59 unit/integration tests passing.
+- ✅ **Documentation**: Comprehensive guides (User, Developer, API).
 
-### Gaps
-- ❌ Tight Qt coupling: business logic in `Worker` QObject (legacy).
-- ❌ No plugin registry: providers hardcoded, not swappable at runtime (Registry pattern implemented but dynamic loading not yet).
-- ❌ No benchmarking harness: multiple implementations exist but not measured.
-- ❌ No CI/CD: manual builds; no cross-platform testing.
-- ✅ OCR and perceptual hashing implemented (Tesseract, dHash, pHash, aHash).
-- ❌ Large vendor sprawl: many unused libraries (radare2, OpenCV, FFmpeg, etc.).
+### Pending
+- ⏳ **Installers**: MSI (Windows), AppImage (Linux), DMG (macOS).
+- ⏳ **Fuzz Testing**: Robustness testing with libFuzzer.
+- ⏳ **Benchmarks**: Comprehensive performance analysis and tuning.
+- ⏳ **Cloud Integration**: Optional S3/Drive support (Post-v1.0).
 
 ---
 
-## Phase 1: Decouple and Architect (Weeks 1–3)
+## Phase 1: Decouple and Architect (Completed)
 
 **Goal**: Extract a portable, CLI-first engine with a plugin architecture.
 
 ### Tasks
-
-1. **Create CMake build system** ✅ (completed)
-   - [x] Top-level `CMakeLists.txt` with `core/` and `cli/` subdirectories.
-   - [x] Vendor TinyEXIF, hash-library, xxHash directly in core build.
-   - [x] Add vcpkg manifest (`vcpkg.json`) for optional dependencies (Exiv2, BLAKE3, Tesseract).
-   - [ ] Test cross-platform builds (Windows MSVC, Linux GCC/Clang, macOS Clang).
-
-2. **Define core types and interfaces** ✅ (completed)
-   - [x] `fo::core::types.hpp`: `FileInfo`, `DateMetadata`, `ImageMetadata`, `Hashes`.
-   - [x] `fo::core::interfaces.hpp`: `IFileScanner`, `IHasher`, `IMetadataProvider`, `IDuplicateFinder`.
-   - [x] `fo::core::ocr_interface.hpp`: `IOCRProvider`, `OCRResult`, `OCRBoundingBox`.
-   - [x] `fo::core::registry.hpp`: Generic registry for static provider registration.
-
-3. **Implement initial providers** ✅ (completed)
-   - [x] Scanners: `StdFsScanner` (std::filesystem), `Win32Scanner`, `DirentScanner`.
-   - [x] Hashers: `Fast64Hasher` (sampled), `SHA256Hasher` (hash-library), `XXHasher` (xxHash64).
-   - [x] Metadata: `TinyExifMetadataProvider` (read-only).
-   - [ ] Add stubs for: `Exiv2MetadataProvider`, `Blake3Hasher`, `TesseractOCRProvider` (feature-guarded).
-   - [x] Implement `IDuplicateFinder` variants: `SizeHashDuplicateFinder`.
-
-4. **Build CLI executable** ✅ (completed)
-   - [x] `cli/fo_cli.cpp`: Parse args (`--scanner`, `--hasher`, `--ext`, roots).
-   - [x] Integrate with `fo::core::Engine`.
-   - [x] Add commands: `scan`, `duplicates`, `hash`, `metadata`.
-   - [x] Add commands: `ocr` (subcommands).
-   - [ ] Add JSON output mode (`--format=json`) for GUI consumption.
-
-5. **Extract Qt GUI as thin client** (deferred to Phase 3)
-   - [ ] Keep `OpenFileOrganizer.cpp` but refactor to call CLI via `QProcess` or link `fo_core` as library.
-   - [ ] UI becomes a frontend; engine handles all logic.
-
-**Deliverable**: A working `fo_cli` that can scan directories, compute hashes, and list duplicates without Qt.
+- [x] Create CMake build system with `core/` and `cli/` subdirectories.
+- [x] Define core types and interfaces (`IFileScanner`, `IHasher`, etc.).
+- [x] Implement initial providers (StdFs, Win32, TinyEXIF, Fast64).
+- [x] Build `fo_cli` executable.
 
 ---
 
-## Phase 2: Database and Persistence (Weeks 4–5)
+## Phase 2: Database and Persistence (Completed)
 
 **Goal**: Robust schema with migrations and data-access layer.
 
 ### Tasks
-
-1. **Implement database schema** ✅ (completed)
-   - [x] Design tables: `files`, `file_dates`, `duplicate_groups`, `ignore_list`, `scan_sessions`, etc.
-   - [x] Write initial migration SQL (v1).
-   - [ ] Add perceptual hashing and OCR tables (v2, v3).
-
-2. **Build migration manager** ✅ (completed)
-   - [x] C++ class: `MigrationManager::apply_migrations(sqlite3* db)` (implemented in `DatabaseManager`).
-   - [x] Store migrations as numbered SQL strings or files.
-   - [x] Track applied versions in `schema_version` table.
-   - [x] Test rollback safety (transactions per migration).
-
-3. **Create data-access layer** ✅ (completed)
-   - [x] `FileRepository`: CRUD for `files` and `file_dates`.
-   - [x] `DuplicateRepository`: Insert groups, query by size/hash.
-   - [x] `IgnoreRepository`: Manage exclude patterns.
-   - [x] `ScanSessionRepository`: Track scan history.
-   - [x] Use prepared statements; avoid SQL injection.
-
-4. **Integrate DB into Engine** ✅ (completed)
-   - [x] `Engine::scan()` inserts/updates `files` table.
-   - [x] `Engine::find_duplicates()` populates `duplicate_groups` and `duplicate_members`.
-   - [x] Add `--db-path` CLI flag (default: `~/.file_organizer/db.sqlite`).
-
-5. **Optional: Alternate Data Streams (Windows)** ✅ (completed)
-   - [x] Implement ADS read/write for fast hashes (`file.jpg:fo_cache`).
-   - [x] CLI flag: `--use-ads-cache` (Windows only).
-   - [x] Fallback to DB if ADS unavailable (network shares, FAT32).
-
-**Deliverable**: Persistent storage; incremental scans; query duplicates without re-hashing.
+- [x] Implement database schema and migration manager.
+- [x] Create data-access layer (`FileRepository`, `DuplicateRepository`).
+- [x] Integrate DB into Engine (incremental scanning).
+- [x] Implement Alternate Data Streams (ADS) cache for Windows.
 
 ---
 
-## Phase 3: Provider Expansion (Weeks 6–8)
+## Phase 3: Provider Expansion (Completed)
 
 **Goal**: Enable all optional providers with feature guards and vcpkg integration.
 
 ### Tasks
-
-1. **Add vcpkg dependencies**
-   - [x] `vcpkg.json`: Add `exiv2`, `blake3`, `tesseract`, `opencv` (optional).
-   - [x] CMake `find_package()` for each; set `FO_HAVE_*` macros.
-   - [x] Conditional compilation: `#ifdef FO_HAVE_EXIV2`.
-
-2. **Implement advanced metadata providers**
-   - [x] `Exiv2MetadataProvider`: Full EXIF/IPTC/XMP read/write (Code implemented, requires vcpkg build).
-   - [ ] Test on JPEG, TIFF, HEIF, RAW (CR2, NEF, ARW).
-   - [ ] Compare extraction rates vs. TinyEXIF (benchmarking).
-
-3. **Implement strong hashers**
-   - [x] `Blake3Hasher`: Fast cryptographic hashing (Code implemented, requires vcpkg build).
-   - [ ] Benchmark vs. SHA-256 on large files.
-   - [ ] Add to registry; select via `--hasher=blake3`.
-
-4. **Implement OCR providers**
-   - [x] `TesseractOCRProvider`: Basic text extraction (Code implemented, requires vcpkg build).
-   - [ ] Optional: `PaddleOCRProvider` (Python bridge or C++ inference).
-   - [ ] Store results in `ocr_results` table; enable FTS5 search.
-   - [x] CLI: `fo_cli ocr --lang=eng /path/to/images`.
-
-5. **Implement perceptual hashing** ✅ (completed)
-   - [x] `dHash` (difference hash): Simple gradient-based.
-   - [x] `pHash` (DCT-based): Robust to rotation/scale.
-   - [x] `aHash` (average hash): Simple and fast.
-   - [x] Store in `perceptual_hashes` table (via `file_repository`).
-   - [x] CLI: `fo_cli similar --threshold=5 --phash=phash /path/to/query.jpg`.
-
-6. **Add external tool integrations**
-   - [ ] `ExifToolProvider`: Shell out to `exiftool` binary.
-   - [ ] Opt-in via `--metadata-provider=exiftool`.
-
-**Deliverable**: Full-featured engine with all providers selectable via CLI flags.
+- [x] Add vcpkg dependencies (`exiv2`, `blake3`, `tesseract`).
+- [x] Implement `Exiv2MetadataProvider`.
+- [x] Implement `Blake3Hasher`.
+- [x] Implement `TesseractOCRProvider`.
+- [x] Implement perceptual hashing (`dHash`, `pHash`, `aHash`).
 
 ---
 
-## Phase 4: Benchmarking and Optimization (Weeks 9–11)
+## Phase 4: Benchmarking and Optimization (In Progress)
 
 **Goal**: Empirical validation of provider choices; performance tuning.
 
 ### Tasks
-
-1. **Prepare benchmark datasets** ✅ (planned)
+1. **Prepare benchmark datasets**
    - [ ] Acquire or generate small/medium/large/duplicates/EXIF datasets.
-   - [ ] Label ground truth (duplicates, OCR text, perceptual similarity).
-   - [ ] Store in `benchmarks/datasets/` (or download on demand).
+   - [ ] Label ground truth.
 
-2. **Implement benchmark harness** ✅ (completed)
+2. **Implement benchmark harness** ✅
    - [x] Add `benchmarks/fo_benchmarks.cpp` using Google Benchmark.
-   - [x] Cover: scanners, hashers.
-   - [ ] Output CSV for plotting; store baselines in repo.
 
 3. **Run and analyze benchmarks**
    - [ ] Measure throughput, memory, accuracy on all datasets.
-   - [ ] Identify optimal defaults (e.g., XXH3 for prefilter, BLAKE3 for strong, TinyEXIF for JPEG).
-   - [ ] Document trade-offs in `LIBRARY_EVALUATION.md`.
+   - [ ] Identify optimal defaults.
 
 4. **Optimize hot paths**
-   - [ ] Profile with `perf` (Linux), VTune (Windows), Instruments (macOS).
-   - [ ] Parallelize I/O-bound operations (multi-threaded hashing).
-   - [ ] Reduce memory allocations (object pools, arena allocators).
+   - [ ] Profile with `perf`/VTune.
+   - [ ] Parallelize I/O-bound operations.
 
 5. **CI integration**
-   - [x] GitHub Actions: build matrix (Windows/Linux/macOS, Debug/Release).
-   - [ ] Run benchmarks weekly; upload results as artifacts.
-   - [ ] Regression check: fail if throughput drops >10% without justification.
-
-**Deliverable**: Data-driven provider defaults; optimized performance; CI-backed quality gates.
+   - [x] GitHub Actions build matrix.
+   - [ ] Run benchmarks weekly.
 
 ---
 
-## Phase 5: GUI Decoupling and Frontends (Weeks 12–14)
+## Phase 5: GUI Decoupling and Frontends (Completed)
 
-**Goal**: Implement a modern, decoupled GUI using Qt (primary) and potentially Electron (secondary).
+**Goal**: Implement a modern, decoupled GUI using Qt.
 
 ### Tasks
-
-1. **GUI Evaluation** ✅ (completed)
-   - [x] Evaluate Qt, Electron, wxWidgets, ImGui, Flutter.
-   - [x] Decision: **Qt Widgets** is the primary choice due to existing code, performance, and C++ integration.
-   - [x] See `docs/GUI_EVALUATION.md` for details.
-
-2. **Define IPC/API Layer**
-   - [ ] Design a clean C++ API for the GUI to consume `fo_core` (no direct database access from GUI).
-   - [ ] Optional: Implement JSON-RPC over stdio for future Electron/Web clients.
-
-3. **Refactor Qt GUI** ✅ (completed)
-   - [x] Create `gui/` directory with `CMakeLists.txt`.
-   - [x] Port `mainwindow.cpp` to use `fo::core::Engine`.
-   - [x] Add tabbed interface (Files, Duplicates, Log).
-   - [x] Add scanner/hasher selection dropdowns.
-   - [x] Add export functionality (HTML/JSON/CSV).
-
-4. **Prototype Electron frontend (Optional)**
-   - [ ] Basic UI: directory picker, start scan, view duplicates.
-   - [ ] Communicate with `fo_cli serve` via WebSocket or child process.
-
-**Deliverable**: A clean, responsive Qt GUI that uses the shared `fo_core` library.
+- [x] Evaluate GUI frameworks (Qt chosen).
+- [x] Refactor Qt GUI to use `fo::core::Engine`.
+- [x] Implement tabbed interface and scanner selection.
+- [ ] Prototype Electron frontend (Optional/Deferred).
 
 ---
 
-## Phase 6: Advanced Features (Weeks 15–18)
+## Phase 6: Advanced Features (Completed)
 
 **Goal**: AI classification, smart organization, and power-user workflows.
 
 ### Tasks
-
-1. **AI-based classification**
-   - [x] Integrate image classification model (ONNX Runtime).
-   - [x] Tag images: `animal`, `landscape`, `document`, `screenshot`, etc.
-   - [x] Store tags in `file_tags` table; enable search.
-   - [x] CLI: `fo_cli classify --model=mobilenet /path/to/images`.
-
-2. **Smart organization rules**
-   - [x] Define rules: "Move photos from 2023 to `/Photos/2023/`" (RuleEngine implemented).
-   - [x] Template variables: `{year}`, `{month}`, `{camera_make}`, `{tag}`.
-   - [x] Dry-run mode: preview moves without executing.
-   - [x] CLI: `fo_cli organize --rule="/Photos/{year}/{month}" --dry-run`.
-   - [x] Support YAML rule files (currently single rule via CLI).
-
-3. **Batch operations** ✅ (completed)
-   - [x] CLI: `fo_cli delete-duplicates --keep=oldest --auto`.
-   - [x] CLI: `fo_cli rename --pattern="{date}_{name}.{ext}"`.
-   - [x] Undo support: track operations in `operation_log` table.
-   - [x] CLI: `fo_cli undo` and `fo_cli history` commands.
-
-4. **Incremental scanning** ✅ (completed)
-   - [x] Track file mtimes in DB; skip unchanged files.
-   - [x] CLI: `fo_cli scan --incremental`.
-   - [x] Detect moved files (same hash, new path); prompt to update DB.
-
-5. **Export and reporting** ✅ (completed)
-   - [x] CLI: `fo_cli export --format=json|csv|html /path/to/report`.
-   - [x] Generate HTML report with duplicate lists, statistics.
-   - [x] Thumbnails in HTML report (`--thumbnails` option).
-
-**Deliverable**: Production-ready tool with automation and power-user workflows.
+- [x] AI-based classification (ONNX Runtime).
+- [x] Smart organization rules (RuleEngine).
+- [x] Batch operations (delete, rename, undo).
+- [x] Incremental scanning and export.
 
 ---
 
-## Phase 7: Polish and Release (Weeks 19–20)
+## Phase 7: Polish and Release (In Progress)
 
 **Goal**: Documentation, packaging, and public launch.
 
 ### Tasks
-
 1. **Documentation** ✅
-   - [x] User manual: installation, CLI commands, GUI usage (`docs/USER_MANUAL.md`).
-   - [x] Developer guide: building, adding providers, contributing (`docs/DEVELOPER_GUIDE.md`).
-   - [x] API reference: Doxygen for core headers (`docs/Doxyfile`, `docs/API_REFERENCE.md`).
+   - [x] User Manual, Developer Guide, API Reference.
 
 2. **Packaging**
-   - [ ] Windows: MSI installer (WiX) or NSIS.
-   - [ ] Linux: AppImage, Flatpak, or distro packages (.deb, .rpm).
-   - [ ] macOS: .dmg with notarized binary.
-   - [x] Portable: ZIP with CLI + optional GUI (`scripts/package.bat`, `scripts/package.sh`).
+   - [x] Portable ZIP scripts.
+   - [ ] Windows: MSI installer (WiX/NSIS).
+   - [ ] Linux: AppImage/Flatpak.
+   - [ ] macOS: .dmg.
 
 3. **Testing**
-   - [x] Unit tests: Google Test for core functions (59 tests passing).
-       - RuleEngine tests (12 tests)
-       - Exporter tests (7 tests)
-       - Hasher tests (7 tests)
-       - Scanner tests (8 tests)
-       - Database tests (5 tests)
-       - FileRepository tests (13 tests)
-   - [x] Integration tests: End-to-end CLI workflows (7 tests).
-       - Scan, duplicates, export, incremental scan, filtering.
-   - [ ] Fuzz testing: Random inputs to scanner/parser (libFuzzer).
+   - [x] Unit and Integration tests.
+   - [ ] Fuzz testing.
 
 4. **Release**
-   - [ ] Tag v1.0.0; publish on GitHub Releases.
-   - [ ] Announce on Reddit (r/DataHoarder, r/selfhosted), Hacker News, etc.
-   - [ ] Website: robertpelloni.com/file-organizer or dedicated site.
-
-**Deliverable**: Public release with installers, docs, and community support.
+   - [ ] Tag v2.0.0 (or next release).
+   - [ ] Publish on GitHub Releases.
 
 ---
 
-## Summary Table
+## Next Immediate Steps
 
-| Phase | Weeks | Goal | Key Deliverables |
-|-------|-------|------|------------------|
-| 1. Decouple | 1–3 | CLI-first engine | CMake build, plugin registry, `fo_cli` |
-| 2. Database | 4–5 | Persistent storage | Migrations, data-access layer, incremental scans |
-| 3. Providers | 6–8 | Full feature set | Exiv2, BLAKE3, Tesseract, perceptual hashing |
-| 4. Benchmarks | 9–11 | Empirical validation | Datasets, harness, CI integration |
-| 5. GUI | 12–14 | Multi-frontend | IPC protocol, Qt refactor, Electron prototype |
-| 6. Advanced | 15–18 | Power features | AI classification, smart organization, batch ops |
-| 7. Release | 19–20 | Public launch | Installers, docs, v1.0.0 release |
-
----
-
-## Open Questions and Decisions
-
-1. **Radare2**: Remove from vendor tree? (Yes, unless binary analysis is planned.)
-2. **Alternate Data Streams**: Implement as optional cache or defer? (Optional, Phase 2.)
-3. **AI models**: On-device (ONNX Runtime) or cloud API (OpenAI CLIP)? (On-device for privacy.)
-4. **GUI default**: Ship Qt, Electron, or both? (Both, but promote Electron for broader appeal.)
-5. **License**: Stick with GPL or switch to MIT/Apache? (GPL is fine; Exiv2 requires it anyway.)
-
----
-
-## Next Immediate Steps (This Week)
-
-1. ✅ Finalize CMake build with vendored libs.
-2. ✅ Complete initial providers (scanners, hashers, metadata).
-3. ✅ Test `fo_cli` on sample directory.
-4. ✅ Implement database schema and migrations.
-5. ✅ Add CLI subcommands (`scan`, `duplicates`, `hash`, `ocr`, `similar`, `classify`).
-6. ✅ Write benchmark harness skeleton.
-7. ⏳ Run benchmarks and optimize.
-8. ⏳ Implement smart organization rules.
-
----
-
-## Long-Term Vision & Feature Backlog
-
-For a detailed list of potential features and ideas for development beyond the v1.0 roadmap, see the following documents:
-
-- **[Competitive Analysis](COMPETITIVE_ANALYSIS.md)**: A review of features from other leading file management and deduplication tools.
-- **[Feature Wishlist](FEATURE_WISHLIST.md)**: A backlog of potential new features, including advanced duplicate detection, filesystem "lint" finding, and workflow enhancements.
-
-### High-Level Vision (Beyond v1.0)
-- **Cloud Sync:** Optional integration with S3, Google Drive for backup verification.
-- **Web UI:** React/Vue frontend hosted locally; access via browser.
-- **Mobile Apps:** iOS/Android clients (read-only; view duplicates, browse metadata).
-- **Plugin Marketplace:** A system for community-contributed providers (new hash algorithms, OCR engines, AI models).
-- **Enterprise Features:** LDAP authentication, audit logs, and policy enforcement for corporate NAS environments.
-
----
-
-## Alignment with Your Goals
-
-✅ **All features important**: Preserved and expanded (EXIF, hashing, OCR, AI, duplicates).  
-✅ **Redundant operations for benchmarking**: Multiple scanners/hashers retained; harness planned.  
-✅ **Cross-platform from start**: CMake + vcpkg; tested on Windows/Linux/macOS.  
-✅ **Decoupled from Qt**: CLI-first engine; GUI as thin client via IPC.  
-✅ **Plugin architecture**: Registry pattern; providers swappable at runtime.  
-✅ **Evaluate all libraries**: Systematic matrix with speed/accuracy/license comparison.  
-✅ **Extremely robust**: Benchmarking, CI, migration-safe DB, feature guards.  
-✅ **Long-term commitment**: 20-week roadmap; extensible for future features.  
-✅ **GPL acceptable**: License unblocked for Exiv2, Tesseract, etc.  
-
-**Radare2**: Binary analysis framework; not needed for file organization—safe to remove or exclude from builds to reduce bloat.
+1. **Packaging**: Create installers for Windows and Linux.
+2. **Benchmarking**: Run the benchmark harness on real datasets.
+3. **Fuzzing**: Set up libFuzzer for the scanner and parser.

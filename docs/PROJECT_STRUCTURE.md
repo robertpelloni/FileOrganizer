@@ -1,139 +1,59 @@
-| Path | URL | Commit Hash |
-| --- | --- | --- |
-| libs/fstlib | https://github.com/fstpackage/fstlib | 4d61c19a874a56292a7ede56321c70db5a306cd6 |
-| libs/hash-library | https://github.com/stbrumme/hash-library | d389d18112bcf7e4786ec5e8723f3658a7f433d7 |
-| libs/libheif | https://github.com/strukturag/libheif | 8ac06a0aee2f185245cb0bdaf610fc0ca056b3cb |
-| libs/heif | https://github.com/nokiatech/heif | 503194eb85e13434b54797bab9d82ad7f88fd35b |
-| libs/imageinfo | https://github.com/xiaozhuai/imageinfo | 5d34254938d5dd3718c5410a44b9c15c352836da |
-| libs/image_info | https://github.com/gottfrois/image_info | 1b6222dd953f463a082461b12d3a5fba354eb6e0 |
-| libs/Windows | https://github.com/ImageMagick/Windows | 52fc4d3499470e134eba45a8c2322a0bd8bdcad9 |
-| libs/Dependencies | https://github.com/ImageMagick/Dependencies | abc18527631103aff6355ed6e560a0afa7c7325f |
-| libs/ImageMagick | https://github.com/ImageMagick/ImageMagick | b49fe554cd81d2eb983165f865aa7744a2482bfd |
-| libs/gdk-pixbuf | https://github.com/ImageMagick/gdk-pixbuf | a01fe1d3d1ac0eba9d141bd7aed47da9560df350 |
-| libs/Imath | https://github.com/AcademySoftwareFoundation/Imath | 4de9a1dabdf517a7df9bc350b7395bc8db2f681d |
-| libs/openexr | https://github.com/AcademySoftwareFoundation/openexr | 166bc4832cd9b09e49902f89da5fbba7d162ad3d |
-| libs/OpenImageIO | https://github.com/AcademySoftwareFoundation/OpenImageIO | ff89654492c2f29ca94207aa08bedcaeab46ef92 |
-| libs/OpenColorIO | https://github.com/AcademySoftwareFoundation/OpenColorIO | 1d77ecda706b7d67e350c2f0416d5e470b48be74 |
-| libs/OpenTimelineIO | https://github.com/AcademySoftwareFoundation/OpenTimelineIO | 4af7407e8f2af036723d2f77127d3b9a3a45d684 |
-| libs/OpenCue | https://github.com/AcademySoftwareFoundation/OpenCue | 8b39636198486380e34f7f394d83546907167a1c |
-| libs/OpenRV | https://github.com/AcademySoftwareFoundation/OpenRV | 73512859cd34c6543452d6d4147b26720bc94039 |
-| libs/openfx | https://github.com/AcademySoftwareFoundation/openfx | ab779510b2655b4d11a7e01e5c521f9aa8c88976 |
-| libs/openapv | https://github.com/AcademySoftwareFoundation/openapv | 1a7845a4624eb51a877af069056bf24bcefe41de |
-| libs/libxml2 | https://github.com/GNOME/libxml2 | 9827e6e44652555992e168609abf94e4237ca944 |
-| libs/libxmlplusplus | https://github.com/libxmlplusplus/libxmlplusplus | 80ce21a37cfd3cb329590e071cf17df886fbbf89 |
-| libs/json-c | https://github.com/json-c/json-c | a1249bfda0f6adf0363d5ab42d9ca816b3366ff2 |
-| libs/SysmonForLinux | https://github.com/microsoft/SysmonForLinux | 412cb37d80591d8fb1bc4852578928ae36554d7b |
-| libs/fast-lzma2 | https://github.com/conor42/fast-lzma2 | b44b79b9b1decb32ba03f25c4bf8430379d6e1b6 |
-| libs/pxz | https://github.com/jnovy/pxz | 136e5c25daf545753329d7cee1b06ae482fb9c44 |
-| libs/openh264 | https://github.com/cisco/openh264 | cf568c83f71a18778f9a16e344effaf40c11b752 |
-| libs/libffi | https://github.com/libffi/libffi | f067aef6493c827f0bbbee44cc1b6e62b756afa4 |
-| libs/dragonffi | https://github.com/aguinet/dragonffi | 90c66b3db9dd859f340e23eee7d65ab72a0e0122 |
-| libs/WizardsToolkit | https://github.com/ImageMagick/WizardsToolkit | af6884f96b8b078d10741620be95c217803fa6a6 |
-| libs/openjpeg | https://github.com/uclouvain/openjpeg | 8ac526236416b9c28f73d4684cf9e8a66f1d134e |
-| libs/libzip | https://github.com/nih-at/libzip | a1364389320754b437234c30989e37e1881b4fef |
-| libs/libiconv | https://github.com/winlibs/libiconv | 880a1fa8b5581e37e136a7b051947d3ea39097b6 |
-| libs/ckmame | https://github.com/nih-at/ckmame | ad23f21bf27a03bf3441cda39e1ed92225ce0258 |
-| libs/nihtest | https://github.com/nih-at/nihtest | 3adeb602d053105578c7f695a78632ac1c60e9fa |
-| libs/ziptools | https://github.com/nih-at/ziptools | 24ccea5f67792895f2781149c38027b45d41221f |
-| libs/nihtest-cpp | https://github.com/nih-at/nihtest-cpp | 8eafcb2216bd0325dfc1b465226a51a616baa133 |
-| libs/openssl | https://github.com/winlibs/openssl | 58bea78d5f6d936001bb4ffa32fbba483cc1ddf9 |
-| libs/sqlite3 | https://github.com/winlibs/sqlite3 | 182a6a4e89ca2c8abdacae9c6cb00fd007ebe2b6 |
-| libs/postgresql | https://github.com/winlibs/postgresql | 59a67cbaddb51e9c5262988d6b3cd70520588cfb |
-| libs/cURL | https://github.com/winlibs/cURL | 97a22cc1ffffd9dd2050ba90e4dc38631bea5eee |
-| libs/libtidy | https://github.com/winlibs/libtidy | cfff694452b765cc9782f7ae9ed1f4743dd98156 |
-| libs/libjpeg | https://github.com/winlibs/libjpeg | 1177955a8eecc6cdc61a39e59081e410d9054f66 |
-| libs/glib | https://github.com/winlibs/glib | e9f0a756690ed1dd5f8346e97731f015484e0ebf |
-| libs/enchant | https://github.com/winlibs/enchant | f8238b41c7fdbc56f50bfcaca78b692deb266fa4 |
-| libs/net-snmp | https://github.com/winlibs/net-snmp | 0c478089ece16d6346fbf464a9ef00d17f123fc3 |
-| libs/openldap | https://github.com/winlibs/openldap | b2ffd90b9a7fdfd0dd1d66f1581190a311f14ab2 |
-| libs/nghttp2 | https://github.com/winlibs/nghttp2 | 2bfeb83a0ea71a4d4bfbc9dbeffadbb720ae3022 |
-| libs/libxpm | https://github.com/winlibs/libxpm | 8cbfcb39e322fdb0ddc7c003db3b42e6319c5522 |
-| libs/cyrus-sasl | https://github.com/winlibs/cyrus-sasl | d933c030ce12ec0668469d79ab8378e347a1b3ba |
-| libs/icu4c | https://github.com/winlibs/icu4c | b5cdbf1d61a5f70be1547fc0526ece4fba23aca0 |
-| libs/mpir | https://github.com/winlibs/mpir | 62672a04a6ded603280c782c293b93e871506487 |
-| libs/gettext | https://github.com/winlibs/gettext | 04c409c1f3f9df09c6d90f37e587e8966c3a9ac4 |
-| libs/libxslt | https://github.com/winlibs/libxslt | dc7d30c54607401ef435b80d274337b54fa6cf58 |
-| libs/libwebp | https://github.com/winlibs/libwebp | f6ee4b24d8d0c0a0e14baee113beb72ca69c2ad9 |
-| libs/freetype | https://github.com/winlibs/freetype | 70391bfb6eea2f204fb8f4f8fe5d488c98d1e3a7 |
-| libs/libavif | https://github.com/winlibs/libavif | ecc52e7c6065eeff8bf081fca40674210815e987 |
-| libs/libssh2 | https://github.com/winlibs/libssh2 | a7685495746fe32b54ecebc23fda3f1174129488 |
-| libs/libpng | https://github.com/winlibs/libpng | 44baa877767133e5ebd5121fb5cdc6ef046e2269 |
-| libs/libsodium | https://github.com/winlibs/libsodium | 822546ccd18af46c274b5d0da21c4df0ddaeb9cf |
-| libs/qdbm | https://github.com/winlibs/qdbm | 586aa477ff42f0d307dc26adada275642630b28f |
-| libs/oniguruma | https://github.com/winlibs/oniguruma | ac76cdc412afcc0dc560c381bf98520375288fb6 |
-| libs/argon2 | https://github.com/winlibs/argon2 | fb53ef37be212380d51877b70f514f3bf2c1ee40 |
-| libs/lmdb | https://github.com/winlibs/lmdb | 46aef27478e561538b926b3a5c5880be5d7dce6f |
-| libs/libbzip2 | https://github.com/winlibs/libbzip2 | 99d3c4812e2b98bc305ae4b867f35346946717f0 |
-| libs/zlib | https://github.com/winlibs/zlib | 65dd21280c3ad7205c99644a8f8c97c7703564f0 |
-| libs/ssdeep | https://github.com/winlibs/ssdeep | c509f9906a0734b0f8c2d251d927c2d97860cd7d |
-| libs/wineditline | https://github.com/winlibs/wineditline | 60eb709bb4bbf21e653074069562bf824b68aa31 |
-| libs/pthreads | https://github.com/winlibs/pthreads | 648488da5ce4c484777a9b4000ee8f213c789f05 |
-| libs/imap | https://github.com/winlibs/imap | 4f5969e9dd677122f30416de044576644f612c71 |
-| libs/pslib | https://github.com/winlibs/pslib | 4c6b93bd12d52be36fb9a23745c3959a40266fdc |
-| libs/libmcrypt | https://github.com/winlibs/libmcrypt | 1e93cbe97a463a2c0c62338d607b17fe011eb77e |
-| libs/dirent | https://github.com/winlibs/dirent | f7d48413d5e862e46c306a9f5e5f4a8551c685c5 |
-| libs/c-ares | https://github.com/winlibs/c-ares | 6c783a942d2bba34a2d3b742d5c7247ae30f284f |
-| libs/httpd | https://github.com/apache/httpd | 806e1f383c1601358c29c70c308c6bf3e2c2f4d5 |
-| libs/fribidi | https://github.com/winlibs/fribidi | cbcc997561d8e4b0d502b1741d60dc7dcee0da26 |
-| libs/libvpx | https://github.com/winlibs/libvpx | 5e76714446d78b5e6679ddf46b13d1d9a25dacf3 |
-| libs/libvbucket | https://github.com/membase/libvbucket | 5590fff683f5ae57f55728eccb4ce0b8acc42c44 |
-| libs/FFmpeg | https://github.com/FFmpeg/FFmpeg | abb15241388c18d1d2587dd8eb06f5eb50e2ff6a |
-| libs/hashcat | https://github.com/hashcat/hashcat | 2d71af3718ef76f69c675e933cb4900c40788c58 |
-| libs/radare2 | https://github.com/radareorg/radare2 | c4331955f6ead0fd61ba3f1459103011ec7bceb1 |
-| libs/C | https://github.com/TheAlgorithms/C | e5dad3fa8def3726ec850ca66a7f51521f8ad393 |
-| libs/vlc | https://github.com/videolan/vlc | b71bd03233a6a9392c906a22345041a9447bc49a |
-| libs/sumatrapdf | https://github.com/sumatrapdfreader/sumatrapdf | 866c44cf3f69db3d77b6679eef2e7d639de90945 |
-| libs/mpv | https://github.com/mpv-player/mpv | c0d989c83913fb9c990d961c44da4816b8d2de18 |
-| libs/sqlite | https://github.com/sqlite/sqlite | 91d0ffa57623b98cff698e4134521052379628dd |
-| libs/tinyxml2 | https://github.com/leethomason/tinyxml2 | 3324d04d58de9d5db09327db6442f075e519f11b |
-| libs/libvips | https://github.com/libvips/libvips | 9e641793cdc4f54e9465dc9e00196afc9c792588 |
-| libs/opencv | https://github.com/opencv/opencv | cff7581175d2abfc6aef2e4f04f482e258b5c864 |
-| libs/MediaInfoLib | https://github.com/MediaArea/MediaInfoLib | 4590c320d4a425991afc1178f26d91172187ece8 |
-| libs/MediaInfo | https://github.com/MediaArea/MediaInfo | 82b66e6daa2229b8a143409c64cf6190a5c63d15 |
-| libs/mm_file | https://github.com/jermp/mm_file | 5b5291360488095ce3617c48af0f5145fdf9e710 |
-| libs/TinyEXIF | https://github.com/cdcseacave/TinyEXIF | 39bba86cedddff3f57d37e4a221d6dc76871f7b3 |
-| libs/libjpeg-turbo | https://github.com/libjpeg-turbo/libjpeg-turbo | af9c1c268520a29adf98cad5138dafe612b3d318 |
-| libs/jhead | https://github.com/Matthias-Wandel/jhead | db00efb27c7b358ec7dcd0c34f958cf775b175bd |
-| libs/libexif | https://github.com/libexif/libexif | cdfe2db6ace857a788a028d333f2a4009539a1cf |
-| libs/getopt-win32 | https://github.com/nanoporetech/getopt-win32 | b3de5c2928369d3477ee135bf83cceb711bd92f6 |
-| libs/raylib | https://github.com/raysan5/raylib | 101502103a559afdff6938dc0c739eb5d0870912 |
-| libs/lvgl | https://github.com/lvgl/lvgl | fad549732bc2844883a8bdf105488963eec8ed01 |
-| libs/getopt-win | https://github.com/ludvikjerabek/getopt-win | 36e55dd0f1b44f7b8d0405e74603a1d1b1a47eb0 |
-| libs/libunistd | https://github.com/robinrowe/libunistd | 18b4e782818284c80d66b3774858d023d0f8abc5 |
-| libs/ShazamAPI | https://github.com/Numenorean/ShazamAPI | ff8f89d1af6d962f54a519766c7ca9f5e13de0f1 |
-| libs/seek-tune | https://github.com/cgzirim/seek-tune | a6507e8f1e4a3dce1053eb8ff4c57144d698966f |
-| libs/ShazamIO | https://github.com/shazamio/ShazamIO | b5321b5c15d88ed98663420e63916704c6537512 |
-| libs/audio-recognizer | https://github.com/wsieroci/audio-recognizer | 3028b6147dcd09f6b1bd418b8b0d2bacd7c8afc3 |
-| libs/pHash | https://github.com/nihas101/pHash | 3a70447ad28a8d560410a6ed06c055dd3dffd4ec |
-| libs/image-hash | https://github.com/ytetsuro/image-hash | 34f0a007bef280fc4c655f94836d46211b9c0c29 |
-| libs/imghash-viewer | https://github.com/YannickAlex07/imghash-viewer | 8b72a9f3c654fa8de1d0a48408b537ed25e74708 |
-| libs/imagehash | https://github.com/vitali-fedulov/imagehash | 1a775c30f44071dcb07e16de67483686e0f646a6 |
-| libs/securecopy | https://github.com/hansij66/securecopy | a82171b398901989234a876b2a9af93293589d85 |
-| libs/xattrs | https://github.com/hrbrmstr/xattrs | 9fd00c6eaaaf787dfefd4cb9716be6b7ea02912a |
-| libs/fuse_xattrs | https://github.com/fbarriga/fuse_xattrs | d1e304659a2381e04c715afc6425c66b663f277d |
-| libs/xattrlib | https://github.com/amdf/xattrlib | 286d38bdd76b3594a3cf93d5f671526ee216f343 |
-| libs/RenStrm | https://github.com/hernandp/RenStrm | 3874e391b233fa170fb6070da45919e1bbf9ff41 |
-| libs/metastore | https://github.com/przemoc/metastore | 8f0dd4c8788a94a3b3841207ac96662f5ce30d53 |
-| libs/lsads | https://github.com/assarbad/lsads | e2d15992822cccd7ce3911325accc08dc068cd0f |
-| libs/Powershell-ADS | https://github.com/phlashko/Powershell-ADS | 5227a03cd5d9b882a389ff397660755febff0587 |
-| libs/SharpADS | https://github.com/ricardojoserf/SharpADS | ea6d0b9dc6c26ed9ad9c3c76390a74e5ce91c4c3 |
-| libs/ADSIdentifier | https://github.com/HannahVernon/ADSIdentifier | 099e808b0d9e155a3355edfb6b8c74265313e3ab |
-| libs/ads | https://github.com/katahiromz/ads | 87fc3aac11c74e1aa6a510f2fd7e53b3afe633ff |
-| libs/AlternateDataStreams | https://github.com/narasimha14/AlternateDataStreams | 34cd1cb17f8c8eabe125cf470ca183e3fc770024 |
-| libs/DataStreamBrowser | https://github.com/Thibstars/DataStreamBrowser | 88db0185cc79376ba908da7665542bc156e61270 |
-| libs/libevent | https://github.com/libevent/libevent | a994a52d5373d6284b27576efa617aff2baa7bd3 |
-| libs/xxHash | https://github.com/Cyan4973/xxHash | 66979328cf3f15cecdc61ea58c9f81e6071f8983 |
-| libs/libgit2 | https://github.com/libgit2/libgit2 | 3ac4c0adb1064bad16a7f980d87e7261753fd07e |
-| libs/dokany | https://github.com/dokan-dev/dokany | ead52a976aab7908af97ad19d764ae90e2131378 |
-| libs/pngquant | https://github.com/kornelski/pngquant | e3bdc7c9b8b814409555a7aa30adcfb3997fa115 |
-| libs/dunst | https://github.com/dunst-project/dunst | e2593d337de639d5015806ad6f68261c74a2873a |
-| libs/audiocraft | https://github.com/facebookresearch/audiocraft | 896ec7c47f5e5d1e5aa1e4b260c4405328bf009d |
-| libs/hashingImage | https://github.com/goongong/hashingImage | f00adc99355a8bfdcca23ccb3a7ae937d8851b99 |
-| libs/util-linux | https://github.com/util-linux/util-linux | e4656fa9765f55eb4dcd45ca63b5eea43e59551b |
-| libs/libimghash | https://github.com/shuttie/libimghash | ec97409b2274896366bc75b1b4a6877227f4742b |
-| libs/perceptual-dct-hash | https://github.com/alangshur/perceptual-dct-hash | 9646476294a024f5e4515b5c3d5f61dacfc4d469 |
-| libs/pHash.c | https://github.com/folksable/pHash.c | 1d7c056b980811d2d1138b9392fee9a03abf37e2 |
-| libs/tinyphash | https://github.com/Wassasin/tinyphash | 7c7c503d331cc8fd5507db58e5813398f3939189 |
-| libs/ADSman | https://github.com/8gudbits/ADSman | 187e647309ac7c3c6fb0c54de6d0d271d1586426 |
-| libs/ADSFileSystem | https://github.com/marcelogm/ADSFileSystem | 60b6710843117e343a96c9dbd507ad97647bf47b |
-| libs/Bringing-Old-Photos-Back-to-Life | https://github.com/microsoft/Bringing-Old-Photos-Back-to-Life | 33875eccf4ebcd3665cf38cc56f3a0ce563d3a9c |
+# Project Structure
+
+This document outlines the directory layout of the FileOrganizer project.
+
+## Top-Level Directories
+
+| Directory | Description |
+|-----------|-------------|
+| `core/` | The core C++ static library (`fo_core`). Contains all business logic, database access, and providers. |
+| `cli/` | The command-line interface executable (`fo_cli`). Links against `fo_core`. |
+| `gui/` | The Qt6-based graphical user interface (`fo_gui`). Links against `fo_core`. |
+| `libs/` | Third-party dependencies managed as Git submodules (130+ libraries). |
+| `tests/` | Unit and integration tests using Google Test. |
+| `benchmarks/` | Performance benchmarks using Google Benchmark. |
+| `docs/` | Project documentation, including roadmap, API reference, and user manual. |
+| `scripts/` | Helper scripts for building, packaging, and maintenance. |
+| `examples/` | Example configuration files (e.g., `rules.yaml`). |
+
+## Core Library (`core/`)
+
+The `core/` directory is the heart of the application. It is designed to be portable and UI-agnostic.
+
+### `core/include/fo/core/` (Public Headers)
+- **`interfaces.hpp`**: Defines abstract base classes for providers (`IFileScanner`, `IHasher`, `IMetadataProvider`).
+- **`types.hpp`**: Common data structures (`FileInfo`, `DateMetadata`).
+- **`registry.hpp`**: The `Registry<T>` template for dependency injection.
+- **`engine.hpp`**: The main `Engine` class that orchestrates operations.
+- **`database.hpp`**: Database connection and migration management.
+- **`rule_engine.hpp`**: Logic for smart organization rules.
+
+### `core/src/` (Implementation)
+- **`providers/`**: Concrete implementations of interfaces (e.g., `scanner_win32.cpp`, `hasher_blake3.cpp`).
+- **`database.cpp`**: SQLite implementation.
+- **`engine.cpp`**: Core logic implementation.
+
+## CLI (`cli/`)
+
+The CLI is a thin wrapper around the Core library.
+- **`fo_cli.cpp`**: Main entry point. Parses arguments using `CLI11` (or similar) and calls `Engine` methods.
+
+## GUI (`gui/`)
+
+The GUI is a Qt Widgets application.
+- **`mainwindow.cpp`**: The main application window.
+- **`models/`**: Qt AbstractItemModel implementations for displaying database results.
+
+## Libraries (`libs/`)
+
+We vendor many dependencies to ensure reproducibility and offline builds. See `docs/SUBMODULES.md` for a full list.
+- **`TinyEXIF`**: Lightweight EXIF parsing.
+- **`hash-library`**: Portable hash implementations (SHA256, MD5).
+- **`xxHash`**: Extremely fast non-cryptographic hash.
+- **`sqlite3`**: The database engine.
+
+## Build System
+
+The project uses CMake.
+- **`CMakeLists.txt`**: Top-level build configuration.
+- **`vcpkg.json`**: Manifest for dependencies managed by vcpkg (e.g., Exiv2, Tesseract).
