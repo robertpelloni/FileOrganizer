@@ -1,3 +1,8 @@
+## [2.0.2] - 2025-12-28
+- Merged feature branch 'project-analysis-and-refactoring'.
+- Updated all submodules to latest versions.
+- Resolved code duplication in CLI.
+- Updated documentation dashboards.
 # Changelog
 
 All notable changes to this project will be documented in this file.
