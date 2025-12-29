@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2025-12-28
+
+### Added
+- **Submodule Dashboard Overhaul**: Comprehensive documentation of 130+ submodules with categories.
+    - Organized by category: Image/Media, Metadata, Hashing, Database, Compression, Networking, etc.
+    - Full version info, commit hashes, and repository URLs.
+    - Project structure documentation with component descriptions.
+
+### Changed
+- **Merged Feature Branches**: Consolidated `feature/project-analysis-and-refactoring` into main.
+- **Updated All Submodules**: Synced 130+ submodules to latest upstream commits.
+    - FFmpeg updated to n8.1-dev
+    - ImageMagick updated to 7.1.2-12
+    - libheif updated to v1.20.1+
+    - mpv updated to v0.41.0+
+    - sqlite updated to 3.51.0+
+    - raylib updated to 5.5+
+    - radare2 updated to 6.0.7+
+    - vlc updated to 4.0.0-dev
+
+### Documentation
+- **AGENTS.md**: Streamlined to 24-line actionable reference.
+- **docs/SUBMODULES.md**: Complete rewrite with categorized submodule listing.
+- **docs/LLM_INSTRUCTIONS.md**: Referenced as central AI instruction source.
+
 ## [1.3.0] - 2025-12-28
 
 ### Added
