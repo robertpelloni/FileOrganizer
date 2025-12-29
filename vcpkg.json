@@ -6,6 +6,7 @@
     "nlohmann-json",
     "yaml-cpp",
     "blake3",
-    "gtest"
+    "gtest",
+    "benchmark"
   ]
 }
