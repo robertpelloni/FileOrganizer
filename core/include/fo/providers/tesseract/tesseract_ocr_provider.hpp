@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fo/core/ocr_provider.hpp"
+#include "fo/core/ocr_interface.hpp"
 
 #ifdef FO_HAVE_TESSERACT
 #include <tesseract/baseapi.h>
@@ -13,10 +13,8 @@ namespace fo::providers::tesseract {
       public:
         TesseractOCRProvider();
         ~TesseractOCRProvider();
-        std::string
-        extract_text(std::istream& file,
-                     const std::filesystem::path& file_path) const override;
-        std::vector<std::string> supported_extensions() const override;
+        std::optional<core::OCRResult> recognize(const std::filesystem::path& image_path, const std::string& lang = "eng") override;
+        std::string name() const override { return "tesseract"; }
 
       private:
         struct Impl;

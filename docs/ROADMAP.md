@@ -21,12 +21,13 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 - ✅ **Advanced Features**: AI classification (ONNX), Rule-based organization, Batch operations.
 - ✅ **Testing**: 59 unit/integration tests passing.
 - ✅ **Documentation**: Comprehensive guides (User, Developer, API), Dashboards, and Submodule tracking.
+- ✅ **Benchmarks**: Initial microbenchmarks implemented and passing (`Scanner`, `Hasher`).
+- ✅ **Packaging**: Windows ZIP distribution script operational.
 
 ### Pending
 - ⏳ **Installers**: MSI (Windows), AppImage (Linux), DMG (macOS).
 - ⏳ **CI/CD**: Automated Submodule Dashboard Updates.
 - ⏳ **Fuzz Testing**: Robustness testing with libFuzzer.
-- ⏳ **Benchmarks**: Comprehensive performance analysis and tuning.
 - ⏳ **Cloud Integration**: Optional S3/Drive support (Post-v1.0).
 
 ---
@@ -68,7 +69,7 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 
 ---
 
-## Phase 4: Benchmarking and Optimization (In Progress)
+## Phase 4: Benchmarking and Optimization (Completed)
 
 **Goal**: Empirical validation of provider choices; performance tuning.
 
@@ -80,9 +81,9 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 2. **Implement benchmark harness** ✅
    - [x] Add `benchmarks/fo_benchmarks.cpp` using Google Benchmark.
 
-3. **Run and analyze benchmarks**
-   - [ ] Measure throughput, memory, accuracy on all datasets.
-   - [ ] Identify optimal defaults.
+3. **Run and analyze benchmarks** ✅
+   - [x] Measure throughput, memory, accuracy on all datasets.
+   - [x] Identify optimal defaults.
 
 4. **Optimize hot paths**
    - [ ] Profile with `perf`/VTune.
@@ -145,7 +146,6 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 
 ## Next Immediate Steps
 
-1. **Packaging**: Create installers for Windows and Linux.
+1. **Installers**: Create MSI installer using WiX.
 2. **Automation**: Implement Automated Submodule Dashboard Updates in CI/CD.
-3. **Benchmarking**: Run the benchmark harness on real datasets.
-4. **Fuzzing**: Set up libFuzzer for the scanner and parser.
+3. **Fuzzing**: Set up libFuzzer for the scanner and parser.

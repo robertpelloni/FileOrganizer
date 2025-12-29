@@ -17,9 +17,9 @@ Version: 1.9.4
 Depends: vcpkg-cmake, vcpkg-cmake-config
 Architecture: x64-windows
 Multi-Arch: same
-Abi: f246415dc51ae1e417eb5a4182cc1628df4900eba43bb8ed7e1cd68b57cdad1f
+Abi: 350f7ab1cd414f3f443944b3e8a2dba0013ba73725e24b12e594e17f2b867415
 Description: A library to benchmark code snippets, similar to unit tests.
-Status: purge ok not-installed
+Status: install ok installed
 
 Package: blake3
 Version: 1.8.2

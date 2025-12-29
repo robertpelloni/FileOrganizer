@@ -1,6 +1,7 @@
 #include <benchmark/benchmark.h>
 #include "fo/core/registry.hpp"
 #include "fo/core/interfaces.hpp"
+#include "fo/core/provider_registration.hpp"
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -12,6 +13,9 @@ public:
     fs::path test_dir;
 
     void SetUp(const ::benchmark::State&) override {
+        // Ensure providers are registered!
+        fo::core::register_all_providers();
+
         test_dir = fs::temp_directory_path() / "fo_bench_scanner";
         if (fs::exists(test_dir)) fs::remove_all(test_dir);
         fs::create_directories(test_dir);
@@ -73,9 +77,9 @@ static void BM_Hasher_Fast64(benchmark::State& state) {
         ofs.write(data.data(), data.size());
     }
     
-    auto hasher = fo::core::Registry<fo::core::IHasher>::instance().create("default");
+    auto hasher = fo::core::Registry<fo::core::IHasher>::instance().create("fast64");
     if (!hasher) {
-        state.SkipWithError("default hasher not found");
+        state.SkipWithError("fast64 hasher not found");
         fs::remove(path);
         return;
     }

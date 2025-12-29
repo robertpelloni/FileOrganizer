@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fo/core/hasher.hpp"
+#include "fo/core/interfaces.hpp"
 
 #ifdef FO_HAVE_BLAKE3
 #include <blake3.h>
@@ -12,7 +12,9 @@ namespace fo::providers::blake3 {
       public:
         Blake3Hasher();
         ~Blake3Hasher();
-        Hash compute(std::istream& file) const override;
+        std::string fast64(const std::filesystem::path& p) override;
+        std::optional<std::string> strong(const std::filesystem::path& p) override;
+        std::string strong_algo() const override;
         std::string name() const override {
             return "blake3";
         }

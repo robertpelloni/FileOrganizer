@@ -1,6 +1,8 @@
 #include "fo/core/provider_registration.hpp"
 
 namespace fo::core {
+    void register_extended_providers(); // Forward declare
+
     void register_all_providers() {
         register_scanner_std();
 #ifdef _WIN32
@@ -12,5 +14,7 @@ namespace fo::core {
         register_hasher_xxhash();
         register_hasher_blake3();
         register_metadata_tinyexif();
+        
+        register_extended_providers();
     }
 }

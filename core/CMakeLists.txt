@@ -33,7 +33,7 @@ if(WIN32)
 endif()
 
 file(GLOB_RECURSE FO_CORE_HEADERS ${FO_CORE_INCLUDE_DIR}/*.hpp)
-file(GLOB FO_CORE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+file(GLOB_RECURSE FO_CORE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 list(APPEND FO_CORE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/duplicate_finders.cpp)
 
 # Find optional provider dependencies
@@ -85,6 +85,7 @@ target_include_directories(fo_core
     PRIVATE ${XXHASH_INCLUDE}
     PRIVATE ${LIBS_DIR}/dirent/src
     PRIVATE ${LIBS_DIR}/sqlite3
+    PRIVATE ${LIBS_DIR}
 )
 
 if(exiv2_FOUND)

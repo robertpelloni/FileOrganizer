@@ -9,16 +9,11 @@ namespace fo::providers::exiv2 {
     Exiv2MetadataProvider::Exiv2MetadataProvider() : impl_(std::make_unique<Impl>()) {}
     Exiv2MetadataProvider::~Exiv2MetadataProvider() = default;
 
-    std::vector<std::string> Exiv2MetadataProvider::supported_extensions() const {
-        return {".jpg", ".jpeg", ".png", ".gif", ".tiff"};
-    }
-
-    core::FileMetadata
-    Exiv2MetadataProvider::get_metadata(std::istream& file,
-                                          const std::filesystem::path& file_path) const {
-        core::FileMetadata md;
+    bool Exiv2MetadataProvider::read(const std::filesystem::path& p, core::ImageMetadata& out) {
         // Placeholder implementation
-        return md;
+        (void)p;
+        (void)out;
+        return false;
     }
 }
 

@@ -13,3 +13,17 @@ target_link_libraries(fo_tests PRIVATE GTest::gtest GTest::gtest_main fo_core)
 
 include(GoogleTest)
 gtest_discover_tests(fo_tests)
+
+# Fuzzing target (conditional)
+option(FO_BUILD_FUZZ_TESTS "Build fuzz tests" OFF)
+if(FO_BUILD_FUZZ_TESTS)
+    add_executable(fuzz_metadata fuzz/fuzz_metadata.cpp)
+    target_link_libraries(fuzz_metadata PRIVATE fo_core)
+    # Note: MSVC doesn't support -fsanitize=fuzzer directly in the same way Clang does.
+    # On Windows, we might need LibFuzzer linked manually or use Clang-CL.
+    # For now, we will just define the target and let the user configure the compiler.
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        target_compile_options(fuzz_metadata PRIVATE -fsanitize=fuzzer)
+        target_link_options(fuzz_metadata PRIVATE -fsanitize=fuzzer)
+    endif()
+endif()

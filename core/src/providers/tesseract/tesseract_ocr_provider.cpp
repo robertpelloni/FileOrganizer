@@ -14,15 +14,10 @@ namespace fo::providers::tesseract {
 
     TesseractOCRProvider::~TesseractOCRProvider() = default;
 
-    std::string
-    TesseractOCRProvider::extract_text(std::istream& file,
-                                      const std::filesystem::path& file_path) const {
+    std::optional<core::OCRResult> TesseractOCRProvider::recognize(const std::filesystem::path& image_path, const std::string& lang) {
         // Placeholder
-        return "";
-    }
-
-    std::vector<std::string> TesseractOCRProvider::supported_extensions() const {
-        return {".jpg", ".jpeg", ".png", ".tiff"};
+        (void)image_path; (void)lang;
+        return std::nullopt;
     }
 }
 
