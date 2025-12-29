@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2025-12-28
+
+### Added
+- **API Reference Documentation**: Doxygen configuration and API guide.
+    - `docs/Doxyfile`: Doxygen configuration for HTML API docs.
+    - `docs/API_REFERENCE.md`: Developer guide to core interfaces and classes.
+    - Documents IFileScanner, IHasher, IMetadataProvider, Engine, Registry, Database.
+    - Usage examples for each component.
+
+### Documentation
+- Complete Phase 7 documentation tasks (User Manual, Developer Guide, API Reference).
+
 ## [1.8.0] - 2025-12-28
 
 ### Added

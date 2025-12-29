@@ -259,10 +259,10 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 
 ### Tasks
 
-1. **Documentation**
+1. **Documentation** ✅
    - [x] User manual: installation, CLI commands, GUI usage (`docs/USER_MANUAL.md`).
    - [x] Developer guide: building, adding providers, contributing (`docs/DEVELOPER_GUIDE.md`).
-   - [ ] API reference: Doxygen for core headers.
+   - [x] API reference: Doxygen for core headers (`docs/Doxyfile`, `docs/API_REFERENCE.md`).
 
 2. **Packaging**
    - [ ] Windows: MSI installer (WiX) or NSIS.
