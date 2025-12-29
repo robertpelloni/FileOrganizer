@@ -71,9 +71,9 @@ Port-Version: 2
 Depends: vcpkg-cmake, vcpkg-cmake-config
 Architecture: x64-windows
 Multi-Arch: same
-Abi: 1d6383c89e8c47e62265d004762dc86c1631bbf89a5e2bdb63282435c511ff97
+Abi: 3c435f2035826c6503a07230ddba3f1296fd6d3bc47758f12682b4a5b80e4f7e
 Description: Google Testing and Mocking Framework
-Status: purge ok not-installed
+Status: install ok installed
 
 Package: nlohmann-json
 Version: 3.12.0

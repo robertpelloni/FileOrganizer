@@ -73,7 +73,9 @@ TEST_F(HasherTest, Sha256ProducesValidHash) {
     auto hasher = Registry<IHasher>::instance().create("sha256");
     ASSERT_NE(hasher, nullptr);
     
-    std::string hash = hasher->full(test_file);
+    auto hash_opt = hasher->strong(test_file);
+    ASSERT_TRUE(hash_opt.has_value());
+    std::string hash = hash_opt.value();
     
     // SHA256 produces 64 hex characters
     EXPECT_EQ(hash.length(), 64);
@@ -91,7 +93,7 @@ TEST_F(HasherTest, XxHashHasherExists) {
 }
 
 TEST_F(HasherTest, ListAvailableHashers) {
-    auto names = Registry<IHasher>::instance().list();
+    auto names = Registry<IHasher>::instance().names();
     
     EXPECT_FALSE(names.empty());
     

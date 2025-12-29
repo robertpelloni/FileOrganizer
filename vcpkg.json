@@ -5,6 +5,7 @@
     "sqlite3",
     "nlohmann-json",
     "yaml-cpp",
-    "blake3"
+    "blake3",
+    "gtest"
   ]
 }

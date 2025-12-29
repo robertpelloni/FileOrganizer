@@ -98,7 +98,7 @@ TEST_F(ScannerTest, DirentScannerExists) {
 }
 
 TEST_F(ScannerTest, ListAvailableScanners) {
-    auto names = Registry<IFileScanner>::instance().list();
+    auto names = Registry<IFileScanner>::instance().names();
     
     EXPECT_FALSE(names.empty());
     

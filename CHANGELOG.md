@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2025-12-28
+
+### Added
+- **User Manual**: Comprehensive documentation at `docs/USER_MANUAL.md`.
+    - Installation instructions for Windows/Linux/macOS.
+    - Quick start guide with 5-step workflow.
+    - Detailed command reference with examples and comparison tables.
+    - Common workflows: photo organization, incremental scans, OCR.
+    - Troubleshooting section with solutions.
+- **RuleEngine Unit Tests**: 12 new tests in `tests/test_rule_engine.cpp`.
+    - Template variable expansion tests ({year}, {month}, {day}, {name}, {ext}, {parent}).
+    - Rule matching with conditions and tag filtering.
+    - Destination path handling and first-matching-rule behavior.
+
+### Fixed
+- **Test API Updates**: Fixed outdated API calls in test files (`list()` → `names()`, `full()` → `strong()`).
+
+### Changed
+- **Test Suite**: Now 34 tests total across 4 test suites (all passing).
+
 ## [1.4.0] - 2025-12-28
 
 ### Added
