@@ -11,6 +11,15 @@ echo ========================================
 echo FileOrganizer Packaging Script v%VERSION%
 echo ========================================
 
+:: Initialize Visual Studio Environment
+if exist "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvars64.bat" (
+    call "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
+) else if exist "C:\Program Files\Microsoft Visual Studio\2022\Preview\VC\Auxiliary\Build\vcvars64.bat" (
+    call "C:\Program Files\Microsoft Visual Studio\2022\Preview\VC\Auxiliary\Build\vcvars64.bat"
+) else (
+    echo WARNING: VCVars64.bat not found. Assuming environment is already set up.
+)
+
 :: Clean previous builds
 echo [1/5] Cleaning previous builds...
 if exist dist rmdir /s /q dist
@@ -18,7 +27,7 @@ if exist build rmdir /s /q build
 
 :: Create build directory and run cmake
 echo [2/5] Configuring CMake (Release)...
-cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="vcpkg/scripts/buildsystems/vcpkg.cmake"
 if errorlevel 1 (
     echo ERROR: CMake configuration failed
     exit /b 1
@@ -52,7 +61,7 @@ if not exist dist\fo_cli.exe (
 :: Create ZIP archive
 echo [5/5] Creating ZIP archive...
 set ZIPNAME=FileOrganizer-%VERSION%-win64.zip
-powershell -Command "Compress-Archive -Path 'dist\*' -DestinationPath '%ZIPNAME%' -Force"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Compress-Archive -Path 'dist\*' -DestinationPath '%ZIPNAME%' -Force"
 if errorlevel 1 (
     echo ERROR: Failed to create ZIP archive
     exit /b 1
