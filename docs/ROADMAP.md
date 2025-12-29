@@ -4,12 +4,13 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 
 ---
 
-## Current Status (v2.0.0)
+## Current Status (v2.0.2)
 
 ### Completed
 - ✅ **Core Engine**: C++20 static library (`fo_core`) with plugin registry.
 - ✅ **CLI**: Feature-complete `fo_cli` with 15+ commands.
 - ✅ **GUI**: Qt6-based `fo_gui` decoupled from core logic.
+- ✅ **Refactoring**: Resolved CLI duplicate code issues and optimized structure.
 - ✅ **Providers**:
     - Scanners: `std::filesystem`, `Win32`, `dirent`.
     - Hashers: `xxHash`, `SHA256`, `BLAKE3` (vcpkg).
@@ -19,10 +20,11 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 - ✅ **Database**: SQLite with migrations, repositories, and incremental scanning.
 - ✅ **Advanced Features**: AI classification (ONNX), Rule-based organization, Batch operations.
 - ✅ **Testing**: 59 unit/integration tests passing.
-- ✅ **Documentation**: Comprehensive guides (User, Developer, API).
+- ✅ **Documentation**: Comprehensive guides (User, Developer, API), Dashboards, and Submodule tracking.
 
 ### Pending
 - ⏳ **Installers**: MSI (Windows), AppImage (Linux), DMG (macOS).
+- ⏳ **CI/CD**: Automated Submodule Dashboard Updates.
 - ⏳ **Fuzz Testing**: Robustness testing with libFuzzer.
 - ⏳ **Benchmarks**: Comprehensive performance analysis and tuning.
 - ⏳ **Cloud Integration**: Optional S3/Drive support (Post-v1.0).
@@ -123,6 +125,7 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 ### Tasks
 1. **Documentation** ✅
    - [x] User Manual, Developer Guide, API Reference.
+   - [x] Submodule and Feature Dashboards.
 
 2. **Packaging**
    - [x] Portable ZIP scripts.
@@ -135,7 +138,7 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
    - [ ] Fuzz testing.
 
 4. **Release**
-   - [ ] Tag v2.0.0 (or next release).
+   - [x] Tag v2.0.2.
    - [ ] Publish on GitHub Releases.
 
 ---
@@ -143,5 +146,6 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 ## Next Immediate Steps
 
 1. **Packaging**: Create installers for Windows and Linux.
-2. **Benchmarking**: Run the benchmark harness on real datasets.
-3. **Fuzzing**: Set up libFuzzer for the scanner and parser.
+2. **Automation**: Implement Automated Submodule Dashboard Updates in CI/CD.
+3. **Benchmarking**: Run the benchmark harness on real datasets.
+4. **Fuzzing**: Set up libFuzzer for the scanner and parser.
