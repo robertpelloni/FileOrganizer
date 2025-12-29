@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2025-12-28
+
+### Added
+- **Database Unit Tests**: Comprehensive test suite in `tests/test_database.cpp`.
+    - DatabaseTest (5 tests): open/close, in-memory DB, migrations, execute, query.
+    - FileRepositoryTest (13 tests): CRUD operations, hashes, tags, paths.
+    - Total test count increased from 34 to 52 (all passing).
+
+### Changed
+- **Test Coverage**: Expanded test coverage across all major components.
+
 ## [1.6.0] - 2025-12-28
 
 ### Added
