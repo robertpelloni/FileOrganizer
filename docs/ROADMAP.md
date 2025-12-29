@@ -260,8 +260,8 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 ### Tasks
 
 1. **Documentation**
-   - [ ] User manual: installation, CLI commands, GUI usage.
-   - [ ] Developer guide: building, adding providers, contributing.
+   - [x] User manual: installation, CLI commands, GUI usage (`docs/USER_MANUAL.md`).
+   - [x] Developer guide: building, adding providers, contributing (`docs/DEVELOPER_GUIDE.md`).
    - [ ] API reference: Doxygen for core headers.
 
 2. **Packaging**
@@ -271,8 +271,15 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
    - [ ] Portable: ZIP with CLI + optional GUI.
 
 3. **Testing**
-   - [ ] Unit tests: Catch2/Google Test for core functions.
-   - [ ] Integration tests: End-to-end CLI workflows.
+   - [x] Unit tests: Google Test for core functions (59 tests passing).
+       - RuleEngine tests (12 tests)
+       - Exporter tests (7 tests)
+       - Hasher tests (7 tests)
+       - Scanner tests (8 tests)
+       - Database tests (5 tests)
+       - FileRepository tests (13 tests)
+   - [x] Integration tests: End-to-end CLI workflows (7 tests).
+       - Scan, duplicates, export, incremental scan, filtering.
    - [ ] Fuzz testing: Random inputs to scanner/parser (libFuzzer).
 
 4. **Release**

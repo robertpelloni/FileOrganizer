@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2025-12-28
+
+### Added
+- **Integration Tests**: End-to-end workflow tests in `tests/test_integration.cpp`.
+    - Scan directory and verify file count.
+    - Find duplicates with identical content.
+    - Export to JSON and verify structure.
+    - Incremental scan only processes new files.
+    - Extension filtering tests.
+    - Duplicate group size verification.
+    - Export to file creates valid JSON.
+- **Test Suite**: Now 59 tests total across 7 test suites (all passing).
+
+### Changed
+- **Roadmap**: Updated to reflect documentation and testing progress.
+
 ## [1.7.0] - 2025-12-28
 
 ### Added

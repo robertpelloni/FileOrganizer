@@ -6,6 +6,7 @@ add_executable(fo_tests
     test_hasher.cpp
     test_scanner.cpp
     test_database.cpp
+    test_integration.cpp
 )
 
 target_link_libraries(fo_tests PRIVATE GTest::gtest GTest::gtest_main fo_core)
