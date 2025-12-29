@@ -247,7 +247,7 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 5. **Export and reporting** ✅ (completed)
    - [x] CLI: `fo_cli export --format=json|csv|html /path/to/report`.
    - [x] Generate HTML report with duplicate lists, statistics.
-   - [ ] Thumbnails in HTML report (future enhancement).
+   - [x] Thumbnails in HTML report (`--thumbnails` option).
 
 **Deliverable**: Production-ready tool with automation and power-user workflows.
 
