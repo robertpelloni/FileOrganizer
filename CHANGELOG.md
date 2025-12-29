@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2025-12-28
+
+### Added
+- **Developer Guide**: Comprehensive documentation at `docs/DEVELOPER_GUIDE.md`.
+    - Prerequisites and build instructions for all platforms.
+    - Project architecture and component overview.
+    - Registry pattern explanation with code examples.
+    - Step-by-step guide for adding new providers.
+    - Testing guide with Google Test patterns.
+    - Code style conventions and contributing guidelines.
+
 ## [1.5.0] - 2025-12-28
 
 ### Added
