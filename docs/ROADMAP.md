@@ -27,7 +27,7 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 
 ### Pending
 - 🔄 **Installers**: MSI (Windows) [Script Ready], AppImage (Linux), DMG (macOS).
-- ⏳ **CI/CD**: Automated Submodule Dashboard Updates.
+- ✅ **CI/CD**: Automated Submodule Dashboard Updates.
 - ✅ **Fuzz Testing**: Robustness testing infrastructure (sanity checks).
 - ⏳ **Cloud Integration**: Optional S3/Drive support (Post-v1.0).
 
