@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Product Id="751e54e9-8d55-49c9-8aa0-2ce3650caf10" Name="FileOrganizer" Language="1033" Version="2.1.0" Manufacturer="FileOrganizer Team" UpgradeCode="82d9f31a-c555-4041-81ce-edf1d8065d73">
+        <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+        <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+        <MediaTemplate EmbedCab="yes" />
+
+        <Feature Id="ProductFeature" Title="FileOrganizer" Level="1">
+            <ComponentGroupRef Id="ProductComponents" />
+        </Feature>
+    </Product>
+
+    <Fragment>
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFiles64Folder">
+                <Directory Id="INSTALLFOLDER" Name="FileOrganizer" />
+            </Directory>
+        </Directory>
+    </Fragment>
+
+    <Fragment>
+        <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+            <Component Id="MainExecutable" Guid="*">
+                <File Id="fo_cli.exe" Source="..\build\cli\fo_cli.exe" KeyPath="yes" />
+            </Component>
+            <Component Id="LicenseFile" Guid="*">
+                <File Id="LICENSE.txt" Source="..\LICENSE.txt" KeyPath="yes" />
+            </Component>
+            <Component Id="ReadmeFile" Guid="*">
+                <File Id="README.md" Source="..\README.md" KeyPath="yes" />
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+</Wix>

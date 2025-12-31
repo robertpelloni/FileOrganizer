@@ -461,6 +461,38 @@ TEST_F(ProviderTest, TestName) {
 
 ---
 
+## Fuzz Testing
+
+This project uses LLVM's LibFuzzer-style structure for fuzz testing. We currently support "corpus-replay" mode where the fuzz targets are compiled as standard executables that can accept files as input or run a default dummy case.
+
+### Targets
+1. **`fuzz_metadata`**: Tests the `IMetadataProvider` implementations (e.g., TinyEXIF). It creates a temporary file from the input data and attempts to read metadata from it.
+2. **`fuzz_rule_engine`**: Tests the `RuleEngine` by feeding random strings as rule configurations or file names.
+
+### Running Fuzz Tests
+
+To run the fuzz tests (sanity check):
+
+```bash
+# Run metadata fuzzer with internal dummy data
+./build/tests/fuzz_metadata.exe
+
+# Run rule engine fuzzer
+./build/tests/fuzz_rule_engine.exe
+```
+
+### Running with a Corpus
+
+To test against a specific file (simulating a crash case or seed):
+
+```bash
+./build/tests/fuzz_metadata.exe path/to/suspicious_image.jpg
+```
+
+*Note: For full coverage-guided fuzzing, these targets should be compiled with Clang and `-fsanitize=fuzzer` on Linux/macOS. On Windows MSVC, we currently use them for regression testing and stability checks.*
+
+---
+
 ## Code Style
 
 ### C++20 Features

@@ -26,9 +26,9 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 - ✅ **Submodules**: All 130+ submodules updated to latest upstream (v2.1.0).
 
 ### Pending
-- ⏳ **Installers**: MSI (Windows), AppImage (Linux), DMG (macOS).
+- 🔄 **Installers**: MSI (Windows) [Script Ready], AppImage (Linux), DMG (macOS).
 - ⏳ **CI/CD**: Automated Submodule Dashboard Updates.
-- ⏳ **Fuzz Testing**: Robustness testing with libFuzzer.
+- ✅ **Fuzz Testing**: Robustness testing infrastructure (sanity checks).
 - ⏳ **Cloud Integration**: Optional S3/Drive support (Post-v1.0).
 
 ---

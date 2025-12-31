@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <filesystem>
+#include <vector>
 #include "fo/core/interfaces.hpp"
 #include "fo/core/registry.hpp"
 #include "fo/core/provider_registration.hpp"
