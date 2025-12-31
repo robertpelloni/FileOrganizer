@@ -27,7 +27,7 @@ jobs:
         python-version: '3.x'
 
     - name: Generate Dashboard
-      run: python generate_dashboard.py
+      run: python scripts/generate_dashboard.py
 
     - name: Commit and Push if changed
       run: |

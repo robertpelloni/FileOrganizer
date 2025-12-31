@@ -17,6 +17,10 @@ cmake -S . -B build -G Ninja && cmake --build build  # Manual build
 - **libs/** - 100+ git submodules (TinyEXIF, xxHash, sqlite3, etc.)
 - **Registry pattern**: Providers (scanners, hashers, metadata, OCR) registered via `Registry<T>::instance().add()`
 
+## Automation
+- **Submodule Dashboard**: Automatically updated via GitHub Actions (`.github/workflows/dashboard.yml`) on weekly schedule or library changes. Run `python scripts/generate_dashboard.py` to update locally.
+- **Fuzzing**: Infrastructure in `tests/fuzz/`. See `docs/DEVELOPER_GUIDE.md` for usage.
+
 ## Code Style
 - **C++20** with `std::filesystem`, `std::chrono`, `std::optional`
 - **Naming**: `snake_case` for functions/variables, `CamelCase` for classes
