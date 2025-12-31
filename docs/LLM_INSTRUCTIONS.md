@@ -225,6 +225,27 @@ git submodule status
 
 ## 11. Current Session Handoff Log
 
+### Update: 2025-12-31 (Session 21)
+
+**Author:** OpenCode Interpreter
+
+**Scope:** Submodule Update, Documentation Refresh, Version Bump (v2.1.0).
+
+**Current Status:**
+- ✅ **Submodules**: Updated 130+ submodules to latest upstream commits (FFmpeg, ImageMagick, libheif, etc.).
+- ✅ **Dashboard**: Regenerated `docs/SUBMODULES.md` with latest commit hashes and versions.
+- ✅ **Documentation**: Updated `CHANGELOG.md` and `docs/LLM_INSTRUCTIONS.md` to reflect latest state.
+- ✅ **Versioning**: Bumped to `2.1.0` in `VERSION.md`.
+
+**Next Steps:**
+1. **Packaging**: Create platform-specific installers (MSI, AppImage, DMG).
+2. **Benchmarking**: Execute the benchmark harness on real datasets and publish results.
+3. **Fuzzing**: Implement libFuzzer tests for robustness.
+4. **Release**: Tag v2.1.0 and publish to GitHub.
+
+**Handoff Note:**
+The project is fully synced with upstream dependencies, documented, and versioned. The next phase focuses on stability (fuzzing/benchmarks) and distribution (packaging).
+
 ### Update: 2025-12-29 (Session 19)
 
 **Author:** Gemini 2.0 Flash (Architect Mode)

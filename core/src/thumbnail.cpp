@@ -8,6 +8,15 @@
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
+
+// Include std::algorithm first for min/max
+#include <algorithm>
+
+namespace Gdiplus {
+    using std::min;
+    using std::max;
+}
+
 #include <windows.h>
 #include <gdiplus.h>
 #pragma comment(lib, "gdiplus.lib")

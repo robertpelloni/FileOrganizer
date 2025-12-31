@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2025-12-31
+
+### Changed
+- **Submodules**: Updated all 130+ submodules to their latest upstream versions, including major updates for FFmpeg, ImageMagick, libheif, and OpenCV.
+- **Project Structure**: Re-analyzed and documented project structure in `docs/SUBMODULES.md`.
+- **Dashboard**: Regenerated submodule dashboard with latest version information.
+
+### Fixed
+- **Submodule Consistency**: Resolved potential conflicts by merging upstream changes and ensuring all submodules are synchronized.
+
 ## [2.0.2] - 2025-12-29
 
 ### Fixed

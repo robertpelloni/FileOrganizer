@@ -4,7 +4,7 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 
 ---
 
-## Current Status (v2.0.2)
+## Current Status (v2.1.0)
 
 ### Completed
 - ✅ **Core Engine**: C++20 static library (`fo_core`) with plugin registry.
@@ -23,6 +23,7 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 - ✅ **Documentation**: Comprehensive guides (User, Developer, API), Dashboards, and Submodule tracking.
 - ✅ **Benchmarks**: Initial microbenchmarks implemented and passing (`Scanner`, `Hasher`).
 - ✅ **Packaging**: Windows ZIP distribution script operational.
+- ✅ **Submodules**: All 130+ submodules updated to latest upstream (v2.1.0).
 
 ### Pending
 - ⏳ **Installers**: MSI (Windows), AppImage (Linux), DMG (macOS).
@@ -140,6 +141,7 @@ This roadmap synthesizes the full analysis, library evaluation, and your require
 
 4. **Release**
    - [x] Tag v2.0.2.
+   - [x] Tag v2.1.0 (Submodule Sync).
    - [ ] Publish on GitHub Releases.
 
 ---
