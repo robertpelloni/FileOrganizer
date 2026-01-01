@@ -9,6 +9,7 @@ void register_hasher_sha256();
 void register_hasher_xxhash();
 void register_hasher_blake3();
 void register_metadata_tinyexif();
+void register_linter_std();
 
 void register_all_providers();
 }
