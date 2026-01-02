@@ -1,6 +1,6 @@
 # Submodule Dashboard
 
-**Last Updated:** 2025-12-31 12:37:33
+**Last Updated:** 2026-01-02 17:45:47
 
 ## Project Structure
 
@@ -102,7 +102,7 @@ The project is organized as follows:
 | libs/vlc | `libs/vlc` | 4.0.0-dev | `5a666ee2df` | 2025-12-28 | 108862 | [Link](https://github.com/videolan/vlc) |
 | libs/sumatrapdf | `libs/sumatrapdf` | 3.2 | `5a178c153` | 2025-12-30 | 16123 | [Link](https://github.com/sumatrapdfreader/sumatrapdf) |
 | libs/mpv | `libs/mpv` | v0.41.0 | `f57c5ca422` | 2025-12-31 | 54491 | [Link](https://github.com/mpv-player/mpv) |
-| libs/sqlite | `libs/sqlite` | version-3.51.0 | `31f6052f03` | 2025-12-31 | 31146 | [Link](https://github.com/sqlite/sqlite) |
+| libs/sqlite | `libs/sqlite` | major-release | `31f6052f03` | 2025-12-31 | 31146 | [Link](https://github.com/sqlite/sqlite) |
 | libs/tinyxml2 | `libs/tinyxml2` | 11.0.0 | `3324d04` | 2025-11-22 | 1278 | [Link](https://github.com/leethomason/tinyxml2) |
 | libs/libvips | `libs/libvips` | v8.18.0 | `9e641793c` | 2025-12-24 | 9118 | [Link](https://github.com/libvips/libvips) |
 | libs/opencv | `libs/opencv` | 4.13.0 | `3c34e42209` | 2025-12-30 | 35906 | [Link](https://github.com/opencv/opencv) |
@@ -156,3 +156,5 @@ The project is organized as follows:
 | libs/ADSFileSystem | `libs/ADSFileSystem` | - | `60b6710` | 2016-06-09 | 9 | [Link](https://github.com/marcelogm/ADSFileSystem) |
 | libs/Bringing-Old-Photos-Back-to-Life | `libs/Bringing-Old-Photos-Back-to-Life` | v1.0 | `33875ec` | 2022-07-23 | 108 | [Link](https://github.com/microsoft/Bringing-Old-Photos-Back-to-Life) |
 | vcpkg | `vcpkg` | 2025.12.12 | `e7d511847f` | 2025-12-30 | 27344 | [Link](https://github.com/microsoft/vcpkg) |
+| ai-file-sorter | `ai-file-sorter` | v1.4.0 | `8e65ce9` | 2025-12-31 | 345 | [Link](https://github.com/hyperfield/ai-file-sorter) |
+| Local-File-Organizer | `Local-File-Organizer` | new_version | `a195599` | 2024-09-30 | 33 | [Link](https://github.com/QiuYannnn/Local-File-Organizer) |
